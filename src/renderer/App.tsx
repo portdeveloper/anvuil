@@ -5,6 +5,7 @@ import LogsWindow from './components/LogsWindow';
 
 function Hello() {
   const [directory, setDirectory] = useState(null);
+  const [anvilParams, setAnvilParams] = useState('');
 
   const selectDirectory = async () => {
     const result = await window.electron.ipcRenderer.invoke(
@@ -18,7 +19,11 @@ function Hello() {
       alert('Please select a directory first.');
       return;
     }
-    await window.electron.ipcRenderer.invoke('start-anvil', directory);
+    await window.electron.ipcRenderer.invoke(
+      'start-anvil',
+      directory,
+      anvilParams
+    );
   };
 
   const killAnvil = async () => {
@@ -32,9 +37,17 @@ function Hello() {
         <button type="button" onClick={selectDirectory}>
           Select Project Directory
         </button>
-        <button type="button" onClick={startAnvil}>
-          Start Anvil
-        </button>
+        <div className="flex flex-col">
+          <input
+            type="text"
+            value={anvilParams}
+            onChange={(e) => setAnvilParams(e.target.value)}
+            placeholder="Enter Anvil parameters"
+          />
+          <button type="button" onClick={startAnvil}>
+            Start Anvil
+          </button>
+        </div>
 
         <button type="button" onClick={killAnvil}>
           Kill Anvil
