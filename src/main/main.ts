@@ -151,8 +151,11 @@ app
 
     let childProcess: any;
 
-    ipcMain.handle('start-anvil', async (event, directoryPath) => {
-      childProcess = spawn('anvil', [], {
+    ipcMain.handle('start-anvil', async (event, directoryPath, anvilParams) => {
+      // separate parameters by spaces
+      const params = anvilParams.split(' ');
+
+      childProcess = spawn('anvil', params, {
         cwd: directoryPath,
       });
 
