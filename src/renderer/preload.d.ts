@@ -1,12 +1,15 @@
 import { ElectronHandler } from 'main/preload';
 
 declare global {
-  // eslint-disable-next-line no-unused-vars
   interface Window {
     electron: ElectronHandler;
     ipcRenderer: {
       invoke: (channel: string, ...args: any[]) => Promise<any>;
-      // add any other methods you need
+      on: (
+        channel: string,
+        listener: (event: any, ...args: any[]) => void
+      ) => void;
+      removeAllListeners: (channel: string) => void;
     };
   }
 }

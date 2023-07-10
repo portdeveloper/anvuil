@@ -1,25 +1,28 @@
-import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
+import { MemoryRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import LogsWindow from './components/LogsWindow';
 
 function Hello() {
   const [directory, setDirectory] = useState(null);
 
   const selectDirectory = async () => {
-    const result = await window.ipcRenderer.invoke('get-directory-path');
+    const result = await window.electron.ipcRenderer.invoke(
+      'get-directory-path'
+    );
     setDirectory(result.filePaths[0]);
   };
 
   const startAnvil = async () => {
     if (!directory) {
-      alert('Please select a directory first');
+      alert('Please select a directory first.');
       return;
     }
-    await window.ipcRenderer.invoke('start-anvil', directory);
+    await window.electron.ipcRenderer.invoke('start-anvil', directory);
   };
 
   const killAnvil = async () => {
-    await window.ipcRenderer.invoke('kill-anvil');
+    await window.electron.ipcRenderer.invoke('kill-anvil');
   };
 
   return (
@@ -42,11 +45,40 @@ function Hello() {
 }
 
 export default function App() {
+  const [output, setOutput] = useState('');
+
+  useEffect(() => {
+    const handleData = (data: Uint8Array) => {
+      const strData = window.electron.buffer.from(data);
+      setOutput((prevOutput) => `${prevOutput}\n${strData}`);
+    };
+
+    window.electron.ipcRenderer.on('anvil-data', handleData);
+
+    return () => {
+      window.electron.ipcRenderer.removeListener('anvil-data', handleData);
+    };
+  }, []);
+
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Hello />} />
-      </Routes>
+      <div>
+        <nav>
+          <ul className="flex gap-5">
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/logs-window">Logs</Link>
+            </li>
+          </ul>
+        </nav>
+
+        <Routes>
+          <Route path="/" element={<Hello />} />
+          <Route path="/logs-window" element={<LogsWindow output={output} />} />
+        </Routes>
+      </div>
     </Router>
   );
 }

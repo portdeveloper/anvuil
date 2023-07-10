@@ -26,12 +26,6 @@ class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 
-ipcMain.on('ipc-example', async (event, arg) => {
-  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
-  event.reply('ipc-example', msgTemplate('pong'));
-});
-
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();
@@ -168,22 +162,22 @@ app
       childProcess.stdout.on('data', (data: Buffer) => {
         console.log(`stdout: ${data}`);
       });
+      childProcess.stdout.on('data', (data: Buffer) => {
+        if (mainWindow) {
+          mainWindow.webContents.send('anvil-data', data);
+        }
+      });
+
       childProcess.stderr.on('data', (data: Buffer) => {
         console.error(`stderr: ${data}`);
       });
-      childProcess.on('close', (code: number | null) => {
-        console.log(`child process exited with code ${code}`);
-      });
-      childProcess.on('exit', (code: number, signal: any) => {
-        console.log(
-          `Child process exited with code ${code} and signal ${signal}`
-        );
+      childProcess.on('close', () => {
+        console.log(`### ANVIL KILLED ###`);
       });
     });
 
     ipcMain.handle('kill-anvil', async () => {
       if (childProcess && !childProcess.killed) {
-        console.log('hey anvil is running and it is not killed');
         try {
           childProcess.kill('SIGINT');
         } catch (err) {
