@@ -30,6 +30,17 @@ function Hello() {
     await window.electron.ipcRenderer.invoke('kill-anvil');
   };
 
+  useEffect(() => {
+    const fetchDirectory = async () => {
+      const dir = await window.electron.ipcRenderer.invoke(
+        'get-saved-directory'
+      );
+      setDirectory(dir);
+    };
+
+    fetchDirectory();
+  }, []);
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-200 text-blue-500">
       <p className="text-5xl font-bold mb-4">Hello Electron!</p>
