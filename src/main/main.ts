@@ -9,9 +9,10 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
+import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import { spawn } from 'child_process';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
@@ -75,6 +76,8 @@ const createWindow = async () => {
     height: 728,
     icon: getAssetPath('icon.png'),
     webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, '../../.erb/dll/preload.js'),
@@ -135,3 +138,72 @@ app
     });
   })
   .catch(console.log);
+
+/**
+ * Custom code
+ */
+app
+  .whenReady()
+  .then(() => {
+    createWindow();
+
+    // IPC handler for getting directory path
+    ipcMain.handle('get-directory-path', async () => {
+      const result = await dialog.showOpenDialog(mainWindow as BrowserWindow, {
+        properties: ['openDirectory'],
+      });
+      return result;
+    });
+
+    let childProcess: any;
+
+    ipcMain.handle('start-anvil', async (event, directoryPath) => {
+      childProcess = spawn('anvil', [], {
+        cwd: directoryPath,
+      });
+
+      childProcess.on('error', (err: any) => {
+        console.error(`Failed to start child process: ${err}`);
+      });
+      childProcess.stdout.on('data', (data: Buffer) => {
+        console.log(`stdout: ${data}`);
+      });
+      childProcess.stderr.on('data', (data: Buffer) => {
+        console.error(`stderr: ${data}`);
+      });
+      childProcess.on('close', (code: number | null) => {
+        console.log(`child process exited with code ${code}`);
+      });
+      childProcess.on('exit', (code: number, signal: any) => {
+        console.log(
+          `Child process exited with code ${code} and signal ${signal}`
+        );
+      });
+    });
+
+    ipcMain.handle('kill-anvil', async () => {
+      if (childProcess && !childProcess.killed) {
+        console.log('hey anvil is running and it is not killed');
+        try {
+          childProcess.kill('SIGINT');
+        } catch (err) {
+          console.error(`Failed to kill process ${childProcess.pid}: ${err}`);
+        }
+      } else {
+        console.log(
+          `Process ${
+            childProcess ? childProcess.pid : 'N/A'
+          } either doesn't exist or has already exited`
+        );
+      }
+    });
+
+    app.on('activate', () => {
+      // On macOS it's common to re-create a window in the app when the
+      // dock icon is clicked and there are no other windows open.
+      if (mainWindow === null) createWindow();
+    });
+  })
+  .catch(console.log);
+
+// forge create src/Counter.sol:Counter --unlocked --from 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266

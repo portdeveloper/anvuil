@@ -21,9 +21,15 @@ const electronHandler = {
     once(channel: Channels, func: (...args: unknown[]) => void) {
       ipcRenderer.once(channel, (_event, ...args) => func(...args));
     },
+    invoke(channel: Channels, ...args: unknown[]) {
+      return ipcRenderer.invoke(channel, ...args);
+    },
   },
 };
 
 contextBridge.exposeInMainWorld('electron', electronHandler);
-
+contextBridge.exposeInMainWorld('ipcRenderer', {
+  invoke: (channel: any, data: any) => ipcRenderer.invoke(channel, data),
+  // Add any other ipcRenderer wrappers you need
+});
 export type ElectronHandler = typeof electronHandler;
