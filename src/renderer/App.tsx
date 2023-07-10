@@ -22,22 +22,37 @@ export default function App() {
 
   return (
     <Router>
-      <div>
-        <nav>
+      <div className="flex flex-col h-screen">
+        <nav className="bg-gray-800 p-4 text-white">
           <ul className="flex gap-5">
             <li>
-              <Link to="/">Home</Link>
+              <Link
+                className="text-white hover:text-red-400 transition duration-200"
+                to="/"
+              >
+                Home
+              </Link>
             </li>
             <li>
-              <Link to="/logs-window">Logs</Link>
+              <Link
+                className="text-white hover:text-red-400 transition duration-200"
+                to="/logs-window"
+              >
+                Logs
+              </Link>
             </li>
           </ul>
         </nav>
 
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/logs-window" element={<LogsWindow output={output} />} />
-        </Routes>
+        <div className="flex-grow overflow-auto bg-gray-200">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route
+              path="/logs-window"
+              element={<LogsWindow output={output} />}
+            />
+          </Routes>
+        </div>
       </div>
     </Router>
   );
