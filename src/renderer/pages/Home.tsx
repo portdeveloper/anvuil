@@ -39,26 +39,37 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-200 text-blue-500">
-      <p className="text-5xl font-bold mb-4">Hello Electron!</p>
-      <div className="flex gap-10 text-red-500">
-        <button type="button" onClick={selectDirectory}>
+    <div className="flex flex-col items-center justify-center h-full p-10 bg-gray-900 text-white">
+      <div className="flex flex-col items-center justify-center bg-gray-800 p-5 shadow-lg rounded">
+        <button
+          className=" bg-orange-500 text-white px-5 py-2 rounded mb-5"
+          type="button"
+          onClick={selectDirectory}
+        >
           Select Project Directory
         </button>
-        <div className="flex flex-col">
+        <div className="ml-5">
           <input
+            className="border-2 border-orange-400 px-2 py-1 rounded mr-2 text-white"
             type="text"
             value={anvilParams}
             onChange={(e) => setAnvilParams(e.target.value)}
             placeholder="Enter Anvil parameters"
           />
-          <button type="button" onClick={startAnvil}>
-            Start Anvil
+          <button
+            className="bg-orange-500 text-white px-5 py-2 rounded mb-5"
+            type="button"
+            onClick={startAnvil}
+          >
+            Ignite Anvil
           </button>
         </div>
-
-        <button type="button" onClick={killAnvil}>
-          Kill Anvil
+        <button
+          className="bg-red-500 text-white px-5 py-2 rounded"
+          type="button"
+          onClick={killAnvil}
+        >
+          Extinguish Anvil
         </button>
       </div>
     </div>
