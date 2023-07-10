@@ -14,10 +14,4 @@ declare global {
   }
 }
 
-export type Channels =
-  | 'ipc-example'
-  | 'get-directory-path'
-  | 'start-anvil'
-  | 'kill-anvil';
-
 export {};

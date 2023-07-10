@@ -5,7 +5,8 @@ export type Channels =
   | 'anvil-data'
   | 'kill-anvil'
   | 'start-anvil'
-  | 'get-directory-path';
+  | 'get-directory-path'
+  | 'get-saved-directory';
 
 const electronHandler = {
   ipcRenderer: {

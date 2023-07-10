@@ -13,6 +13,7 @@ import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import { spawn } from 'child_process';
+import fs from 'fs-extra';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
@@ -141,12 +142,32 @@ app
   .then(() => {
     createWindow();
 
+    const directoryFilePath = path.join(
+      app.getPath('userData'),
+      'lastDirectory.txt'
+    );
+
     // IPC handler for getting directory path
     ipcMain.handle('get-directory-path', async () => {
       const result = await dialog.showOpenDialog(mainWindow as BrowserWindow, {
         properties: ['openDirectory'],
       });
+
+      // Save the directory path
+      if (!result.canceled) {
+        fs.writeFile(directoryFilePath, result.filePaths[0]);
+      }
       return result;
+    });
+
+    ipcMain.handle('get-saved-directory', async () => {
+      try {
+        const directory = await fs.readFile(directoryFilePath, 'utf8');
+        return directory;
+      } catch (err) {
+        console.error(`Failed to read the directory file: ${err}`);
+        return '';
+      }
     });
 
     let childProcess: any;
