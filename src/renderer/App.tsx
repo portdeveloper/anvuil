@@ -1,8 +1,12 @@
 import { MemoryRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 import { useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import LogsWindow from './pages/LogsWindow';
 import Home from './pages/Home';
+import 'react-toastify/dist/ReactToastify.css';
+
+// @todo disable buttons when anvil is running/stopped ?
 
 export default function App() {
   const [output, setOutput] = useState('');
@@ -31,18 +35,29 @@ export default function App() {
 
   const startAnvil = async () => {
     if (!directory) {
-      alert('Please select a directory first.');
+      toast.error('Please select a directory first.');
       return;
     }
-    await window.electron.ipcRenderer.invoke(
-      'start-anvil',
-      directory,
-      anvilParams
-    );
+
+    try {
+      const message = await window.electron.ipcRenderer.invoke(
+        'start-anvil',
+        directory,
+        anvilParams
+      );
+      toast.success(message);
+    } catch (err) {
+      toast.error(err.toString());
+    }
   };
 
   const killAnvil = async () => {
-    await window.electron.ipcRenderer.invoke('kill-anvil');
+    try {
+      const message = await window.electron.ipcRenderer.invoke('kill-anvil');
+      toast.info(message);
+    } catch (err) {
+      toast.error(err.toString());
+    }
   };
 
   useEffect(() => {
@@ -58,14 +73,29 @@ export default function App() {
 
   return (
     <Router>
+      <ToastContainer
+        position="bottom-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       <div className="h-full">
         <nav className="flex items-center justify-between bg-gray-800 px-5 py-3 text-white">
           <div className="flex gap-4">
-            <Link className="bg-slate-500 px-3 py-2 rounded-md" to="/">
+            <Link
+              className="bg-slate-500 px-3 py-2 rounded-md active:scale-95 transition-transform duration-100"
+              to="/"
+            >
               Home
             </Link>
             <Link
-              className="bg-slate-500 px-3 py-2 rounded-md"
+              className="bg-slate-500 px-3 py-2 rounded-md active:scale-95 transition-transform duration-100"
               to="/logs-window"
             >
               Logs
@@ -74,7 +104,7 @@ export default function App() {
 
           <div className="flex items-center space-x-3">
             <button
-              className=" bg-orange-500 text-white text-xs w-24 h-8 rounded"
+              className=" bg-orange-500 text-white text-xs w-24 h-8 rounded active:scale-95 transition-transform duration-100"
               type="button"
               onClick={selectDirectory}
             >
@@ -88,14 +118,14 @@ export default function App() {
               placeholder="Enter Anvil parameters"
             />
             <button
-              className="bg-orange-500 text-xs text-white w-24 h-8 rounded"
+              className="bg-orange-500 text-white text-xs w-24 h-8 rounded active:scale-95 transition-transform duration-100"
               type="button"
               onClick={startAnvil}
             >
               Start Anvil
             </button>
             <button
-              className="bg-red-500 text-xs text-white w-24 h-8 rounded"
+              className="bg-red-500 text-xs text-white w-24 h-8 rounded active:scale-95 transition-transform duration-100"
               type="button"
               onClick={killAnvil}
             >

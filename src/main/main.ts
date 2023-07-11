@@ -173,6 +173,11 @@ app
     let childProcess: any;
 
     ipcMain.handle('start-anvil', async (event, directoryPath, anvilParams) => {
+      // Check if Anvil is already running
+      if (childProcess && !childProcess.killed) {
+        throw new Error('Anvil is already running.');
+      }
+
       let params: string[] = [];
       if (anvilParams.trim() !== '') {
         params = anvilParams.split(' ');
@@ -182,40 +187,52 @@ app
         cwd: directoryPath,
       });
 
-      childProcess.on('error', (err: any) => {
-        console.error(`Failed to start child process: ${err}`);
-      });
-      childProcess.stdout.on('data', (data: Buffer) => {
-        console.log(`stdout: ${data}`);
-      });
-      childProcess.stdout.on('data', (data: Buffer) => {
-        if (mainWindow) {
-          mainWindow.webContents.send('anvil-data', data);
-        }
-      });
+      return new Promise((resolve, reject) => {
+        childProcess.on('error', (err: any) => {
+          console.error(`Failed to start child process: ${err}`);
+          reject(new Error('Anvil failed to start.'));
+        });
+        childProcess.stdout.on('data', (data: Buffer) => {
+          console.log(`stdout: ${data}`);
+        });
+        childProcess.stdout.on('data', (data: Buffer) => {
+          if (mainWindow) {
+            mainWindow.webContents.send('anvil-data', data);
+          }
+          resolve('Anvil started!');
+        });
 
-      childProcess.stderr.on('data', (data: Buffer) => {
-        console.error(`stderr: ${data}`);
-      });
-      childProcess.on('close', () => {
-        console.log(`### ANVIL KILLED ###`);
+        childProcess.stderr.on('data', (data: Buffer) => {
+          console.error(`stderr: ${data}`);
+          reject(new Error('Anvil failed to start.'));
+        });
+        childProcess.on('close', () => {
+          console.log(`### ANVIL KILLED ###`);
+          childProcess = null; // Set the childProcess to null when it's closed
+        });
       });
     });
 
     ipcMain.handle('kill-anvil', async () => {
       if (childProcess && !childProcess.killed) {
-        try {
-          childProcess.kill('SIGINT');
-        } catch (err) {
-          console.error(`Failed to kill process ${childProcess.pid}: ${err}`);
-        }
-      } else {
-        console.log(
-          `Process ${
-            childProcess ? childProcess.pid : 'N/A'
-          } either doesn't exist or has already exited`
-        );
+        return new Promise((resolve, reject) => {
+          try {
+            childProcess.kill('SIGINT');
+            childProcess = null; // Set the childProcess to null after killing it
+            resolve('Anvil stopped!');
+          } catch (err) {
+            console.error(`Failed to kill process ${childProcess.pid}: ${err}`);
+            reject(new Error('Failed to stop Anvil.'));
+          }
+        });
       }
+
+      console.log(
+        `Process ${
+          childProcess ? childProcess.pid : 'N/A'
+        } either doesn't exist or has already exited`
+      );
+      throw new Error('Anvil is not running.');
     });
 
     app.on('activate', () => {
