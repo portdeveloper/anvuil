@@ -2,12 +2,25 @@ import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 import { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
+import { WagmiConfig, createConfig, configureChains } from 'wagmi';
+import { publicProvider } from 'wagmi/providers/public';
+import { localhost } from 'viem/chains';
 import Navbar from './components/Navbar';
 import LogsWindow from './pages/LogsWindow';
 import Home from './pages/Home';
 import 'react-toastify/dist/ReactToastify.css';
 import BlockExplorer from './pages/BlockExplorer';
 import Accounts from './pages/Accounts';
+
+const { publicClient, webSocketPublicClient } = configureChains(
+  [localhost],
+  [publicProvider()]
+);
+
+const config = createConfig({
+  publicClient,
+  webSocketPublicClient,
+});
 
 // @todo disable buttons when anvil is running/stopped ?
 
@@ -88,67 +101,69 @@ export default function App() {
   }, []);
 
   return (
-    <Router>
-      <ToastContainer
-        position="bottom-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
-      <div className="h-screen flex flex-col">
-        <nav className="flex items-center justify-between bg-gray-800 px-5 py-3 text-white">
-          <Navbar />
+    <WagmiConfig config={config}>
+      <Router>
+        <ToastContainer
+          position="bottom-center"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
+        <div className="h-screen flex flex-col">
+          <nav className="flex items-center justify-between bg-gray-800 px-5 py-3 text-white">
+            <Navbar />
 
-          <div className="flex items-center space-x-2">
-            <button
-              className=" bg-orange-500 text-white text-xs w-24 h-8 rounded active:scale-95 transition-transform duration-100"
-              type="button"
-              onClick={selectDirectory}
-            >
-              Select Directory
-            </button>
-            <input
-              className="border-2 border-orange-400 text-xs w-80 h-8 px-2 rounded text-black"
-              type="text"
-              value={anvilParams}
-              onChange={(e) => setAnvilParams(e.target.value)}
-              placeholder="Enter Anvil parameters"
-            />
-            <button
-              className="bg-orange-500 text-white text-xs w-24 h-8 rounded active:scale-95 transition-transform duration-100"
-              type="button"
-              onClick={startAnvil}
-            >
-              Start Anvil
-            </button>
-            <button
-              className="bg-red-500 text-xs text-white w-24 h-8 rounded active:scale-95 transition-transform duration-100"
-              type="button"
-              onClick={killAnvil}
-            >
-              Stop Anvil
-            </button>
+            <div className="flex items-center space-x-2">
+              <button
+                className=" bg-orange-500 text-white text-xs w-24 h-8 rounded active:scale-95 transition-transform duration-100"
+                type="button"
+                onClick={selectDirectory}
+              >
+                Select Directory
+              </button>
+              <input
+                className="border-2 border-orange-400 text-xs w-80 h-8 px-2 rounded text-black"
+                type="text"
+                value={anvilParams}
+                onChange={(e) => setAnvilParams(e.target.value)}
+                placeholder="Enter Anvil parameters"
+              />
+              <button
+                className="bg-orange-500 text-white text-xs w-24 h-8 rounded active:scale-95 transition-transform duration-100"
+                type="button"
+                onClick={startAnvil}
+              >
+                Start Anvil
+              </button>
+              <button
+                className="bg-red-500 text-xs text-white w-24 h-8 rounded active:scale-95 transition-transform duration-100"
+                type="button"
+                onClick={killAnvil}
+              >
+                Stop Anvil
+              </button>
+            </div>
+          </nav>
+
+          <div className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/accounts" element={<Accounts />} />
+              <Route path="/block-explorer" element={<BlockExplorer />} />
+              <Route
+                path="/logs-window"
+                element={<LogsWindow output={output} />}
+              />
+            </Routes>
           </div>
-        </nav>
-
-        <div className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/accounts" element={<Accounts />} />
-            <Route path="/block-explorer" element={<BlockExplorer />} />
-            <Route
-              path="/logs-window"
-              element={<LogsWindow output={output} />}
-            />
-          </Routes>
         </div>
-      </div>
-    </Router>
+      </Router>
+    </WagmiConfig>
   );
 }
