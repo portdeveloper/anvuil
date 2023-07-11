@@ -33,16 +33,19 @@ export default function App() {
   useEffect(() => {
     const handleData = (data: Uint8Array) => {
       const strData = window.electron.buffer.from(data);
-      const lines = strData.split('\n');
-      setCurrentLine((prevCurrentLine) => prevCurrentLine + lines[0]);
+      setCurrentLine((prevCurrentLine) => prevCurrentLine + strData);
+      const lines = currentLine.split('\n');
+
       if (lines.length > 1) {
+        // Handle all complete lines
         setOutput((prevOutput) => [
           ...prevOutput,
-          `[${new Date().toLocaleString()}] ${currentLine}`,
           ...lines
-            .slice(1, -1)
+            .slice(0, -1)
             .map((line) => `[${new Date().toLocaleString()}] ${line}`),
         ]);
+
+        // Save the beginning of the next line
         setCurrentLine(lines[lines.length - 1]);
       }
     };
