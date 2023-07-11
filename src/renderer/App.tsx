@@ -1,10 +1,13 @@
-import { MemoryRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 import { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
+import Navbar from './components/Navbar';
 import LogsWindow from './pages/LogsWindow';
 import Home from './pages/Home';
 import 'react-toastify/dist/ReactToastify.css';
+import BlockExplorer from './pages/BlockExplorer';
+import Accounts from './pages/Accounts';
 
 // @todo disable buttons when anvil is running/stopped ?
 
@@ -100,22 +103,9 @@ export default function App() {
       />
       <div className="h-screen flex flex-col">
         <nav className="flex items-center justify-between bg-gray-800 px-5 py-3 text-white">
-          <div className="flex gap-4">
-            <Link
-              className="bg-slate-500 px-3 py-2 rounded-md active:scale-95 transition-transform duration-100"
-              to="/"
-            >
-              Home
-            </Link>
-            <Link
-              className="bg-slate-500 px-3 py-2 rounded-md active:scale-95 transition-transform duration-100"
-              to="/logs-window"
-            >
-              Logs
-            </Link>
-          </div>
+          <Navbar />
 
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2">
             <button
               className=" bg-orange-500 text-white text-xs w-24 h-8 rounded active:scale-95 transition-transform duration-100"
               type="button"
@@ -150,6 +140,8 @@ export default function App() {
         <div className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/accounts" element={<Accounts />} />
+            <Route path="/block-explorer" element={<BlockExplorer />} />
             <Route
               path="/logs-window"
               element={<LogsWindow output={output} />}

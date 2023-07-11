@@ -22,7 +22,7 @@ export default function LogsWindow({ output }: { output: string[] }) {
     <div className="flex-grow flex flex-col items-center h-full bg-gray-900 text-white px-5">
       <pre
         ref={logsContainerRef}
-        className="flex-grow w-full max-h-[600px] overflow-auto"
+        className="flex-grow w-full max-h-[600px] overflow-auto text-sm"
       >
         {output.join('\n')}
       </pre>
