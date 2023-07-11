@@ -9,14 +9,26 @@ import 'react-toastify/dist/ReactToastify.css';
 // @todo disable buttons when anvil is running/stopped ?
 
 export default function App() {
-  const [output, setOutput] = useState('');
+  const [output, setOutput] = useState<string[]>([]);
+  const [currentLine, setCurrentLine] = useState('');
   const [directory, setDirectory] = useState(null);
   const [anvilParams, setAnvilParams] = useState('');
 
   useEffect(() => {
     const handleData = (data: Uint8Array) => {
       const strData = window.electron.buffer.from(data);
-      setOutput((prevOutput) => `${prevOutput}\n${strData}`);
+      const lines = strData.split('\n');
+      setCurrentLine((prevCurrentLine) => prevCurrentLine + lines[0]);
+      if (lines.length > 1) {
+        setOutput((prevOutput) => [
+          ...prevOutput,
+          `[${new Date().toLocaleString()}] ${currentLine}`,
+          ...lines
+            .slice(1, -1)
+            .map((line) => `[${new Date().toLocaleString()}] ${line}`),
+        ]);
+        setCurrentLine(lines[lines.length - 1]);
+      }
     };
 
     window.electron.ipcRenderer.on('anvil-data', handleData);
@@ -24,7 +36,7 @@ export default function App() {
     return () => {
       window.electron.ipcRenderer.removeListener('anvil-data', handleData);
     };
-  }, []);
+  }, [currentLine]);
 
   const selectDirectory = async () => {
     const result = await window.electron.ipcRenderer.invoke(
@@ -46,7 +58,7 @@ export default function App() {
         anvilParams
       );
       toast.success(message);
-    } catch (err) {
+    } catch (err: any) {
       toast.error(err.toString());
     }
   };
@@ -54,8 +66,9 @@ export default function App() {
   const killAnvil = async () => {
     try {
       const message = await window.electron.ipcRenderer.invoke('kill-anvil');
+      setOutput([]); // Reset the output here
       toast.info(message);
-    } catch (err) {
+    } catch (err: any) {
       toast.error(err.toString());
     }
   };
@@ -85,7 +98,7 @@ export default function App() {
         pauseOnHover
         theme="dark"
       />
-      <div className="h-full">
+      <div className="h-screen flex flex-col">
         <nav className="flex items-center justify-between bg-gray-800 px-5 py-3 text-white">
           <div className="flex gap-4">
             <Link
