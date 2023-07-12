@@ -1,29 +1,30 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { createWalletClient, http } from 'viem';
+import { localhost } from 'viem/chains';
 import AddressBlock from '../components/AddressBlock';
 
-export default function Accounts({
-  accounts,
-  getAddresses,
-}: {
-  accounts: string[];
-  getAddresses: () => void;
-}) {
+const localWalletClient = createWalletClient({
+  chain: localhost,
+  transport: http(),
+});
+
+export default function Accounts() {
+  const [accounts, setAccounts] = useState<string[]>([]);
+
+  const getAddresses = useCallback(async () => {
+    const localAccounts = await localWalletClient.getAddresses();
+    setAccounts(localAccounts);
+  }, []);
+
   useEffect(() => {
     getAddresses();
-  }, []);
+  }, [getAddresses]);
+
   return (
-    <div className="flex-grow flex-col gap-5 h-full w-full flex items-center justify-center p-5 bg-gray-800 text-white">
-      <div className="flex flex-col gap-2 w-full overflow-auto max-h-[600px] bg-gray-700 rounded-lg p-5">
-        {accounts.map((account) => (
-          <div
-            key={account}
-            className="flex justify-between items-center bg-gray-600 px-2 py-3 rounded-md"
-          >
-            <p className="text-green-400 font-mono px-2">{account}</p>
-            <AddressBlock address={account} />
-          </div>
-        ))}
-      </div>
+    <div>
+      {accounts.map((account) => (
+        <AddressBlock key={account} address={account} />
+      ))}
     </div>
   );
 }
