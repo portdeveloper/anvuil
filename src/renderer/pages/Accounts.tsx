@@ -7,9 +7,15 @@ interface AccountsProps {
 export default function Accounts({ accounts }: AccountsProps) {
   return (
     <div>
-      {accounts.map((account) => (
-        <AddressBlock key={account} address={account} />
-      ))}
+      {accounts.length > 0 ? (
+        <div>
+          {accounts.map((account) => (
+            <AddressBlock key={account} address={account} />
+          ))}
+        </div>
+      ) : (
+        <div>no accs</div>
+      )}
     </div>
   );
 }

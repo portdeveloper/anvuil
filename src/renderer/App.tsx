@@ -87,6 +87,7 @@ export default function App() {
         anvilParams
       );
       toast.success(message);
+      getAddresses();
     } catch (err: any) {
       toast.error(err.toString());
     }
