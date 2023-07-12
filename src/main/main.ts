@@ -172,7 +172,7 @@ app
 
     let childProcess: any;
 
-    ipcMain.handle('start-anvil', async (event, directoryPath, anvilParams) => {
+    ipcMain.handle('start-anvil', async (_, directoryPath, anvilParams) => {
       // Check if Anvil is already running
       if (childProcess && !childProcess.killed) {
         throw new Error('Anvil is already running.');
@@ -242,5 +242,3 @@ app
     });
   })
   .catch(console.log);
-
-// forge create src/Counter.sol:Counter --unlocked --from 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
