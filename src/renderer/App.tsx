@@ -48,7 +48,6 @@ const outputReducer = (state, action) => {
 
 export default function App() {
   const [output, dispatchOutput] = useReducer(outputReducer, []);
-  const [currentLine, setCurrentLine] = useState('');
   const [directory, setDirectory] = useState(null);
   const [anvilParams, setAnvilParams] = useState('');
   const [accounts, setAccounts] = useState<string[]>([]);
@@ -119,10 +118,6 @@ export default function App() {
       toast.error(err.toString());
     }
   };
-
-  useEffect(() => {
-    console.log(output);
-  }, [output]);
 
   useEffect(() => {
     const fetchDirectory = async () => {
