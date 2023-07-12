@@ -119,7 +119,7 @@ export default function App() {
           theme="dark"
         />
         <div className="h-screen flex flex-col">
-          <nav className="flex items-center justify-between bg-gray-800 px-5 py-3 text-white">
+          <nav className="flex items-center justify-between bg-gray-800 p-6 text-white">
             <Navbar />
 
             <div className="flex items-center space-x-2">
