@@ -26,9 +26,29 @@ export default function Navbar() {
             ? 'bg-slate-700 text-white'
             : ''
         }`}
-        to="/block-explorer"
+        to="/blocks"
       >
-        Block Explorer
+        Blocks
+      </Link>
+      <Link
+        className={`bg-slate-500 px-3 py-2 hover:bg-slate-600 ${
+          location.pathname === '/block-explorer'
+            ? 'bg-slate-700 text-white'
+            : ''
+        }`}
+        to="/transactions"
+      >
+        Transactions
+      </Link>
+      <Link
+        className={`bg-slate-500 px-3 py-2 hover:bg-slate-600 ${
+          location.pathname === '/block-explorer'
+            ? 'bg-slate-700 text-white'
+            : ''
+        }`}
+        to="/events"
+      >
+        Events
       </Link>
       <Link
         className={`bg-slate-500 px-3 py-2 hover:bg-slate-600 ${

@@ -10,7 +10,9 @@ import Navbar from './components/Navbar';
 import LogsWindow from './pages/LogsWindow';
 import Home from './pages/Home';
 import 'react-toastify/dist/ReactToastify.css';
-import BlockExplorer from './pages/BlockExplorer';
+import Blocks from './pages/Blocks';
+import Transactions from './pages/Transactions';
+import Events from './pages/Events';
 import Accounts from './pages/Accounts';
 import outputReducer from '../utils/outputReducer';
 
@@ -169,7 +171,9 @@ export default function App() {
                 path="/accounts"
                 element={<Accounts accounts={accounts} />}
               />
-              <Route path="/block-explorer" element={<BlockExplorer />} />
+              <Route path="/blocks" element={<Blocks />} />
+              <Route path="/transactions" element={<Transactions />} />
+              <Route path="/events" element={<Events />} />
               <Route
                 path="/logs-window"
                 element={<LogsWindow output={output} />}
