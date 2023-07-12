@@ -1,7 +1,6 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
 export type Channels =
-  | 'ipc-example'
   | 'anvil-data'
   | 'kill-anvil'
   | 'start-anvil'
