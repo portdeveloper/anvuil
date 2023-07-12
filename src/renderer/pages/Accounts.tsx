@@ -1,24 +1,11 @@
-import { useEffect, useState, useCallback } from 'react';
-import { createWalletClient, http } from 'viem';
-import { localhost } from 'viem/chains';
 import AddressBlock from '../components/AddressBlock';
 
-const localWalletClient = createWalletClient({
-  chain: localhost,
-  transport: http(),
-});
+interface AccountsProps {
+  accounts: string[];
+}
 
-export default function Accounts() {
-  const [accounts, setAccounts] = useState<string[]>([]);
-
-  const getAddresses = useCallback(async () => {
-    const localAccounts = await localWalletClient.getAddresses();
-    setAccounts(localAccounts);
-  }, []);
-
-  useEffect(() => {
-    getAddresses();
-  }, [getAddresses]);
+export default function Accounts({ accounts }: AccountsProps) {
+  // Here we no longer need getAddresses or the local state for accounts
 
   return (
     <div>

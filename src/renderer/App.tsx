@@ -13,6 +13,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import BlockExplorer from './pages/BlockExplorer';
 import Accounts from './pages/Accounts';
 
+type OutputAction = { type: 'add'; lines: string[] } | { type: 'reset' };
+
 const { publicClient, webSocketPublicClient } = configureChains(
   [localhost],
   [publicProvider()]
@@ -28,13 +30,13 @@ const localWalletClient = createWalletClient({
   transport: http(),
 });
 
-const outputReducer = (state, action) => {
+const outputReducer = (state: string[], action: OutputAction) => {
   switch (action.type) {
     case 'add':
       return [
         ...state,
         ...action.lines.map(
-          (line) => `[${new Date().toLocaleString()}] ${line}`
+          (line: string) => `[${new Date().toLocaleString()}] ${line}`
         ),
       ];
     case 'reset':
@@ -186,10 +188,7 @@ export default function App() {
               <Route path="/" element={<Home />} />
               <Route
                 path="/accounts"
-                element={
-                  // eslint-disable-next-line react/jsx-no-bind
-                  <Accounts accounts={accounts} getAddresses={getAddresses} />
-                }
+                element={<Accounts accounts={accounts} />}
               />
               <Route path="/block-explorer" element={<BlockExplorer />} />
               <Route
