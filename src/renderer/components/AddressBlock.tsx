@@ -1,5 +1,4 @@
 import { useBalance } from 'wagmi';
-import React from 'react';
 
 function AddressBlock({ address }: { address: string }) {
   const { data } = useBalance({ address: address as any });
@@ -12,4 +11,4 @@ function AddressBlock({ address }: { address: string }) {
   );
 }
 
-export default React.memo(AddressBlock);
+export default AddressBlock;

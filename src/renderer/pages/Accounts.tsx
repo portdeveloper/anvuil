@@ -14,7 +14,7 @@ export default function Accounts({ accounts }: AccountsProps) {
           ))}
         </div>
       ) : (
-        <div>No accounts yet. Did you start anvil?</div>
+        <div>No accounts yet, please start anvil</div>
       )}
     </div>
   );
