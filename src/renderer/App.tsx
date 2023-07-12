@@ -63,10 +63,6 @@ export default function App() {
     }
   }
 
-  useEffect(() => {
-    getAddresses();
-  }, []);
-
   const selectDirectory = async () => {
     const result = await window.electron.ipcRenderer.invoke(
       'get-directory-path'
@@ -97,6 +93,7 @@ export default function App() {
     try {
       const message = await window.electron.ipcRenderer.invoke('kill-anvil');
       dispatchOutput({ type: 'reset' });
+      setAccounts([]);
       toast.info(message);
     } catch (err: any) {
       toast.error(err.toString());
