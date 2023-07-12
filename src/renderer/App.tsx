@@ -12,8 +12,7 @@ import Home from './pages/Home';
 import 'react-toastify/dist/ReactToastify.css';
 import BlockExplorer from './pages/BlockExplorer';
 import Accounts from './pages/Accounts';
-
-type OutputAction = { type: 'add'; lines: string[] } | { type: 'reset' };
+import outputReducer from '../utils/outputReducer';
 
 const { publicClient, webSocketPublicClient } = configureChains(
   [localhost],
@@ -30,22 +29,6 @@ const localWalletClient = createWalletClient({
   transport: http(),
 });
 
-const outputReducer = (state: string[], action: OutputAction) => {
-  switch (action.type) {
-    case 'add':
-      return [
-        ...state,
-        ...action.lines.map(
-          (line: string) => `[${new Date().toLocaleString()}] ${line}`
-        ),
-      ];
-    case 'reset':
-      return [];
-    default:
-      throw new Error();
-  }
-};
-
 // @todo disable buttons when anvil is running/stopped ?
 
 export default function App() {
@@ -60,7 +43,6 @@ export default function App() {
       const lines = strData.split('\n');
 
       if (lines.length > 1) {
-        // Replace setOutput with dispatchOutput
         dispatchOutput({ type: 'add', lines: lines.slice(0, -1) });
       }
     };
@@ -113,7 +95,6 @@ export default function App() {
   const killAnvil = async () => {
     try {
       const message = await window.electron.ipcRenderer.invoke('kill-anvil');
-      // Replace setOutput with dispatchOutput
       dispatchOutput({ type: 'reset' });
       toast.info(message);
     } catch (err: any) {

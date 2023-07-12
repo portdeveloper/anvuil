@@ -5,8 +5,6 @@ interface AccountsProps {
 }
 
 export default function Accounts({ accounts }: AccountsProps) {
-  // Here we no longer need getAddresses or the local state for accounts
-
   return (
     <div>
       {accounts.map((account) => (
