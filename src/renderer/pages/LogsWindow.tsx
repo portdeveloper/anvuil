@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 
 export default function LogsWindow({ output }: { output: string[] }) {
   const logsContainerRef = useRef<HTMLPreElement | null>(null);
@@ -9,6 +9,8 @@ export default function LogsWindow({ output }: { output: string[] }) {
         logsContainerRef.current.scrollHeight;
     }
   }, [output]);
+
+  const outputString = useMemo(() => output.join('\n'), [output]);
 
   if (!output.length) {
     return (
@@ -24,7 +26,7 @@ export default function LogsWindow({ output }: { output: string[] }) {
         ref={logsContainerRef}
         className="flex-grow w-full max-h-[600px] overflow-auto text-sm"
       >
-        {output.join('\n')}
+        {outputString}
       </pre>
     </div>
   );

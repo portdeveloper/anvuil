@@ -1,8 +1,9 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { WagmiConfig, createConfig, configureChains } from 'wagmi';
+import { createWalletClient, http } from 'viem';
 import { publicProvider } from 'wagmi/providers/public';
 import { localhost } from 'viem/chains';
 import Navbar from './components/Navbar';
@@ -22,31 +23,44 @@ const config = createConfig({
   webSocketPublicClient,
 });
 
+const localWalletClient = createWalletClient({
+  chain: localhost,
+  transport: http(),
+});
+
+const outputReducer = (state, action) => {
+  switch (action.type) {
+    case 'add':
+      return [
+        ...state,
+        ...action.lines.map(
+          (line) => `[${new Date().toLocaleString()}] ${line}`
+        ),
+      ];
+    case 'reset':
+      return [];
+    default:
+      throw new Error();
+  }
+};
+
 // @todo disable buttons when anvil is running/stopped ?
 
 export default function App() {
-  const [output, setOutput] = useState<string[]>([]);
+  const [output, dispatchOutput] = useReducer(outputReducer, []);
   const [currentLine, setCurrentLine] = useState('');
   const [directory, setDirectory] = useState(null);
   const [anvilParams, setAnvilParams] = useState('');
+  const [accounts, setAccounts] = useState<string[]>([]);
 
   useEffect(() => {
     const handleData = (data: Uint8Array) => {
       const strData = window.electron.buffer.from(data);
-      setCurrentLine((prevCurrentLine) => prevCurrentLine + strData);
-      const lines = currentLine.split('\n');
+      const lines = strData.split('\n');
 
       if (lines.length > 1) {
-        // Handle all complete lines
-        setOutput((prevOutput) => [
-          ...prevOutput,
-          ...lines
-            .slice(0, -1)
-            .map((line) => `[${new Date().toLocaleString()}] ${line}`),
-        ]);
-
-        // Save the beginning of the next line
-        setCurrentLine(lines[lines.length - 1]);
+        // Replace setOutput with dispatchOutput
+        dispatchOutput({ type: 'add', lines: lines.slice(0, -1) });
       }
     };
 
@@ -55,7 +69,20 @@ export default function App() {
     return () => {
       window.electron.ipcRenderer.removeListener('anvil-data', handleData);
     };
-  }, [currentLine]);
+  }, []);
+
+  async function getAddresses() {
+    try {
+      const localAccounts = await localWalletClient.getAddresses();
+      setAccounts(localAccounts);
+    } catch (error: any) {
+      toast.error(error?.shortMessage);
+    }
+  }
+
+  useEffect(() => {
+    getAddresses();
+  }, []);
 
   const selectDirectory = async () => {
     const result = await window.electron.ipcRenderer.invoke(
@@ -85,12 +112,17 @@ export default function App() {
   const killAnvil = async () => {
     try {
       const message = await window.electron.ipcRenderer.invoke('kill-anvil');
-      setOutput([]); // Reset the output here
+      // Replace setOutput with dispatchOutput
+      dispatchOutput({ type: 'reset' });
       toast.info(message);
     } catch (err: any) {
       toast.error(err.toString());
     }
   };
+
+  useEffect(() => {
+    console.log(output);
+  }, [output]);
 
   useEffect(() => {
     const fetchDirectory = async () => {
@@ -157,7 +189,13 @@ export default function App() {
           <div className="flex-grow">
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/accounts" element={<Accounts />} />
+              <Route
+                path="/accounts"
+                element={
+                  // eslint-disable-next-line react/jsx-no-bind
+                  <Accounts accounts={accounts} getAddresses={getAddresses} />
+                }
+              />
               <Route path="/block-explorer" element={<BlockExplorer />} />
               <Route
                 path="/logs-window"

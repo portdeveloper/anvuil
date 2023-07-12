@@ -1,30 +1,16 @@
-import { useEffect, useState } from 'react';
-import { createWalletClient, http } from 'viem';
-import { localhost } from 'viem/chains';
-import { toast } from 'react-toastify';
+import { useEffect } from 'react';
 import AddressBlock from '../components/AddressBlock';
 
-const localWalletClient = createWalletClient({
-  chain: localhost,
-  transport: http(),
-});
-
-export default function Accounts() {
-  const [accounts, setAccounts] = useState<string[]>([]);
-
-  async function getAddresses() {
-    try {
-      const localAccounts = await localWalletClient.getAddresses();
-      setAccounts(localAccounts);
-    } catch (error: any) {
-      toast.error(error?.shortMessage);
-    }
-  }
-
+export default function Accounts({
+  accounts,
+  getAddresses,
+}: {
+  accounts: string[];
+  getAddresses: () => void;
+}) {
   useEffect(() => {
     getAddresses();
   }, []);
-
   return (
     <div className="flex-grow flex-col gap-5 h-full w-full flex items-center justify-center p-5 bg-gray-800 text-white">
       <div className="flex flex-col gap-2 w-full overflow-auto max-h-[600px] bg-gray-700 rounded-lg p-5">
