@@ -1,5 +1,5 @@
 import { Address } from 'viem';
-import AddressBlock from '../components/AddressBlock';
+import { AddressBlock } from '../components/';
 
 interface AccountsProps {
   accounts: Address[];
