@@ -2,34 +2,33 @@ import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 import { useEffect, useReducer, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import { WagmiConfig, createConfig, configureChains } from 'wagmi';
-import { createWalletClient, http } from 'viem';
-import { publicProvider } from 'wagmi/providers/public';
-import { localhost } from 'viem/chains';
-import Navbar from './components/Navbar';
-import LogsWindow from './pages/LogsWindow';
-import Home from './pages/Home';
+import {
+  createTestClient,
+  http,
+  publicActions,
+  walletActions,
+  Address,
+} from 'viem';
+import {
+  LogsWindow,
+  Home,
+  Blocks,
+  Transactions,
+  Events,
+  Accounts,
+} from 'renderer/pages';
+import { Navbar } from 'renderer/components';
+import { foundry } from 'viem/chains';
 import 'react-toastify/dist/ReactToastify.css';
-import Blocks from './pages/Blocks';
-import Transactions from './pages/Transactions';
-import Events from './pages/Events';
-import Accounts from './pages/Accounts';
 import outputReducer from '../utils/outputReducer';
 
-const { publicClient, webSocketPublicClient } = configureChains(
-  [localhost],
-  [publicProvider()]
-);
-
-const config = createConfig({
-  publicClient,
-  webSocketPublicClient,
-});
-
-const localWalletClient = createWalletClient({
-  chain: localhost,
+const anvilClient = createTestClient({
+  chain: foundry,
+  mode: 'anvil',
   transport: http(),
-});
+})
+  .extend(publicActions)
+  .extend(walletActions);
 
 // @todo disable buttons when anvil is running/stopped ?
 
@@ -37,7 +36,7 @@ export default function App() {
   const [output, dispatchOutput] = useReducer(outputReducer, []);
   const [directory, setDirectory] = useState(null);
   const [anvilParams, setAnvilParams] = useState('');
-  const [accounts, setAccounts] = useState<string[]>([]);
+  const [accounts, setAccounts] = useState<Address[]>([]);
 
   useEffect(() => {
     const handleData = (data: Uint8Array) => {
@@ -58,7 +57,7 @@ export default function App() {
 
   async function getAddresses() {
     try {
-      const localAccounts = await localWalletClient.getAddresses();
+      const localAccounts = await anvilClient.getAddresses();
       setAccounts(localAccounts);
     } catch (error: any) {
       toast.error(error?.shortMessage);
@@ -114,74 +113,72 @@ export default function App() {
   }, []);
 
   return (
-    <WagmiConfig config={config}>
-      <Router>
-        <ToastContainer
-          position="bottom-center"
-          autoClose={2000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="dark"
-        />
-        <div className="h-screen flex flex-col">
-          <nav className="flex items-center justify-between bg-gray-800 p-6 text-white">
-            <Navbar />
+    <Router>
+      <ToastContainer
+        position="bottom-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
+      <div className="h-screen flex flex-col">
+        <nav className="flex items-center justify-between bg-gray-800 p-6 text-white">
+          <Navbar />
 
-            <div className="flex items-center space-x-2">
-              <button
-                className=" bg-orange-500 text-white text-xs w-24 h-8 rounded active:scale-95 transition-transform duration-100"
-                type="button"
-                onClick={selectDirectory}
-              >
-                Select Directory
-              </button>
-              <input
-                className="border-2 border-orange-400 text-xs w-80 h-8 px-2 rounded text-black"
-                type="text"
-                value={anvilParams}
-                onChange={(e) => setAnvilParams(e.target.value)}
-                placeholder="Enter Anvil parameters"
-              />
-              <button
-                className="bg-orange-500 text-white text-xs w-24 h-8 rounded active:scale-95 transition-transform duration-100"
-                type="button"
-                onClick={startAnvil}
-              >
-                Start Anvil
-              </button>
-              <button
-                className="bg-red-500 text-xs text-white w-24 h-8 rounded active:scale-95 transition-transform duration-100"
-                type="button"
-                onClick={killAnvil}
-              >
-                Stop Anvil
-              </button>
-            </div>
-          </nav>
-
-          <div className="flex-grow">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route
-                path="/accounts"
-                element={<Accounts accounts={accounts} />}
-              />
-              <Route path="/blocks" element={<Blocks />} />
-              <Route path="/transactions" element={<Transactions />} />
-              <Route path="/events" element={<Events />} />
-              <Route
-                path="/logs-window"
-                element={<LogsWindow output={output} />}
-              />
-            </Routes>
+          <div className="flex items-center space-x-2">
+            <button
+              className=" bg-orange-500 text-white text-xs w-24 h-8 rounded active:scale-95 transition-transform duration-100"
+              type="button"
+              onClick={selectDirectory}
+            >
+              Select Directory
+            </button>
+            <input
+              className="border-2 border-orange-400 text-xs w-80 h-8 px-2 rounded text-black"
+              type="text"
+              value={anvilParams}
+              onChange={(e) => setAnvilParams(e.target.value)}
+              placeholder="Enter Anvil parameters"
+            />
+            <button
+              className="bg-orange-500 text-white text-xs w-24 h-8 rounded active:scale-95 transition-transform duration-100"
+              type="button"
+              onClick={startAnvil}
+            >
+              Start Anvil
+            </button>
+            <button
+              className="bg-red-500 text-xs text-white w-24 h-8 rounded active:scale-95 transition-transform duration-100"
+              type="button"
+              onClick={killAnvil}
+            >
+              Stop Anvil
+            </button>
           </div>
+        </nav>
+
+        <div className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route
+              path="/accounts"
+              element={<Accounts accounts={accounts} />}
+            />
+            <Route path="/blocks" element={<Blocks />} />
+            <Route path="/transactions" element={<Transactions />} />
+            <Route path="/events" element={<Events />} />
+            <Route
+              path="/logs-window"
+              element={<LogsWindow output={output} />}
+            />
+          </Routes>
         </div>
-      </Router>
-    </WagmiConfig>
+      </div>
+    </Router>
   );
 }

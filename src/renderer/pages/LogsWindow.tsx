@@ -1,6 +1,6 @@
 import { useEffect, useRef, useMemo } from 'react';
 
-export default function LogsWindow({ output }: { output: string[] }) {
+export const LogsWindow = ({ output }: { output: string[] }) => {
   const logsContainerRef = useRef<HTMLPreElement | null>(null);
 
   useEffect(() => {
@@ -30,4 +30,4 @@ export default function LogsWindow({ output }: { output: string[] }) {
       </pre>
     </div>
   );
-}
+};

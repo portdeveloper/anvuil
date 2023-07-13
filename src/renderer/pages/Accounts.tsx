@@ -1,10 +1,11 @@
+import { Address } from 'viem';
 import AddressBlock from '../components/AddressBlock';
 
 interface AccountsProps {
-  accounts: string[];
+  accounts: Address[];
 }
 
-export default function Accounts({ accounts }: AccountsProps) {
+export const Accounts = ({ accounts }: AccountsProps) => {
   return (
     <div className="h-full flex items-center justify-center p-5 bg-gray-900 text-white">
       {accounts.length > 0 ? (
@@ -18,4 +19,4 @@ export default function Accounts({ accounts }: AccountsProps) {
       )}
     </div>
   );
-}
+};
