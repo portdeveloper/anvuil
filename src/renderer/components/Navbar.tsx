@@ -42,6 +42,16 @@ export const Navbar = () => {
       </Link>
       <Link
         className={`bg-slate-500 px-3 py-2 hover:bg-slate-600 ${
+          location.pathname === '/Mempool'
+            ? 'bg-slate-700 text-white'
+            : ''
+        }`}
+        to="/mempool"
+      >
+        Mempool
+      </Link>
+      <Link
+        className={`bg-slate-500 px-3 py-2 hover:bg-slate-600 ${
           location.pathname === '/events'
             ? 'bg-slate-700 text-white'
             : ''
