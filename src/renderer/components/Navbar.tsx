@@ -22,7 +22,7 @@ export const Navbar = () => {
       </Link>
       <Link
         className={`bg-slate-500 px-3 py-2 hover:bg-slate-600 ${
-          location.pathname === '/block-explorer'
+          location.pathname === '/blocks'
             ? 'bg-slate-700 text-white'
             : ''
         }`}
@@ -32,7 +32,7 @@ export const Navbar = () => {
       </Link>
       <Link
         className={`bg-slate-500 px-3 py-2 hover:bg-slate-600 ${
-          location.pathname === '/block-explorer'
+          location.pathname === '/transactions'
             ? 'bg-slate-700 text-white'
             : ''
         }`}
@@ -42,7 +42,7 @@ export const Navbar = () => {
       </Link>
       <Link
         className={`bg-slate-500 px-3 py-2 hover:bg-slate-600 ${
-          location.pathname === '/block-explorer'
+          location.pathname === '/events'
             ? 'bg-slate-700 text-white'
             : ''
         }`}
