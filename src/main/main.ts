@@ -213,9 +213,9 @@ app
       });
     });
 
-    ipcMain.handle('kill-anvil', async () => {
-      if (childProcess && !childProcess.killed) {
-        return new Promise((resolve, reject) => {
+    const killAnvil = () => {
+      return new Promise((resolve, reject) => {
+        if (childProcess && !childProcess.killed) {
           try {
             childProcess.kill('SIGINT');
             childProcess = null; // Set the childProcess to null after killing it
@@ -224,15 +224,24 @@ app
             console.error(`Failed to kill process ${childProcess.pid}: ${err}`);
             reject(new Error('Failed to stop Anvil.'));
           }
-        });
-      }
+        } else {
+          resolve('Anvil is not running.');
+        }
+      });
+    };
 
-      console.log(
-        `Process ${
-          childProcess ? childProcess.pid : 'N/A'
-        } either doesn't exist or has already exited`
-      );
-      throw new Error('Anvil is not running.');
+    ipcMain.handle('kill-anvil', async () => {
+      return killAnvil();
+    });
+
+    app.on('before-quit', async (event) => {
+      event.preventDefault(); // Prevent the app from quitting
+      try {
+        await killAnvil(); // Attempt to stop Anvil
+      } catch (err) {
+        console.error(`Failed to stop Anvil before quitting: ${err}`);
+      }
+      app.quit(); // Now quit the app
     });
 
     app.on('activate', () => {
