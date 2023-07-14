@@ -2,13 +2,7 @@ import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 import { useEffect, useReducer, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import {
-  createTestClient,
-  http,
-  publicActions,
-  walletActions,
-  Address,
-} from 'viem';
+import { Address } from 'viem';
 import {
   LogsWindow,
   Home,
@@ -19,26 +13,15 @@ import {
   Events,
 } from 'renderer/pages';
 import { Navbar } from 'renderer/components';
-import { foundry } from 'viem/chains';
 import 'react-toastify/dist/ReactToastify.css';
 import outputReducer from '../utils/outputReducer';
-
-const anvilClient = createTestClient({
-  chain: foundry,
-  mode: 'anvil',
-  transport: http(),
-})
-  .extend(publicActions)
-  .extend(walletActions);
-
-// @todo disable buttons when anvil is running/stopped ?
+import { anvilClient } from './client';
 
 export default function App() {
   const [output, dispatchOutput] = useReducer(outputReducer, []);
   const [directory, setDirectory] = useState(null);
   const [anvilParams, setAnvilParams] = useState('');
   const [accounts, setAccounts] = useState<Address[]>([]);
-  const [isRunning, setIsRunning] = useState(false);
 
   useEffect(() => {
     const handleData = (data: Uint8Array) => {
@@ -85,8 +68,6 @@ export default function App() {
         directory,
         anvilParams
       );
-      setIsRunning(true);
-      localStorage.setItem('anvilRunning', 'true');
       toast.success(message);
       getAddresses();
     } catch (err: any) {
@@ -97,8 +78,6 @@ export default function App() {
   const killAnvil = async () => {
     try {
       const message = await window.electron.ipcRenderer.invoke('kill-anvil');
-      setIsRunning(false);
-      localStorage.setItem('anvilRunning', 'false');
       dispatchOutput({ type: 'reset' });
       setAccounts([]);
       toast.info(message);
@@ -108,9 +87,6 @@ export default function App() {
   };
 
   useEffect(() => {
-    const anvilRunning = localStorage.getItem('anvilRunning');
-    setIsRunning(anvilRunning === 'true');
-
     const fetchDirectory = async () => {
       const dir = await window.electron.ipcRenderer.invoke(
         'get-saved-directory'
@@ -148,30 +124,21 @@ export default function App() {
                 Select Directory
               </button>
               <input
-                disabled={isRunning}
                 className="border-2 border-orange-400 text-xs w-60 h-8 px-2 text-black"
                 type="text"
                 value={anvilParams}
                 onChange={(e) => setAnvilParams(e.target.value)}
                 placeholder="Enter Anvil parameters"
               />
-
               <button
-                disabled={isRunning}
-                className={`bg-orange-500 text-white text-xs w-24 h-8 active:scale-95 transition-transform duration-100 ${
-                  isRunning ? 'opacity-50' : ''
-                }`}
+                className="bg-orange-500 text-white text-xs w-24 h-8 active:scale-95 transition-transform duration-100"
                 type="button"
                 onClick={startAnvil}
               >
                 Start Anvil
               </button>
-
               <button
-                disabled={!isRunning}
-                className={`bg-red-500 text-xs text-white w-24 h-8 active:scale-95 transition-transform duration-100 ${
-                  !isRunning ? 'opacity-50' : ''
-                }`}
+                className="bg-red-500 text-xs text-white w-24 h-8 active:scale-95 transition-transform duration-100"
                 type="button"
                 onClick={killAnvil}
               >
@@ -186,7 +153,6 @@ export default function App() {
             <div>searchbar?</div>
           </div>
         </nav>
-
         <div className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
