@@ -1,5 +1,11 @@
 import { useEffect, useRef, useMemo } from 'react';
 
+/**
+ * @remind check if it really works?
+ * sometimes it displays things more than once
+ *
+ */
+
 export const LogsWindow = ({ output }: { output: string[] }) => {
   const logsContainerRef = useRef<HTMLPreElement | null>(null);
 

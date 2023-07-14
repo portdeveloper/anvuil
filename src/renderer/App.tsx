@@ -37,6 +37,7 @@ export default function App() {
   const [directory, setDirectory] = useState(null);
   const [anvilParams, setAnvilParams] = useState('');
   const [accounts, setAccounts] = useState<Address[]>([]);
+  const [isRunning, setIsRunning] = useState(false);
 
   useEffect(() => {
     const handleData = (data: Uint8Array) => {
@@ -83,6 +84,8 @@ export default function App() {
         directory,
         anvilParams
       );
+      setIsRunning(true);
+      localStorage.setItem('anvilRunning', 'true');
       toast.success(message);
       getAddresses();
     } catch (err: any) {
@@ -93,6 +96,8 @@ export default function App() {
   const killAnvil = async () => {
     try {
       const message = await window.electron.ipcRenderer.invoke('kill-anvil');
+      setIsRunning(false);
+      localStorage.setItem('anvilRunning', 'false');
       dispatchOutput({ type: 'reset' });
       setAccounts([]);
       toast.info(message);
@@ -102,6 +107,9 @@ export default function App() {
   };
 
   useEffect(() => {
+    const anvilRunning = localStorage.getItem('anvilRunning');
+    setIsRunning(anvilRunning === 'true');
+
     const fetchDirectory = async () => {
       const dir = await window.electron.ipcRenderer.invoke(
         'get-saved-directory'
@@ -127,38 +135,54 @@ export default function App() {
         theme="dark"
       />
       <div className="h-screen flex flex-col">
-        <nav className="flex items-center justify-between bg-gray-800 p-6 text-white">
-          <Navbar />
+        <nav>
+          <div className="flex items-center justify-between bg-gray-800 p-3 text-white">
+            <Navbar />
+            <div className="flex items-center space-x-2">
+              <button
+                className=" bg-orange-500 text-white text-xs w-24 h-8 active:scale-95 transition-transform duration-100"
+                type="button"
+                onClick={selectDirectory}
+              >
+                Select Directory
+              </button>
+              <input
+                disabled={isRunning}
+                className="border-2 border-orange-400 text-xs w-80 h-8 px-2 text-black"
+                type="text"
+                value={anvilParams}
+                onChange={(e) => setAnvilParams(e.target.value)}
+                placeholder="Enter Anvil parameters"
+              />
 
-          <div className="flex items-center space-x-2">
-            <button
-              className=" bg-orange-500 text-white text-xs w-24 h-8 rounded active:scale-95 transition-transform duration-100"
-              type="button"
-              onClick={selectDirectory}
-            >
-              Select Directory
-            </button>
-            <input
-              className="border-2 border-orange-400 text-xs w-80 h-8 px-2 rounded text-black"
-              type="text"
-              value={anvilParams}
-              onChange={(e) => setAnvilParams(e.target.value)}
-              placeholder="Enter Anvil parameters"
-            />
-            <button
-              className="bg-orange-500 text-white text-xs w-24 h-8 rounded active:scale-95 transition-transform duration-100"
-              type="button"
-              onClick={startAnvil}
-            >
-              Start Anvil
-            </button>
-            <button
-              className="bg-red-500 text-xs text-white w-24 h-8 rounded active:scale-95 transition-transform duration-100"
-              type="button"
-              onClick={killAnvil}
-            >
-              Stop Anvil
-            </button>
+              <button
+                disabled={isRunning}
+                className={`bg-orange-500 text-white text-xs w-24 h-8 active:scale-95 transition-transform duration-100 ${
+                  isRunning ? 'opacity-50' : ''
+                }`}
+                type="button"
+                onClick={startAnvil}
+              >
+                Start Anvil
+              </button>
+
+              <button
+                disabled={!isRunning}
+                className={`bg-red-500 text-xs text-white w-24 h-8 active:scale-95 transition-transform duration-100 ${
+                  !isRunning ? 'opacity-50' : ''
+                }`}
+                type="button"
+                onClick={killAnvil}
+              >
+                Stop Anvil
+              </button>
+            </div>
+          </div>
+          <div className="flex gap-10 bg-green-400">
+            <div>Current block:</div>
+            <div>Mining status:</div>
+            <div>other info about current state of local node</div>
+            <div>searchbar?</div>
           </div>
         </nav>
 

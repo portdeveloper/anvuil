@@ -38,14 +38,22 @@ export const Blocks = () => {
   }, [blockNumber]);
 
   return (
-    <div className="flex flex-col flex-grow h-full items-center justify-center p-10 bg-gray-900 text-white">
+    <div className="flex flex-col items-center p-5 bg-gray-900 text-white overflow-hidden h-full">
       <h1>Block number: {blockNumber?.toString()}</h1>
-      <div className="flex flex-col gap-4">
+      <div className="overflow-auto flex flex-col gap-4 w-full h-0 flex-grow">
         {blocks.map((block) => (
-          <div>
-            <p key={block.hash} className="flex flex-col bg-slate-500 p-4">
-              {block.hash}
-            </p>
+          <div className="flex flex-col bg-slate-500 p-4">
+            <p key={block.hash}>Block hash: {block.hash}</p>
+            <p>Gas limit: {Number(block.gasLimit)}</p>
+            <p>Gas used: {Number(block.gasUsed)}</p>
+            <div>
+              Transactions:
+              {block.transactions.map((tx) => (
+                <div>
+                  <p>{tx.toString()}</p>
+                </div>
+              ))}
+            </div>
           </div>
         ))}
       </div>
