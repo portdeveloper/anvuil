@@ -12,10 +12,11 @@ import {
 import {
   LogsWindow,
   Home,
+  Accounts,
   Blocks,
   Transactions,
+  Mempool,
   Events,
-  Accounts,
 } from 'renderer/pages';
 import { Navbar } from 'renderer/components';
 import { foundry } from 'viem/chains';
@@ -148,7 +149,7 @@ export default function App() {
               </button>
               <input
                 disabled={isRunning}
-                className="border-2 border-orange-400 text-xs w-80 h-8 px-2 text-black"
+                className="border-2 border-orange-400 text-xs w-60 h-8 px-2 text-black"
                 type="text"
                 value={anvilParams}
                 onChange={(e) => setAnvilParams(e.target.value)}
@@ -195,6 +196,7 @@ export default function App() {
             />
             <Route path="/blocks" element={<Blocks />} />
             <Route path="/transactions" element={<Transactions />} />
+            <Route path="/mempool" element={<Mempool />} />
             <Route path="/events" element={<Events />} />
             <Route
               path="/logs-window"
