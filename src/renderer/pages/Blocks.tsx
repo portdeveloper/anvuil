@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { BlocksContext } from '../BlocksContext';
 
 export const Blocks = () => {
-  const { blocks, transactions } = useContext(BlocksContext);
+  const { blocks } = useContext(BlocksContext);
 
   return (
     <div className="flex flex-col items-center p-5 bg-gray-900 text-white overflow-hidden h-full">

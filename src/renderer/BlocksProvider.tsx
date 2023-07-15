@@ -23,9 +23,7 @@ export const BlocksProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const unwatch = anvilClient.watchBlocks({
       onBlock: (block) => {
-        console.log(block);
         setBlockNumber(Number(block.number));
-        console.log(block.number);
         setBlocks((prev) => [...prev, block]);
       },
       onError: (error) => console.log(error),
@@ -34,7 +32,6 @@ export const BlocksProvider = ({ children }: { children: React.ReactNode }) => {
       unwatch();
     };
   }, []);
-  console.log('useeffect blocknum', blockNumber);
 
   return (
     <BlocksContext.Provider value={value}>{children}</BlocksContext.Provider>

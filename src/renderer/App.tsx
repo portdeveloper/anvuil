@@ -25,7 +25,7 @@ export default function App() {
   const [anvilParams, setAnvilParams] = useState('');
   const [accounts, setAccounts] = useState<Address[]>([]);
 
-  const { blockNumber, reset } = useContext(BlocksContext);
+  const { reset } = useContext(BlocksContext);
 
   useEffect(() => {
     const handleData = (data: Uint8Array) => {

@@ -3,7 +3,6 @@ import { BlocksContext } from 'renderer/BlocksContext';
 
 export const InfoBar = () => {
   const { blockNumber } = useContext(BlocksContext);
-  console.log(blockNumber);
 
   return (
     <div className="flex gap-10 bg-green-400">
