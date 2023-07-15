@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { BlocksContext } from './BlocksContext';
 import { anvilClient } from './client';
-import { Block } from 'viem';
+import { Block, Transaction } from 'viem';
 
 export const BlocksProvider = ({ children }: { children: React.ReactNode }) => {
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [blockNumber, setBlockNumber] = useState<number>(0);
-  const [transactions, setTransactions] = useState<any[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]); // @todo type
 
   const [anvilStatus, setAnvilStatus] = useState(false); // false means Anvil is not running
 
@@ -40,6 +40,26 @@ export const BlocksProvider = ({ children }: { children: React.ReactNode }) => {
       },
       onError: (error) => console.log(error),
     });
+
+    return () => {
+      unwatch();
+    };
+  }, [anvilStatus]);
+
+  useEffect(() => {
+    const unwatch = anvilClient.watchPendingTransactions({
+      onTransactions: async (txHashes) => {
+        const fetchedTransactions = await Promise.all(
+          txHashes.map((tx) => anvilClient.getTransaction({ hash: tx }))
+        );
+
+        setTransactions((prev) => [...prev, ...fetchedTransactions]);
+      },
+      onError: (error) => console.log(error),
+    });
+
+    console.log(transactions);
+
     return () => {
       unwatch();
     };
