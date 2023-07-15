@@ -16,7 +16,6 @@ import { Navbar, InfoBar } from 'renderer/components';
 import 'react-toastify/dist/ReactToastify.css';
 import outputReducer from '../utils/outputReducer';
 import { anvilClient } from './client';
-import { BlocksProvider } from './BlocksProvider';
 import { BlocksContext } from './BlocksContext';
 
 export default function App() {
@@ -25,7 +24,7 @@ export default function App() {
   const [anvilParams, setAnvilParams] = useState('');
   const [accounts, setAccounts] = useState<Address[]>([]);
 
-  const { reset } = useContext(BlocksContext);
+  const { reset, toggleAnvilStatus } = useContext(BlocksContext);
 
   useEffect(() => {
     const handleData = (data: Uint8Array) => {
@@ -80,6 +79,7 @@ export default function App() {
       );
       toast.success(message);
       getAddresses();
+      toggleAnvilStatus();
     } catch (err: any) {
       toast.error(err.toString());
     }
@@ -93,9 +93,10 @@ export default function App() {
     try {
       const message = await window.electron.ipcRenderer.invoke('kill-anvil');
       dispatchOutput({ type: 'reset' });
-      reset();
       setAccounts([]);
+      reset();
       toast.info(message);
+      toggleAnvilStatus();
     } catch (err: any) {
       toast.error(err.toString());
     }
@@ -126,65 +127,64 @@ export default function App() {
         pauseOnHover
         theme="dark"
       />
-      <BlocksProvider>
-        <div className="h-screen flex flex-col">
-          <nav>
-            <div className="flex items-center justify-between bg-gray-800 p-3 text-white">
-              <Navbar />
-              <div className="flex items-center space-x-2">
-                <button
-                  className=" bg-orange-500 text-white text-xs w-24 h-8 active:scale-95 transition-transform duration-100"
-                  type="button"
-                  onClick={selectDirectory}
-                >
-                  Select Directory
-                </button>
-                <input
-                  className="border-2 border-orange-400 text-xs w-60 h-8 px-2 text-black"
-                  type="text"
-                  value={anvilParams}
-                  onChange={(e) => setAnvilParams(e.target.value)}
-                  placeholder="Enter Anvil parameters"
-                />
-                <button
-                  className="bg-orange-500 text-white text-xs w-24 h-8 active:scale-95 transition-transform duration-100"
-                  type="button"
-                  onClick={startAnvil}
-                >
-                  Start Anvil
-                </button>
-                <button
-                  className="bg-red-500 text-xs text-white w-24 h-8 active:scale-95 transition-transform duration-100"
-                  type="button"
-                  onClick={killAnvil}
-                >
-                  Stop Anvil
-                </button>
-              </div>
-            </div>
-            <div className="flex gap-10 bg-green-400">
-              <InfoBar />
-            </div>
-          </nav>
-          <div className="flex-grow">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route
-                path="/accounts"
-                element={<Accounts accounts={accounts} />}
+
+      <div className="h-screen flex flex-col">
+        <nav>
+          <div className="flex items-center justify-between bg-gray-800 p-3 text-white">
+            <Navbar />
+            <div className="flex items-center space-x-2">
+              <button
+                className=" bg-orange-500 text-white text-xs w-24 h-8 active:scale-95 transition-transform duration-100"
+                type="button"
+                onClick={selectDirectory}
+              >
+                Select Directory
+              </button>
+              <input
+                className="border-2 border-orange-400 text-xs w-60 h-8 px-2 text-black"
+                type="text"
+                value={anvilParams}
+                onChange={(e) => setAnvilParams(e.target.value)}
+                placeholder="Enter Anvil parameters"
               />
-              <Route path="/blocks" element={<Blocks />} />
-              <Route path="/transactions" element={<Transactions />} />
-              <Route path="/mempool" element={<Mempool />} />
-              <Route path="/events" element={<Events />} />
-              <Route
-                path="/logs-window"
-                element={<LogsWindow output={output} />}
-              />
-            </Routes>
+              <button
+                className="bg-orange-500 text-white text-xs w-24 h-8 active:scale-95 transition-transform duration-100"
+                type="button"
+                onClick={startAnvil}
+              >
+                Start Anvil
+              </button>
+              <button
+                className="bg-red-500 text-xs text-white w-24 h-8 active:scale-95 transition-transform duration-100"
+                type="button"
+                onClick={killAnvil}
+              >
+                Stop Anvil
+              </button>
+            </div>
           </div>
+          <div className="flex gap-10 bg-green-400">
+            <InfoBar />
+          </div>
+        </nav>
+        <div className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route
+              path="/accounts"
+              element={<Accounts accounts={accounts} />}
+            />
+            <Route path="/blocks" element={<Blocks />} />
+            <Route path="/transactions" element={<Transactions />} />
+            <Route path="/mempool" element={<Mempool />} />
+            <Route path="/events" element={<Events />} />
+            <Route
+              path="/logs-window"
+              element={<LogsWindow output={output} />}
+            />
+          </Routes>
         </div>
-      </BlocksProvider>
+      </div>
     </Router>
   );
 }

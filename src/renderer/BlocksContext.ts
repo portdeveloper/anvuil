@@ -6,6 +6,7 @@ type BlocksContextType = {
   blockNumber: number;
   transactions: any[]; // @todo type
   reset: () => void;
+  toggleAnvilStatus: () => void;
 };
 
 export const BlocksContext = createContext<BlocksContextType>({
@@ -13,4 +14,5 @@ export const BlocksContext = createContext<BlocksContextType>({
   blockNumber: 0,
   transactions: [],
   reset: () => {},
+  toggleAnvilStatus: () => {},
 });

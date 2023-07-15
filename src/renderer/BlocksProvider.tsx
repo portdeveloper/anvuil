@@ -8,15 +8,27 @@ export const BlocksProvider = ({ children }: { children: React.ReactNode }) => {
   const [blockNumber, setBlockNumber] = useState<number>(0);
   const [transactions, setTransactions] = useState<any[]>([]);
 
+  const [anvilStatus, setAnvilStatus] = useState(false); // false means Anvil is not running
+
+  const toggleAnvilStatus = () => {
+    setAnvilStatus((prevStatus) => !prevStatus);
+  };
+
   const resetBlocksContext = () => {
     setBlocks([]);
     setBlockNumber(0);
     setTransactions([]);
-    console.log('ATTEMPTING RESET');
+    console.log('->>RESETTING BlocksContext');
   };
 
   const value = useMemo(
-    () => ({ blocks, blockNumber, transactions, reset: resetBlocksContext }),
+    () => ({
+      blocks,
+      blockNumber,
+      transactions,
+      reset: resetBlocksContext,
+      toggleAnvilStatus,
+    }),
     [blocks, blockNumber, transactions]
   );
 
@@ -31,7 +43,7 @@ export const BlocksProvider = ({ children }: { children: React.ReactNode }) => {
     return () => {
       unwatch();
     };
-  }, []);
+  }, [anvilStatus]);
 
   return (
     <BlocksContext.Provider value={value}>{children}</BlocksContext.Provider>
