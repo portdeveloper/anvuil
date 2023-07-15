@@ -4,9 +4,13 @@ import { BlocksContext } from '../BlocksContext';
 export const Blocks = () => {
   const { blocks } = useContext(BlocksContext);
 
-  return (
-    <div className="flex flex-col items-center p-5 bg-gray-900 text-white overflow-hidden h-full">
-      <div className="overflow-auto flex flex-col gap-4 w-full h-0 flex-grow">
+  return blocks.length === 0 ? (
+    <div className="h-full flex items-center justify-center p-5 bg-gray-900 text-white">
+      No blocks yet, please start anvil
+    </div>
+  ) : (
+    <div className="h-full flex items-center justify-center p-5 bg-gray-900 text-white">
+      <div className="flex flex-col gap-2 w-full max-h-[600px] overflow-auto">
         {blocks.map((block) => (
           <div key={block.hash} className="flex flex-col bg-slate-500 p-4">
             <p key={block.hash}>Block hash: {block.hash}</p>
