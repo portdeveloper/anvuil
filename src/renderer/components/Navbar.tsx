@@ -22,9 +22,7 @@ export const Navbar = () => {
       </Link>
       <Link
         className={`bg-slate-500 px-3 py-2 hover:bg-slate-600 ${
-          location.pathname === '/blocks'
-            ? 'bg-slate-700 text-white'
-            : ''
+          location.pathname === '/blocks' ? 'bg-slate-700 text-white' : ''
         }`}
         to="/blocks"
       >
@@ -32,9 +30,7 @@ export const Navbar = () => {
       </Link>
       <Link
         className={`bg-slate-500 px-3 py-2 hover:bg-slate-600 ${
-          location.pathname === '/transactions'
-            ? 'bg-slate-700 text-white'
-            : ''
+          location.pathname === '/transactions' ? 'bg-slate-700 text-white' : ''
         }`}
         to="/transactions"
       >
@@ -42,9 +38,7 @@ export const Navbar = () => {
       </Link>
       <Link
         className={`bg-slate-500 px-3 py-2 hover:bg-slate-600 ${
-          location.pathname === '/Mempool'
-            ? 'bg-slate-700 text-white'
-            : ''
+          location.pathname === '/Mempool' ? 'bg-slate-700 text-white' : ''
         }`}
         to="/mempool"
       >
@@ -52,9 +46,7 @@ export const Navbar = () => {
       </Link>
       <Link
         className={`bg-slate-500 px-3 py-2 hover:bg-slate-600 ${
-          location.pathname === '/events'
-            ? 'bg-slate-700 text-white'
-            : ''
+          location.pathname === '/events' ? 'bg-slate-700 text-white' : ''
         }`}
         to="/events"
       >
