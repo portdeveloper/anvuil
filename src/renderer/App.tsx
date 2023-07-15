@@ -1,6 +1,6 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
-import { useEffect, useReducer, useState } from 'react';
+import { useContext, useEffect, useReducer, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { Address } from 'viem';
 import {
@@ -12,16 +12,20 @@ import {
   Mempool,
   Events,
 } from 'renderer/pages';
-import { Navbar } from 'renderer/components';
+import { Navbar, InfoBar } from 'renderer/components';
 import 'react-toastify/dist/ReactToastify.css';
 import outputReducer from '../utils/outputReducer';
 import { anvilClient } from './client';
+import { BlocksProvider } from './BlocksProvider';
+import { BlocksContext } from './BlocksContext';
 
 export default function App() {
   const [output, dispatchOutput] = useReducer(outputReducer, []);
   const [directory, setDirectory] = useState(null);
   const [anvilParams, setAnvilParams] = useState('');
   const [accounts, setAccounts] = useState<Address[]>([]);
+
+  const { blockNumber, reset } = useContext(BlocksContext);
 
   useEffect(() => {
     const handleData = (data: Uint8Array) => {
@@ -57,7 +61,13 @@ export default function App() {
   };
 
   const startAnvil = async () => {
-    if (!directory) {
+    let dir = directory;
+    if (!dir) {
+      dir = await window.electron.ipcRenderer.invoke('get-saved-directory');
+      setDirectory(dir);
+    }
+
+    if (!dir) {
       toast.error('Please select a directory first.');
       return;
     }
@@ -65,7 +75,7 @@ export default function App() {
     try {
       const message = await window.electron.ipcRenderer.invoke(
         'start-anvil',
-        directory,
+        dir,
         anvilParams
       );
       toast.success(message);
@@ -75,10 +85,15 @@ export default function App() {
     }
   };
 
+  useEffect(() => {
+    startAnvil();
+  }, []);
+
   const killAnvil = async () => {
     try {
       const message = await window.electron.ipcRenderer.invoke('kill-anvil');
       dispatchOutput({ type: 'reset' });
+      reset();
       setAccounts([]);
       toast.info(message);
     } catch (err: any) {
@@ -111,66 +126,65 @@ export default function App() {
         pauseOnHover
         theme="dark"
       />
-      <div className="h-screen flex flex-col">
-        <nav>
-          <div className="flex items-center justify-between bg-gray-800 p-3 text-white">
-            <Navbar />
-            <div className="flex items-center space-x-2">
-              <button
-                className=" bg-orange-500 text-white text-xs w-24 h-8 active:scale-95 transition-transform duration-100"
-                type="button"
-                onClick={selectDirectory}
-              >
-                Select Directory
-              </button>
-              <input
-                className="border-2 border-orange-400 text-xs w-60 h-8 px-2 text-black"
-                type="text"
-                value={anvilParams}
-                onChange={(e) => setAnvilParams(e.target.value)}
-                placeholder="Enter Anvil parameters"
-              />
-              <button
-                className="bg-orange-500 text-white text-xs w-24 h-8 active:scale-95 transition-transform duration-100"
-                type="button"
-                onClick={startAnvil}
-              >
-                Start Anvil
-              </button>
-              <button
-                className="bg-red-500 text-xs text-white w-24 h-8 active:scale-95 transition-transform duration-100"
-                type="button"
-                onClick={killAnvil}
-              >
-                Stop Anvil
-              </button>
+      <BlocksProvider>
+        <div className="h-screen flex flex-col">
+          <nav>
+            <div className="flex items-center justify-between bg-gray-800 p-3 text-white">
+              <Navbar />
+              <div className="flex items-center space-x-2">
+                <button
+                  className=" bg-orange-500 text-white text-xs w-24 h-8 active:scale-95 transition-transform duration-100"
+                  type="button"
+                  onClick={selectDirectory}
+                >
+                  Select Directory
+                </button>
+                <input
+                  className="border-2 border-orange-400 text-xs w-60 h-8 px-2 text-black"
+                  type="text"
+                  value={anvilParams}
+                  onChange={(e) => setAnvilParams(e.target.value)}
+                  placeholder="Enter Anvil parameters"
+                />
+                <button
+                  className="bg-orange-500 text-white text-xs w-24 h-8 active:scale-95 transition-transform duration-100"
+                  type="button"
+                  onClick={startAnvil}
+                >
+                  Start Anvil
+                </button>
+                <button
+                  className="bg-red-500 text-xs text-white w-24 h-8 active:scale-95 transition-transform duration-100"
+                  type="button"
+                  onClick={killAnvil}
+                >
+                  Stop Anvil
+                </button>
+              </div>
             </div>
+            <div className="flex gap-10 bg-green-400">
+              <InfoBar />
+            </div>
+          </nav>
+          <div className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route
+                path="/accounts"
+                element={<Accounts accounts={accounts} />}
+              />
+              <Route path="/blocks" element={<Blocks />} />
+              <Route path="/transactions" element={<Transactions />} />
+              <Route path="/mempool" element={<Mempool />} />
+              <Route path="/events" element={<Events />} />
+              <Route
+                path="/logs-window"
+                element={<LogsWindow output={output} />}
+              />
+            </Routes>
           </div>
-          <div className="flex gap-10 bg-green-400">
-            <div>Current block:</div>
-            <div>Mining status:</div>
-            <div>other info about current state of local node</div>
-            <div>searchbar?</div>
-          </div>
-        </nav>
-        <div className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route
-              path="/accounts"
-              element={<Accounts accounts={accounts} />}
-            />
-            <Route path="/blocks" element={<Blocks />} />
-            <Route path="/transactions" element={<Transactions />} />
-            <Route path="/mempool" element={<Mempool />} />
-            <Route path="/events" element={<Events />} />
-            <Route
-              path="/logs-window"
-              element={<LogsWindow output={output} />}
-            />
-          </Routes>
         </div>
-      </div>
+      </BlocksProvider>
     </Router>
   );
 }
