@@ -23,7 +23,7 @@ export const InfoBar = () => {
   return (
     <div className="flex gap-10 bg-green-400">
       <div>Current block: {blockNumber}</div>
-      <div>Mining status: {autoMining ? 'true' : 'false'}</div>
+      <div>AutoMining status: {autoMining ? 'true' : 'false'}</div>
       <div>other info about current state of local node</div>
       <div>searchbar?</div>
     </div>
