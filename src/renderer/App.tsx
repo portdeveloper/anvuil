@@ -1,5 +1,5 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
-import 'tailwindcss/tailwind.css';
+import './App.css';
 import { useContext, useEffect, useReducer, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { Address } from 'viem';
@@ -132,36 +132,7 @@ export default function App() {
         <nav>
           <div className="flex items-center justify-between bg-gray-800 p-3 text-white">
             <Navbar />
-            <div className="flex items-center space-x-2">
-              <button
-                className=" bg-orange-500 text-white text-xs w-24 h-8 active:scale-95 transition-transform duration-100"
-                type="button"
-                onClick={selectDirectory}
-              >
-                Select Directory
-              </button>
-              <input
-                className="border-2 border-orange-400 text-xs w-60 h-8 px-2 text-black"
-                type="text"
-                value={anvilParams}
-                onChange={(e) => setAnvilParams(e.target.value)}
-                placeholder="Enter Anvil parameters"
-              />
-              <button
-                className="bg-orange-500 text-white text-xs w-24 h-8 active:scale-95 transition-transform duration-100"
-                type="button"
-                onClick={startAnvil}
-              >
-                Start Anvil
-              </button>
-              <button
-                className="bg-red-500 text-xs text-white w-24 h-8 active:scale-95 transition-transform duration-100"
-                type="button"
-                onClick={killAnvil}
-              >
-                Stop Anvil
-              </button>
-            </div>
+            {/* add parameters below */}
           </div>
           <div className="flex gap-10 bg-green-400">
             <InfoBar />
@@ -169,7 +140,18 @@ export default function App() {
         </nav>
         <div className="flex-grow">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route
+              path="/"
+              element={
+                <Home
+                  selectDirectory={selectDirectory}
+                  anvilParams={anvilParams}
+                  setAnvilParams={setAnvilParams}
+                  startAnvil={startAnvil}
+                  killAnvil={killAnvil}
+                />
+              }
+            />
             <Route
               path="/accounts"
               element={<Accounts accounts={accounts} />}
