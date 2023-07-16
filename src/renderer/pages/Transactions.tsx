@@ -16,7 +16,7 @@ export const Transactions = () => {
             <p>tx hash: {tx.hash}</p>
             <p>tx from: {tx.from}</p>
             <p>tx to: {tx.to}</p>
-            <p>tx value: {tx.value}</p>
+            <p>tx value: {Number(tx.value)}</p>
           </div>
         ))}
       </div>
