@@ -43,7 +43,7 @@ export const BlocksProvider = ({ children }: { children: React.ReactNode }) => {
               anvilClient.getTransaction({ hash: tx as Transaction['hash'] })
             )
           );
-
+          console.log("TRYING TO GET TXs");
           setTransactions((prev) => [...prev, ...fetchedTransactions]);
         } catch (error) {
           console.error('Failed to fetch transactions: ', error);
