@@ -2,11 +2,11 @@ import { useContext } from 'react';
 import { BlocksContext } from '../BlocksContext';
 
 export const Transactions = () => {
-  const { transactions } = useContext(BlocksContext);
+  const { transactions, anvilStatus } = useContext(BlocksContext);
 
   return transactions.length === 0 ? (
     <div className="h-full flex items-center justify-center p-5 bg-gray-900 text-white">
-      No transactions yet, please start anvil
+      {anvilStatus ? 'No transactions yet.' : 'Anvil is not running.'}
     </div>
   ) : (
     <div className="flex flex-col items-center p-5 bg-gray-900 text-white overflow-hidden h-full">

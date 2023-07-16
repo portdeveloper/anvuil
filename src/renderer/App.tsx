@@ -132,7 +132,6 @@ export default function App() {
         <nav>
           <div className="flex items-center justify-between bg-gray-800 p-3 text-white">
             <Navbar />
-            {/* add parameters below */}
           </div>
           <div className="flex gap-10 bg-green-400">
             <InfoBar />

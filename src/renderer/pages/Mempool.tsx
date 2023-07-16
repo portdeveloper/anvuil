@@ -3,7 +3,7 @@ import { BlocksContext } from '../BlocksContext';
 import { Transaction } from 'viem';
 
 export const Mempool = () => {
-  const { mempool } = useContext(BlocksContext);
+  const { mempool, anvilStatus } = useContext(BlocksContext);
 
   const pending: { [address: string]: { [nonce: string]: Transaction } } =
     mempool.pending as any;
@@ -13,7 +13,9 @@ export const Mempool = () => {
   return Object.keys(pending).length === 0 &&
     Object.keys(queued).length === 0 ? (
     <div className="h-full flex items-center justify-center p-5 bg-gray-900 text-white">
-      Mempool is empty
+      {anvilStatus
+        ? 'No transactions in the mempool yet.'
+        : 'Anvil is not running.'}
     </div>
   ) : (
     <div className="flex items-center p-5 bg-gray-900 text-white overflow-hidden h-full">

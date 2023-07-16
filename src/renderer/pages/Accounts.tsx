@@ -8,7 +8,7 @@ interface AccountsProps {
 export const Accounts = ({ accounts }: AccountsProps) => {
   return accounts.length === 0 ? (
     <div className="h-full flex items-center justify-center p-5 bg-gray-900 text-white">
-      No accounts yet, please start anvil
+      Anvil is not running.
     </div>
   ) : (
     <div className="h-full flex items-center justify-center p-5 bg-gray-900 text-white">
