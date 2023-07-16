@@ -1,22 +1,47 @@
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef, useMemo, useState } from 'react';
 
-/**
- * @remind check if it really works?
- * sometimes it displays things more than once
- *
- */
+interface OutputLine {
+  timestamp: string;
+  message: string;
+  count: number;
+}
 
-export const LogsWindow = ({ output }: { output: string[] }) => {
+export const LogsWindow = ({ output }: { output: OutputLine[] }) => {
   const logsContainerRef = useRef<HTMLPreElement | null>(null);
+  const [manuallyScrolled, setManuallyScrolled] = useState(false);
 
   useEffect(() => {
-    if (logsContainerRef.current) {
+    const handleScroll = () => {
+      if (!logsContainerRef.current) return;
+
+      const { scrollTop, scrollHeight, clientHeight } =
+        logsContainerRef.current;
+      const atBottom = scrollHeight - scrollTop === clientHeight;
+
+      setManuallyScrolled(!atBottom);
+    };
+
+    logsContainerRef.current?.addEventListener('scroll', handleScroll);
+
+    return () => {
+      logsContainerRef.current?.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!manuallyScrolled && logsContainerRef.current) {
       logsContainerRef.current.scrollTop =
         logsContainerRef.current.scrollHeight;
     }
-  }, [output]);
+  }, [output, manuallyScrolled]);
 
-  const outputString = useMemo(() => output.join('\n'), [output]);
+  const outputString = useMemo(
+    () =>
+      output
+        .map((line) => `[x${line.count}] ${line.timestamp} ${line.message}`)
+        .join('\n'),
+    [output]
+  );
 
   if (!output.length) {
     return (
