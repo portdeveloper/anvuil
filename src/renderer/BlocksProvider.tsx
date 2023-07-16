@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { BlocksContext } from './BlocksContext';
 import { anvilClient } from './client';
 import { Block, Transaction, Log } from 'viem';
+import { toast } from 'react-toastify';
 
 export const BlocksProvider = ({ children }: { children: React.ReactNode }) => {
   const [blocks, setBlocks] = useState<Block[]>([]);
@@ -44,16 +45,13 @@ export const BlocksProvider = ({ children }: { children: React.ReactNode }) => {
         setBlockNumber(Number(block.number));
         setBlocks((prev) => [...prev, block]);
 
-        try {
-          const fetchedTransactions = await Promise.all(
-            block.transactions.map((tx) =>
-              anvilClient.getTransaction({ hash: tx as Transaction['hash'] })
-            )
-          );
-          setTransactions((prev) => [...prev, ...fetchedTransactions]);
-        } catch (error) {
-          console.error('Failed to fetch transactions: ', error);
-        }
+        const fetchedTransactions = await Promise.all(
+          block.transactions.map((tx) =>
+            anvilClient.getTransaction({ hash: tx as Transaction['hash'] })
+          )
+        );
+        console.log('fetchedTransactions: ', fetchedTransactions);
+        setTransactions((prev) => [...prev, ...fetchedTransactions]);
       },
       onError: (error) => console.log(error),
     });
@@ -83,6 +81,7 @@ export const BlocksProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const unwatch = anvilClient.watchEvent({
       onLogs: (logs) => setLogs((prev) => [...prev, ...logs]),
+      onError: (error) => toast.error(error?.message),
     });
     console.log('watching event');
     return () => {

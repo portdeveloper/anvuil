@@ -24,7 +24,7 @@ export default function App() {
   const [anvilParams, setAnvilParams] = useState('');
   const [accounts, setAccounts] = useState<Address[]>([]);
 
-  const { reset, toggleAnvilStatus } = useContext(BlocksContext);
+  const { reset, toggleAnvilStatus, anvilStatus } = useContext(BlocksContext);
 
   useEffect(() => {
     const handleData = (data: Uint8Array) => {
@@ -79,7 +79,9 @@ export default function App() {
       );
       toast.success(message);
       getAddresses();
-      toggleAnvilStatus();
+      if (!anvilStatus) {
+        toggleAnvilStatus();
+      }
     } catch (err: any) {
       toast.error(err.toString());
     }
@@ -96,7 +98,9 @@ export default function App() {
       setAccounts([]);
       reset();
       toast.info(message);
-      toggleAnvilStatus();
+      if (anvilStatus) {
+        toggleAnvilStatus();
+      }
     } catch (err: any) {
       toast.error(err.toString());
     }
