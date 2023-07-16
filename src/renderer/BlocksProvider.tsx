@@ -18,7 +18,6 @@ export const BlocksProvider = ({ children }: { children: React.ReactNode }) => {
     setBlocks([]);
     setBlockNumber(0);
     setTransactions([]);
-    console.log('->>RESETTING BlocksContext');
   };
 
   const value = useMemo(
@@ -34,31 +33,24 @@ export const BlocksProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const unwatch = anvilClient.watchBlocks({
-      onBlock: (block) => {
+      onBlock: async (block) => {
         setBlockNumber(Number(block.number));
         setBlocks((prev) => [...prev, block]);
+
+        try {
+          const fetchedTransactions = await Promise.all(
+            block.transactions.map((tx) =>
+              anvilClient.getTransaction({ hash: tx as Transaction['hash'] })
+            )
+          );
+
+          setTransactions((prev) => [...prev, ...fetchedTransactions]);
+        } catch (error) {
+          console.error('Failed to fetch transactions: ', error);
+        }
       },
       onError: (error) => console.log(error),
     });
-
-    return () => {
-      unwatch();
-    };
-  }, [anvilStatus]);
-
-  useEffect(() => {
-    const unwatch = anvilClient.watchPendingTransactions({
-      onTransactions: async (txHashes) => {
-        const fetchedTransactions = await Promise.all(
-          txHashes.map((tx) => anvilClient.getTransaction({ hash: tx }))
-        );
-
-        setTransactions((prev) => [...prev, ...fetchedTransactions]);
-      },
-      onError: (error) => console.log(error),
-    });
-
-    console.log(transactions);
 
     return () => {
       unwatch();
