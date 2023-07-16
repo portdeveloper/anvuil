@@ -1,10 +1,11 @@
 import { createContext } from 'react';
-import { Block } from 'viem';
+import { Block, Transaction } from 'viem';
 
 type BlocksContextType = {
   blocks: Block[];
   blockNumber: number;
-  transactions: any[]; // @todo type
+  transactions: Transaction[];
+  mempool: any; // @todo type
   reset: () => void;
   toggleAnvilStatus: () => void;
 };
@@ -13,6 +14,7 @@ export const BlocksContext = createContext<BlocksContextType>({
   blocks: [],
   blockNumber: 0,
   transactions: [],
+  mempool: {},
   reset: () => {},
   toggleAnvilStatus: () => {},
 });
