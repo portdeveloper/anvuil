@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import { BlocksContext } from './BlocksContext';
 import { anvilClient } from './client';
-import { Block, Transaction } from 'viem';
+import { Block, Transaction, Log } from 'viem';
 
 export const BlocksProvider = ({ children }: { children: React.ReactNode }) => {
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [blockNumber, setBlockNumber] = useState<number>(0);
   const [transactions, setTransactions] = useState<Transaction[]>([]); // @todo type
   const [mempool, setMempool] = useState({ pending: {}, queued: {} }); // @todo type
+  const [logs, setLogs] = useState<Log[]>([]);
 
   const [anvilStatus, setAnvilStatus] = useState(false); // false means Anvil is not running
 
@@ -28,10 +29,11 @@ export const BlocksProvider = ({ children }: { children: React.ReactNode }) => {
       blockNumber,
       transactions,
       mempool,
+      logs,
       reset: resetBlocksContext,
       toggleAnvilStatus,
     }),
-    [blocks, blockNumber, transactions, mempool] // mempool wasnt here before!
+    [blocks, blockNumber, transactions, mempool, logs]
   );
 
   useEffect(() => {
@@ -46,7 +48,6 @@ export const BlocksProvider = ({ children }: { children: React.ReactNode }) => {
               anvilClient.getTransaction({ hash: tx as Transaction['hash'] })
             )
           );
-          console.log('TRYING TO GET TXs');
           setTransactions((prev) => [...prev, ...fetchedTransactions]);
         } catch (error) {
           console.error('Failed to fetch transactions: ', error);
@@ -71,9 +72,18 @@ export const BlocksProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     fetchMempool(); // Fetch once immediately
-    const intervalId = setInterval(fetchMempool, 5000); // Then fetch every 5 seconds
+    const intervalId = setInterval(fetchMempool, 10000); // Then fetch every 10 seconds
     // Cleanup: clear the interval when the component unmounts or anvilStatus changes
     return () => clearInterval(intervalId);
+  }, [anvilStatus]);
+
+  useEffect(() => {
+    const unwatch = anvilClient.watchEvent({
+      onLogs: (logs) => setLogs((prev) => [...prev, ...logs]),
+    });
+    return () => {
+      unwatch();
+    };
   }, [anvilStatus]);
 
   return (
