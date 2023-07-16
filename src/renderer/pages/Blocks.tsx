@@ -2,11 +2,11 @@ import { useContext } from 'react';
 import { BlocksContext } from '../BlocksContext';
 
 export const Blocks = () => {
-  const { blocks } = useContext(BlocksContext);
+  const { blocks, anvilStatus } = useContext(BlocksContext);
 
   return blocks.length === 0 ? (
     <div className="h-full flex items-center justify-center p-5 bg-gray-900 text-white">
-      No blocks yet, please start anvil
+      {anvilStatus ? 'No blocks yet.' : 'Anvil is not running.'}
     </div>
   ) : (
     <div className="h-full flex justify-center p-5 bg-gray-900 text-white">

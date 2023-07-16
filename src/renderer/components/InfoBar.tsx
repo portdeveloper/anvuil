@@ -6,7 +6,7 @@ export const InfoBar = () => {
   const [autoMining, setAutoMining] = useState<boolean>(false);
   const [highlight, setHighlight] = useState(false); // state to control highlight
 
-  const { blockNumber } = useContext(BlocksContext);
+  const { blockNumber, anvilStatus } = useContext(BlocksContext);
 
   const fetchAutomineStatus = async () => {
     try {
@@ -50,21 +50,30 @@ export const InfoBar = () => {
   }, [blockNumber]);
 
   return (
-    <div className="flex gap-10 bg-green-400">
-      <div>
-        Current block:{' '}
-        <span className={` ${highlight ? 'animate-pulse bg-pink-300' : ''}`}>
-          {blockNumber}
-        </span>
-      </div>
-      <button type="button" className="bg-pink-300" onClick={toggleAutomine}>
-        AutoMining = {autoMining ? 'ON' : 'OFF'}
-      </button>
-      <button type="button" className="bg-pink-300" onClick={() => mineBlock()}>
-        Mine a block
-      </button>
+    <div className="flex gap-10 w-full bg-green-400 justify-between">
+      <div className="flex gap-10">
+        <div>
+          Current block:{' '}
+          <span className={` ${highlight ? 'animate-pulse bg-pink-300' : ''}`}>
+            {blockNumber}
+          </span>
+        </div>
+        <button type="button" className="bg-pink-300" onClick={toggleAutomine}>
+          AutoMining = {autoMining ? 'ON' : 'OFF'}
+        </button>
+        <button
+          type="button"
+          className="bg-pink-300"
+          onClick={() => mineBlock()}
+        >
+          Mine a block
+        </button>
 
-      <div>searchbar?</div>
+        <div>searchbar?</div>
+      </div>
+      <div className={` ${anvilStatus ? ' bg-green-400' : 'bg-red-400'}`}>
+        {anvilStatus ? 'Anvil is RUNNING...' : 'Anvil is not running.'}
+      </div>
     </div>
   );
 };

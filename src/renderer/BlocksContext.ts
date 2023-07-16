@@ -7,6 +7,7 @@ type BlocksContextType = {
   transactions: Transaction[];
   mempool: any; // @todo type
   logs: Log[];
+  anvilStatus: boolean;
   reset: () => void;
   toggleAnvilStatus: () => void;
 };
@@ -17,6 +18,7 @@ export const BlocksContext = createContext<BlocksContextType>({
   transactions: [],
   mempool: {},
   logs: [],
+  anvilStatus: false,
   reset: () => {},
   toggleAnvilStatus: () => {},
 });

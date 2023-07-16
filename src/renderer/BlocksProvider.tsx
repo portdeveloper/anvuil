@@ -6,7 +6,7 @@ import { Block, Transaction, Log } from 'viem';
 export const BlocksProvider = ({ children }: { children: React.ReactNode }) => {
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [blockNumber, setBlockNumber] = useState<number>(0);
-  const [transactions, setTransactions] = useState<Transaction[]>([]); // @todo type
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [mempool, setMempool] = useState({ pending: {}, queued: {} }); // @todo type
   const [logs, setLogs] = useState<Log[]>([]);
 
@@ -21,6 +21,7 @@ export const BlocksProvider = ({ children }: { children: React.ReactNode }) => {
     setBlockNumber(0);
     setTransactions([]);
     setMempool({ pending: {}, queued: {} });
+    setLogs([]);
   };
 
   const value = useMemo(
@@ -30,10 +31,11 @@ export const BlocksProvider = ({ children }: { children: React.ReactNode }) => {
       transactions,
       mempool,
       logs,
+      anvilStatus,
       reset: resetBlocksContext,
       toggleAnvilStatus,
     }),
-    [blocks, blockNumber, transactions, mempool, logs]
+    [blocks, blockNumber, transactions, mempool, logs, anvilStatus]
   );
 
   useEffect(() => {
@@ -65,6 +67,7 @@ export const BlocksProvider = ({ children }: { children: React.ReactNode }) => {
     const fetchMempool = async () => {
       try {
         const memorypool = await anvilClient.getTxpoolContent();
+        console.log('memorypool: ', memorypool);
         setMempool(memorypool);
       } catch (error) {
         console.error('Failed to fetch mempool: ', error);
@@ -81,6 +84,7 @@ export const BlocksProvider = ({ children }: { children: React.ReactNode }) => {
     const unwatch = anvilClient.watchEvent({
       onLogs: (logs) => setLogs((prev) => [...prev, ...logs]),
     });
+    console.log('watching event');
     return () => {
       unwatch();
     };
