@@ -13,10 +13,10 @@ export const Blocks = () => {
       <div className="flex flex-col gap-2 w-full max-h-[600px] overflow-auto">
         {blocks.map((block) => (
           <div key={block.hash} className="flex flex-col bg-slate-500 p-4">
-            <p key={block.hash}>Block hash: {block.hash}</p>
+            <p>Block hash: {block.hash}</p>
             <p>Gas limit: {Number(block.gasLimit)}</p>
             <p>Gas used: {Number(block.gasUsed)}</p>
-            <div>
+            <div key={block.hash}>
               Transactions:
               {block.transactions.map((tx) => (
                 <div>
