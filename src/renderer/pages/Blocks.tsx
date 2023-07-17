@@ -16,7 +16,7 @@ export const Blocks = () => {
             <p>Block hash: {block.hash}</p>
             <p>Gas limit: {Number(block.gasLimit)}</p>
             <p>Gas used: {Number(block.gasUsed)}</p>
-            <div key={block.hash}>
+            <div>
               Transactions:
               {block.transactions.map((tx) => (
                 <div>
