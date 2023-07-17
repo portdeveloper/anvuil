@@ -10,14 +10,17 @@ export const AddressBlock = ({ address }: { address: Address }) => {
 
   useEffect(() => {
     const fetchNonce = async () => {
-      const count = await anvilClient.getTransactionCount({ address });
+      try {
+        const count = await anvilClient.getTransactionCount({ address });
 
-      const accountBalance = await anvilClient.getBalance({
-        address,
-      });
-
-      setNonce(count);
-      setBalance(formatEther(accountBalance));
+        const accountBalance = await anvilClient.getBalance({
+          address,
+        });
+        setNonce(count);
+        setBalance(formatEther(accountBalance));
+      } catch (error) {
+        console.error('Failed to fetch nonce and balance:', error);
+      }
     };
 
     fetchNonce();
