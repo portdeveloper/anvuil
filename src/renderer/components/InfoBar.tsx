@@ -1,7 +1,13 @@
 import { useContext, useEffect, useState } from 'react';
 import { anvilClient } from 'renderer/client';
 
-export const InfoBar = ({ blockNumber }: { blockNumber: number }) => {
+export const InfoBar = ({
+  blockNumber,
+  anvilRunning,
+}: {
+  blockNumber: number;
+  anvilRunning: boolean;
+}) => {
   const [autoMining, setAutoMining] = useState<boolean>(false);
   const [highlight, setHighlight] = useState(false); // state to control highlight
 
@@ -58,6 +64,13 @@ export const InfoBar = ({ blockNumber }: { blockNumber: number }) => {
         </button>
 
         <div>searchbar?</div>
+      </div>
+      <div className=" justify-end">
+        {anvilRunning ? (
+          <div className="bg-green-300">Anvil is running</div>
+        ) : (
+          <div className="bg-red-300">Anvil is not running</div>
+        )}
       </div>
     </div>
   );

@@ -29,7 +29,7 @@ export const Mempool = () => {
   return Object.keys(pending).length === 0 &&
     Object.keys(queued).length === 0 ? (
     <div className="h-full flex items-center justify-center p-5 bg-gray-900 text-white">
-      Anvil is not running.
+      Nothing in the mempool yet.
     </div>
   ) : (
     <div className="flex items-center p-5 bg-gray-900 text-white overflow-hidden h-full">
