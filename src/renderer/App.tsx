@@ -1,8 +1,7 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import { useContext, useEffect, useReducer, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import { Address } from 'viem';
 import {
   LogsWindow,
   Home,
@@ -15,16 +14,14 @@ import {
 import { Navbar, InfoBar } from 'renderer/components';
 import 'react-toastify/dist/ReactToastify.css';
 import outputReducer from '../utils/outputReducer';
-import { anvilClient } from './client';
-import { BlocksContext } from './BlocksContext';
+import useAnvil from './hooks/useAnvil';
 
 export default function App() {
   const [output, dispatchOutput] = useReducer(outputReducer, []);
   const [directory, setDirectory] = useState(null);
   const [anvilParams, setAnvilParams] = useState('');
-  const [accounts, setAccounts] = useState<Address[]>([]);
 
-  const { reset, toggleAnvilStatus, anvilStatus } = useContext(BlocksContext);
+  const { accounts, blockNumber, blocks, transactions, logs } = useAnvil();
 
   useEffect(() => {
     const handleData = (data: Uint8Array) => {
@@ -42,15 +39,6 @@ export default function App() {
       window.electron.ipcRenderer.removeListener('anvil-data', handleData);
     };
   }, []);
-
-  async function getAddresses() {
-    try {
-      const localAccounts = await anvilClient.getAddresses();
-      setAccounts(localAccounts);
-    } catch (error: any) {
-      toast.error(error?.shortMessage);
-    }
-  }
 
   const selectDirectory = async () => {
     const result = await window.electron.ipcRenderer.invoke(
@@ -78,10 +66,6 @@ export default function App() {
         anvilParams
       );
       toast.success(message);
-      getAddresses();
-      if (!anvilStatus) {
-        toggleAnvilStatus();
-      }
     } catch (err: any) {
       toast.error(err.toString());
     }
@@ -95,12 +79,7 @@ export default function App() {
     try {
       const message = await window.electron.ipcRenderer.invoke('kill-anvil');
       dispatchOutput({ type: 'reset' });
-      setAccounts([]);
-      reset();
       toast.info(message);
-      if (anvilStatus) {
-        toggleAnvilStatus();
-      }
     } catch (err: any) {
       toast.error(err.toString());
     }
@@ -138,7 +117,7 @@ export default function App() {
             <Navbar />
           </div>
           <div className="flex gap-10 bg-green-400">
-            <InfoBar />
+            <InfoBar blockNumber={blockNumber} />
           </div>
         </nav>
         <div className="flex-grow">
@@ -159,10 +138,13 @@ export default function App() {
               path="/accounts"
               element={<Accounts accounts={accounts} />}
             />
-            <Route path="/blocks" element={<Blocks />} />
-            <Route path="/transactions" element={<Transactions />} />
+            <Route path="/blocks" element={<Blocks blocks={blocks} />} />
+            <Route
+              path="/transactions"
+              element={<Transactions transactions={transactions} />}
+            />
             <Route path="/mempool" element={<Mempool />} />
-            <Route path="/events" element={<Events />} />
+            <Route path="/events" element={<Events logs={logs}/>} />
             <Route
               path="/logs-window"
               element={<LogsWindow output={output} />}

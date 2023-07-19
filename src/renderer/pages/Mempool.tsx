@@ -1,9 +1,25 @@
-import { useContext } from 'react';
-import { BlocksContext } from '../BlocksContext';
 import { Transaction } from 'viem';
+import { anvilClient } from 'renderer/client';
+import { useEffect, useState } from 'react';
 
 export const Mempool = () => {
-  const { mempool, anvilStatus } = useContext(BlocksContext);
+  const [mempool, setMempool] = useState({ pending: {}, queued: {} }); // @todo type
+
+  useEffect(() => {
+    const fetchMempool = async () => {
+      try {
+        const memorypool = await anvilClient.getTxpoolContent();
+        console.log('memorypool: ', memorypool);
+        setMempool(memorypool);
+      } catch (error) {
+        console.error('Failed to fetch mempool: ', error);
+      }
+    };
+
+    fetchMempool();
+    const intervalId = setInterval(fetchMempool, 5000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   const pending: { [address: string]: { [nonce: string]: Transaction } } =
     mempool.pending as any;
@@ -13,9 +29,7 @@ export const Mempool = () => {
   return Object.keys(pending).length === 0 &&
     Object.keys(queued).length === 0 ? (
     <div className="h-full flex items-center justify-center p-5 bg-gray-900 text-white">
-      {anvilStatus
-        ? 'No transactions in the mempool yet.'
-        : 'Anvil is not running.'}
+      Anvil is not running.
     </div>
   ) : (
     <div className="flex items-center p-5 bg-gray-900 text-white overflow-hidden h-full">
