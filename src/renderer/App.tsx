@@ -20,6 +20,7 @@ export default function App() {
   const [output, dispatchOutput] = useReducer(outputReducer, []);
   const [directory, setDirectory] = useState(null);
   const [anvilParams, setAnvilParams] = useState('');
+  const [anvilRunning, setAnvilRunning] = useState(false);
 
   const { accounts, blockNumber, blocks, transactions, logs } = useAnvil();
 
@@ -66,6 +67,7 @@ export default function App() {
         anvilParams
       );
       toast.success(message);
+      setAnvilRunning(true);
     } catch (err: any) {
       toast.error(err.toString());
     }
@@ -73,12 +75,14 @@ export default function App() {
 
   useEffect(() => {
     startAnvil();
+    setAnvilRunning(true);
   }, []);
 
   const killAnvil = async () => {
     try {
       const message = await window.electron.ipcRenderer.invoke('kill-anvil');
       dispatchOutput({ type: 'reset' });
+      setAnvilRunning(false);
       toast.info(message);
     } catch (err: any) {
       toast.error(err.toString());
@@ -117,7 +121,7 @@ export default function App() {
             <Navbar />
           </div>
           <div className="flex gap-10 bg-green-400">
-            <InfoBar blockNumber={blockNumber} />
+            <InfoBar blockNumber={blockNumber} anvilRunning={anvilRunning} />
           </div>
         </nav>
         <div className="flex-grow">
@@ -144,7 +148,7 @@ export default function App() {
               element={<Transactions transactions={transactions} />}
             />
             <Route path="/mempool" element={<Mempool />} />
-            <Route path="/events" element={<Events logs={logs}/>} />
+            <Route path="/events" element={<Events logs={logs} />} />
             <Route
               path="/logs-window"
               element={<LogsWindow output={output} />}
