@@ -1,12 +1,9 @@
-import { useContext } from 'react';
-import { BlocksContext } from '../BlocksContext';
+import { Block } from 'viem';
 
-export const Blocks = () => {
-  const { blocks, anvilStatus } = useContext(BlocksContext);
-
+export const Blocks = ({ blocks }: { blocks: Block[] }) => {
   return blocks.length === 0 ? (
     <div className="h-full flex items-center justify-center p-5 bg-gray-900 text-white">
-      {anvilStatus ? 'No blocks yet.' : 'Anvil is not running.'}
+      'No blocks yet.'
     </div>
   ) : (
     <div className="h-full flex justify-center p-5 bg-gray-900 text-white">

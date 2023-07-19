@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
 import { formatEther, parseEther, Address } from 'viem';
 import { anvilClient } from 'renderer/client';
+import useAnvil from '../hooks/useAnvil';
 
 export const AddressBlock = ({ address }: { address: Address }) => {
   const [nonce, setNonce] = useState<number | null>(null);
   const [balance, setBalance] = useState<string>('');
   const [inputEther, setInputEther] = useState<string>('');
   const [inputNonce, setInputNonce] = useState<string>('');
+
+  const { blockNumber } = useAnvil();
 
   useEffect(() => {
     const fetchNonce = async () => {
@@ -24,8 +27,7 @@ export const AddressBlock = ({ address }: { address: Address }) => {
     };
 
     fetchNonce();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [blockNumber]);
 
   const handleSetBalance = async () => {
     try {
@@ -34,7 +36,6 @@ export const AddressBlock = ({ address }: { address: Address }) => {
         value: parseEther(inputEther),
       });
 
-      // Refresh the balance
       const accountBalance = await anvilClient.getBalance({
         address,
       });
@@ -51,7 +52,6 @@ export const AddressBlock = ({ address }: { address: Address }) => {
         nonce: Number(inputNonce),
       });
 
-      // Refresh the nonce
       const accountNonce = await anvilClient.getTransactionCount({
         address,
       });

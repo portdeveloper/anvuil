@@ -1,12 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
-import { BlocksContext } from 'renderer/BlocksContext';
 import { anvilClient } from 'renderer/client';
 
-export const InfoBar = () => {
+export const InfoBar = ({ blockNumber }: { blockNumber: number }) => {
   const [autoMining, setAutoMining] = useState<boolean>(false);
   const [highlight, setHighlight] = useState(false); // state to control highlight
-
-  const { blockNumber, anvilStatus } = useContext(BlocksContext);
 
   const fetchAutomineStatus = async () => {
     try {
@@ -40,15 +37,6 @@ export const InfoBar = () => {
     }
   };
 
-  // useEffect to listen to blockNumber changes
-  useEffect(() => {
-    setHighlight(true);
-    const timer = setTimeout(() => {
-      setHighlight(false);
-    }, 300); // change color for 500ms
-    return () => clearTimeout(timer);
-  }, [blockNumber]);
-
   return (
     <div className="flex gap-10 w-full bg-green-400 justify-between">
       <div className="flex gap-10">
@@ -70,9 +58,6 @@ export const InfoBar = () => {
         </button>
 
         <div>searchbar?</div>
-      </div>
-      <div className={` ${anvilStatus ? ' bg-green-400' : 'bg-red-400'}`}>
-        {anvilStatus ? 'Anvil is RUNNING...' : 'Anvil is not running.'}
       </div>
     </div>
   );

@@ -1,12 +1,13 @@
-import { useContext } from 'react';
-import { BlocksContext } from '../BlocksContext';
+import { Transaction } from 'viem';
 
-export const Transactions = () => {
-  const { transactions, anvilStatus } = useContext(BlocksContext);
-
+export const Transactions = ({
+  transactions,
+}: {
+  transactions: Transaction[];
+}) => {
   return transactions.length === 0 ? (
     <div className="h-full flex items-center justify-center p-5 bg-gray-900 text-white">
-      {anvilStatus ? 'No transactions yet.' : 'Anvil is not running.'}
+      No transactions yet.
     </div>
   ) : (
     <div className="flex flex-col items-center p-5 bg-gray-900 text-white overflow-hidden h-full">
