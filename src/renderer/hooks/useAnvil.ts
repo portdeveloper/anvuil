@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { anvilClient } from 'renderer/client';
-import { Block, Address, Transaction, Hash, Log } from 'viem';
+import { Block, Address, Transaction, Hash } from 'viem';
 
 const useAnvil = () => {
   const [accounts, setAccounts] = useState<Address[]>([]); // @todo type
   const [blockNumber, setBlockNumber] = useState(0);
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]); // @todo type
-  const [logs, setLogs] = useState<Log[]>([]);
 
   async function getAddresses() {
     try {
       const localAccounts = await anvilClient.getAddresses();
+      console.log('⚠️⚠️⚠️ getAddresses is called inside useAnvil.ts');
       setAccounts(localAccounts);
     } catch (error: any) {
       toast.error(error?.shortMessage);
@@ -24,13 +24,14 @@ const useAnvil = () => {
       onBlock: async (block) => {
         setBlockNumber(Number(block.number));
         setBlocks((prevBlocks) => [...prevBlocks, block]);
+        console.log('⚠️⚠️⚠️ watchBlocks is called inside useAnvil.ts');
 
         const blockTransactions = await Promise.all(
           block.transactions.map((txHash) =>
             anvilClient.getTransaction({ hash: txHash as Hash })
           )
         );
-        console.log('blockTransactions:', blockTransactions); // log the transactions from the new block
+        console.log('⚠️⚠️⚠️ getTransaction is called inside useAnvil.ts');
 
         setTransactions((prev) => [...prev, ...blockTransactions]);
       },
@@ -38,24 +39,19 @@ const useAnvil = () => {
     });
 
     getAddresses();
+    console.log('a new watchBlocks is created in useAnvil.ts');
 
     return () => {
       unwatch();
     };
   }, []);
 
-  useEffect(() => {
-    const unwatch = anvilClient.watchEvent({
-      onLogs: (logs) => setLogs((prev) => [...prev, ...logs]),
-      onError: (error) => toast.error(error.message),
-    });
-
-    return () => {
-      unwatch();
-    };
-  }, []);
-
-  return { accounts, blockNumber, blocks, transactions, logs };
+  return {
+    accounts,
+    blockNumber,
+    blocks,
+    transactions,
+  };
 };
 
 export default useAnvil;

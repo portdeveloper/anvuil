@@ -22,7 +22,7 @@ export default function App() {
   const [anvilParams, setAnvilParams] = useState('');
   const [anvilRunning, setAnvilRunning] = useState(false);
 
-  const { accounts, blockNumber, blocks, transactions, logs } = useAnvil();
+  const { accounts, blockNumber, blocks, transactions } = useAnvil();
 
   useEffect(() => {
     const handleData = (data: Uint8Array) => {
@@ -66,6 +66,7 @@ export default function App() {
         dir,
         anvilParams
       );
+      console.log('⚠️⚠️⚠️ Anvil is started');
       toast.success(message);
       setAnvilRunning(true);
     } catch (err: any) {
@@ -76,11 +77,13 @@ export default function App() {
   useEffect(() => {
     startAnvil();
     setAnvilRunning(true);
+    console.log('⚠️⚠️⚠️ App.tsx is run');
   }, []);
 
   const killAnvil = async () => {
     try {
       const message = await window.electron.ipcRenderer.invoke('kill-anvil');
+      console.log('⚠️⚠️⚠️ Anvil is killed');
       dispatchOutput({ type: 'reset' });
       setAnvilRunning(false);
       toast.info(message);
@@ -148,7 +151,7 @@ export default function App() {
               element={<Transactions transactions={transactions} />}
             />
             <Route path="/mempool" element={<Mempool />} />
-            <Route path="/events" element={<Events logs={logs} />} />
+            <Route path="/events" element={<Events />} />
             <Route
               path="/logs-window"
               element={<LogsWindow output={output} />}

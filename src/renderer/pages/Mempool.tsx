@@ -9,7 +9,8 @@ export const Mempool = () => {
     const fetchMempool = async () => {
       try {
         const memorypool = await anvilClient.getTxpoolContent();
-        console.log('memorypool: ', memorypool);
+        console.log('⚠️⚠️⚠️ Mempool is fetched inside Mempool.tsx');
+
         setMempool(memorypool);
       } catch (error) {
         console.error('Failed to fetch mempool: ', error);

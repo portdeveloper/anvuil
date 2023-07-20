@@ -16,7 +16,7 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
             <div>
               Transactions:
               {block.transactions.map((tx) => (
-                <div>
+                <div key={tx.toString()}>
                   <p>{tx.toString()}</p>
                 </div>
               ))}

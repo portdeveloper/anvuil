@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { formatEther, parseEther, Address } from 'viem';
 import { anvilClient } from 'renderer/client';
-import useAnvil from '../hooks/useAnvil';
+
+/**
+ * @todo need a way to update this component when the balance or nonce changes
+ */
 
 export const AddressBlock = ({ address }: { address: Address }) => {
   const [nonce, setNonce] = useState<number | null>(null);
@@ -9,12 +12,11 @@ export const AddressBlock = ({ address }: { address: Address }) => {
   const [inputEther, setInputEther] = useState<string>('');
   const [inputNonce, setInputNonce] = useState<string>('');
 
-  const { blockNumber } = useAnvil();
-
   useEffect(() => {
     const fetchNonce = async () => {
       try {
         const count = await anvilClient.getTransactionCount({ address });
+        console.log('⚠️⚠️⚠️ Nonces and balances are fetched inside AddressBlock');
 
         const accountBalance = await anvilClient.getBalance({
           address,
@@ -27,7 +29,7 @@ export const AddressBlock = ({ address }: { address: Address }) => {
     };
 
     fetchNonce();
-  }, [blockNumber]);
+  }, []);
 
   const handleSetBalance = async () => {
     try {
