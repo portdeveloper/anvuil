@@ -9,7 +9,6 @@ export const InfoBar = ({
   anvilRunning: boolean;
 }) => {
   const [autoMining, setAutoMining] = useState<boolean>(false);
-  const [highlight, setHighlight] = useState(false); // state to control highlight
 
   const fetchAutomineStatus = async () => {
     try {
@@ -47,10 +46,7 @@ export const InfoBar = ({
     <div className="flex gap-10 w-full bg-green-400 justify-between">
       <div className="flex gap-10">
         <div>
-          Current block:{' '}
-          <span className={` ${highlight ? 'animate-pulse bg-pink-300' : ''}`}>
-            {blockNumber}
-          </span>
+          Current block: <span>{blockNumber}</span>
         </div>
         <button type="button" className="bg-pink-300" onClick={toggleAutomine}>
           AutoMining = {autoMining ? 'ON' : 'OFF'}
