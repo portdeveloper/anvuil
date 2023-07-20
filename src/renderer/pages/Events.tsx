@@ -1,6 +1,34 @@
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { anvilClient } from 'renderer/client';
 import { Log } from 'viem';
 
-export const Events = ({ logs }: { logs: Log[] }) => {
+export const Events = () => {
+  const [logs, setLogs] = useState<Log[]>([]);
+
+  useEffect(() => {
+    const fetchLogs = async () => {
+      try {
+        const logs = await anvilClient.getLogs({
+          fromBlock: 0n,
+        });
+        console.log('⚠️⚠️⚠️ Events are fetched inside Events.tsx');
+
+        setLogs(logs);
+      } catch (error: any) {
+        toast.error(error);
+      }
+    };
+
+    fetchLogs();
+
+    const intervalId = setInterval(fetchLogs, 5000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
   return Object.keys(logs).length === 0 ? (
     <div className="h-full flex items-center justify-center p-5 bg-gray-900 text-white">
       No events yet.
