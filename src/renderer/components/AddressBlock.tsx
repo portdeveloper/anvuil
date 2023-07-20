@@ -16,7 +16,9 @@ export const AddressBlock = ({ address }: { address: Address }) => {
     const fetchNonce = async () => {
       try {
         const count = await anvilClient.getTransactionCount({ address });
-        console.log('⚠️⚠️⚠️ Nonces and balances are fetched inside AddressBlock');
+        console.log(
+          '⚠️⚠️⚠️ Nonces and balances are fetched inside AddressBlock'
+        );
 
         const accountBalance = await anvilClient.getBalance({
           address,
