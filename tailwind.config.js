@@ -14,5 +14,30 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [require("daisyui")],
+  plugins: [require('daisyui')],
+  daisyui: {
+    themes: [
+      {
+        rusty: {
+          primary: '#d4916a',
+
+          secondary: '#4e5255',
+
+          accent: '#e0ac69',
+
+          neutral: '#8d918d',
+
+          'base-100': '#313335',
+
+          info: '#2e3133',
+
+          success: '#589464',
+
+          warning: '#aa6c39',
+
+          error: '#b22222',
+        },
+      },
+    ],
+  },
 };
