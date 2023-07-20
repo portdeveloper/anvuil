@@ -24,14 +24,14 @@ const useAnvil = () => {
       onBlock: async (block) => {
         setBlockNumber(Number(block.number));
         setBlocks((prevBlocks) => [...prevBlocks, block]);
-        console.log('⚠️⚠️⚠️ watchBlocks is called inside useAnvil.ts');
+        console.log('⚠️ watchBlocks is called inside useAnvil.ts');
 
         const blockTransactions = await Promise.all(
           block.transactions.map((txHash) =>
             anvilClient.getTransaction({ hash: txHash as Hash })
           )
         );
-        console.log('⚠️⚠️⚠️ getTransaction is called inside useAnvil.ts');
+        console.log('⚠️ getTransaction is called inside useAnvil.ts');
 
         setTransactions((prev) => [...prev, ...blockTransactions]);
       },
@@ -39,7 +39,7 @@ const useAnvil = () => {
     });
 
     getAddresses();
-    console.log('a new watchBlocks is created in useAnvil.ts');
+    console.log('⚠️⚠️⚠️ a new watchBlocks is created in useAnvil.ts ⚠️⚠️⚠️');
 
     return () => {
       unwatch();
