@@ -67,13 +67,6 @@ export const InfoBar = ({
         >
           AutoMining = {autoMining ? 'ON' : 'OFF'}
         </button>
-        <div className="form-control w-1/3">
-          <input
-            type="text"
-            placeholder="Search..."
-            className="input input-xs input-bordered text-sm"
-          />
-        </div>
       </div>
       <div className="text-xs font-semibold">
         {anvilRunning ? (
