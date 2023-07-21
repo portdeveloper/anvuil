@@ -14,10 +14,10 @@ export const Home = ({
   killAnvil,
 }: HomeProps) => {
   return (
-    <div className="flex-grow h-full flex items-center justify-center p-10 bg-gray-900 text-white">
+    <div className="flex-grow h-full flex items-center justify-center p-10">
       <div className="flex flex-col h-full w-1/3 gap-4 p-5 items-center">
         <button
-          className=" bg-orange-500 text-white w-full h-9 active:scale-95 transition-transform duration-100"
+          className="btn btn-primary btn-block "
           type="button"
           onClick={selectDirectory}
         >
@@ -25,7 +25,7 @@ export const Home = ({
         </button>
 
         <input
-          className="border-2 border-orange-400 w-full h-9 px-2 text-black "
+          className="input input-primary bg-secondary w-full"
           type="text"
           value={anvilParams}
           onChange={(e) => setAnvilParams(e.target.value)}
@@ -33,7 +33,7 @@ export const Home = ({
         />
 
         <button
-          className="bg-orange-500 text-white w-full h-9 active:scale-95 transition-transform duration-100 "
+          className="btn btn-success btn-block"
           type="button"
           onClick={startAnvil}
         >
@@ -41,7 +41,7 @@ export const Home = ({
         </button>
 
         <button
-          className="bg-red-500 w-full text-white h-9 active:scale-95 transition-transform duration-100"
+          className="btn btn-error btn-block"
           type="button"
           onClick={killAnvil}
         >

@@ -2,62 +2,31 @@ import { Link, useLocation } from 'react-router-dom';
 
 export const Navbar = () => {
   const location = useLocation();
+
+  const generateLinkClass = (path: string) =>
+    `tab ${location.pathname === path ? 'tab-active' : ''}`;
+
   return (
-    <div>
-      <Link
-        className={`bg-slate-500 px-3 py-2 hover:bg-slate-600 ${
-          location.pathname === '/' ? 'bg-slate-700 text-white' : ''
-        }`}
-        to="/"
-      >
+    <div className="tabs">
+      <Link className={generateLinkClass('/')} to="/">
         Home
       </Link>
-      <Link
-        className={`bg-slate-500 px-3 py-2 hover:bg-slate-600 ${
-          location.pathname === '/accounts' ? 'bg-slate-700 text-white' : ''
-        }`}
-        to="/accounts"
-      >
+      <Link className={generateLinkClass('/accounts')} to="/accounts">
         Accounts
       </Link>
-      <Link
-        className={`bg-slate-500 px-3 py-2 hover:bg-slate-600 ${
-          location.pathname === '/blocks' ? 'bg-slate-700 text-white' : ''
-        }`}
-        to="/blocks"
-      >
+      <Link className={generateLinkClass('/blocks')} to="/blocks">
         Blocks
       </Link>
-      <Link
-        className={`bg-slate-500 px-3 py-2 hover:bg-slate-600 ${
-          location.pathname === '/transactions' ? 'bg-slate-700 text-white' : ''
-        }`}
-        to="/transactions"
-      >
+      <Link className={generateLinkClass('/transactions')} to="/transactions">
         Transactions
       </Link>
-      <Link
-        className={`bg-slate-500 px-3 py-2 hover:bg-slate-600 ${
-          location.pathname === '/Mempool' ? 'bg-slate-700 text-white' : ''
-        }`}
-        to="/mempool"
-      >
+      <Link className={generateLinkClass('/mempool')} to="/mempool">
         Mempool
       </Link>
-      <Link
-        className={`bg-slate-500 px-3 py-2 hover:bg-slate-600 ${
-          location.pathname === '/events' ? 'bg-slate-700 text-white' : ''
-        }`}
-        to="/events"
-      >
+      <Link className={generateLinkClass('/events')} to="/events">
         Events
       </Link>
-      <Link
-        className={`bg-slate-500 px-3 py-2 hover:bg-slate-600 ${
-          location.pathname === '/logs-window' ? 'bg-slate-700 text-white' : ''
-        }`}
-        to="/logs-window"
-      >
+      <Link className={generateLinkClass('/logs-window')} to="/logs-window">
         Logs
       </Link>
     </div>

@@ -16,9 +16,6 @@ export const AddressBlock = ({ address }: { address: Address }) => {
     const fetchNonce = async () => {
       try {
         const count = await anvilClient.getTransactionCount({ address });
-        console.log(
-          '⚠️⚠️⚠️ Nonces and balances are fetched inside AddressBlock'
-        );
 
         const accountBalance = await anvilClient.getBalance({
           address,
@@ -65,40 +62,47 @@ export const AddressBlock = ({ address }: { address: Address }) => {
     }
   };
 
+  console.log(address);
+
   return (
-    <div className="flex justify-between h-20 px-2 py-1 bg-slate-500">
-      <div>{address}</div>
-      <div>
-        <p>Transaction Count: {nonce}</p>
-        <div>
+    <tr>
+      <td className="font-mono">{address}</td>
+      <td>
+        <div className="form-control flex flex-row">
           <input
             type="text"
-            value={inputNonce}
+            value={nonce !== null ? nonce : inputNonce}
             onChange={(e) => setInputNonce(e.target.value)}
             placeholder="Enter nonce"
-            className="text-black"
+            className="input input-bordered input-xs"
           />
-          <button type="button" onClick={handleSetNonce}>
+          <button
+            type="button"
+            className="btn btn-primary btn-xs "
+            onClick={handleSetNonce}
+          >
             Set Nonce
           </button>
         </div>
-      </div>
-
-      <div>
-        <p>Ether: {balance.toString()}</p>
-        <div>
+      </td>
+      <td>
+        <div className="form-control flex flex-row">
           <input
             type="text"
-            value={inputEther}
+            value={inputEther !== '' ? inputEther : balance.toString()}
             onChange={(e) => setInputEther(e.target.value)}
             placeholder="Enter ether amount"
-            className="text-black"
+            className="input input-bordered input-xs"
           />
-          <button type="button" onClick={handleSetBalance}>
+          <button
+            type="button"
+            className="btn btn-primary btn-xs"
+            onClick={handleSetBalance}
+          >
             Set Balance
           </button>
         </div>
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 };

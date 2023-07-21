@@ -52,94 +52,120 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
   };
 
   return blocks.length === 0 ? (
-    <div className="h-full flex items-center justify-center p-5 bg-gray-900 text-white">
-      'No blocks yet.'
+    <div className="h-full flex items-center justify-center p-5 bg-base-100 text-base-content">
+      No blocks yet.
     </div>
   ) : (
-    <div className="flex flex-col bg-gray-900">
+    <div className="flex flex-col h-full gap-2 bg-base-100 text-base-content px-2 py-1">
       <div className="flex gap-4">
-        <div>
-          <input
-            type="number"
-            value={intervalMining}
-            onChange={(e) => setIntervalMining(Number(e.target.value))}
-            placeholder="Enter interval in seconds"
-            className="text-black"
-          />
-          <button
-            type="button"
-            className="bg-pink-300"
-            onClick={handleSetIntervalMining}
-          >
-            Set automatic mining interval
-          </button>
+        <div className="form-control">
+          <label className="label p-0">
+            <span className="label-text">Interval Mining (seconds)</span>
+          </label>
+          <div className="flex">
+            <input
+              type="number"
+              value={intervalMining}
+              onChange={(e) => setIntervalMining(Number(e.target.value))}
+              placeholder="Enter interval in seconds"
+              className="input input-bordered input-xs flex-grow"
+            />
+            <button
+              type="button"
+              className="btn btn-primary btn-xs ml-2"
+              onClick={handleSetIntervalMining}
+            >
+              Set
+            </button>
+          </div>
         </div>
-        <div>
-          <div>
+        <div className="form-control">
+          <label className="label p-0">
+            <span className="label-text">Jump Time (seconds)</span>
+          </label>
+          <div className="flex">
             <input
               type="number"
               value={jumpTime}
               onChange={(e) => setJumpTime(Number(e.target.value))}
               placeholder="Enter seconds to jump"
-              className="text-black"
+              className="input input-bordered input-xs flex-grow"
             />
             <button
               type="button"
-              className="bg-pink-300"
+              className="btn btn-primary btn-xs ml-2"
               onClick={handleSetJumpTime}
             >
-              Jump time
+              Jump
             </button>
           </div>
         </div>
-        <div>
-          <input
-            type="number"
-            value={blockTimestampInterval}
-            onChange={(e) => setBlockTimestampInterval(Number(e.target.value))}
-            placeholder="Enter seconds to jump"
-            className="text-black"
-          />
-          <button
-            type="button"
-            className="bg-pink-300"
-            onClick={handleSetBlockTimestampInterval}
-          >
-            Set block timestamp interval
-          </button>
-        </div>
-        <div>
-          <button
-            className="bg-pink-300"
-            onClick={handleRemoveBlockTimestampInterval}
-          >
-            Remove block timestamp interval
-          </button>
+        <div className="form-control">
+          <label className="label p-0">
+            <span className="label-text">
+              Block Timestamp Interval (seconds)
+            </span>
+          </label>
+          <div className="flex">
+            <input
+              type="number"
+              value={blockTimestampInterval}
+              onChange={(e) =>
+                setBlockTimestampInterval(Number(e.target.value))
+              }
+              placeholder="Enter seconds"
+              className="input input-bordered input-xs flex-grow"
+            />
+            <button
+              className="btn btn-primary btn-xs"
+              onClick={handleRemoveBlockTimestampInterval}
+            >
+              Remove Interval
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary btn-xs ml-2"
+              onClick={handleSetBlockTimestampInterval}
+            >
+              Set Interval
+            </button>
+          </div>
         </div>
       </div>
-      <div className="flex flex-col overflow-auto max-h-[calc(100vh-6em)]">
-        {blocks.map((block) => (
-          <div
-            key={block.hash}
-            className="flex flex-col bg-slate-500 p-4 text-white"
-          >
-            <p>Block hash: {block.hash}</p>
-            <p>Gas limit: {Number(block.gasLimit)}</p>
-            <p>Gas used: {Number(block.gasUsed)}</p>
-            <p>
-              timestamp:{' '}
-              {new Date(Number(block.timestamp) * 1000).toLocaleString()}
-            </p>
-            <div>
-              Transactions:
-              {block.transactions.map((tx) => (
-                <div key={tx.toString()}>
-                  <p>{tx.toString()}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
+      <div className="overflow-auto max-h-[calc(100vh-6em)]">
+        <table className="table w-full table-compact">
+          <thead>
+            <tr>
+              <th>Block hash</th>
+              <th>Gas limit</th>
+              <th>Gas used</th>
+              <th>Timestamp</th>
+              <th>Transactions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {blocks.map((block) => (
+              <tr key={block.hash} className="">
+                <td className="font-mono">
+                  {block.hash?.substring(0, 6)}...
+                  {block.hash?.substring(block.hash.length - 4)}
+                </td>
+                <td>{Number(block.gasLimit)}</td>
+                <td>{Number(block.gasUsed)}</td>
+                <td>
+                  {new Date(Number(block.timestamp) * 1000).toLocaleString()}
+                </td>
+                <td>
+                  {block.transactions.map((tx) => (
+                    <div key={tx.toString()} className="p-2">
+                      {tx.toString()}
+                    </div>
+                  ))}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

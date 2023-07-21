@@ -6,21 +6,31 @@ export const Transactions = ({
   transactions: Transaction[];
 }) => {
   return transactions.length === 0 ? (
-    <div className="h-full flex items-center justify-center p-5 bg-gray-900 text-white">
+    <div className="h-full flex items-center justify-center p-5 bg-base-100 text-base-content">
       No transactions yet.
     </div>
   ) : (
-    <div className="flex flex-col items-center p-5 bg-gray-900 text-white overflow-hidden h-full">
-      <div className="overflow-auto flex flex-col gap-4 w-full h-0 flex-grow">
-        {transactions.map((tx) => (
-          <div key={tx.hash} className="flex flex-col bg-slate-500 p-4">
-            <p>tx hash: {tx.hash}</p>
-            <p>tx from: {tx.from}</p>
-            <p>tx to: {tx.to}</p>
-            <p>tx value: {Number(tx.value)}</p>
-          </div>
-        ))}
-      </div>
+    <div className="h-full p-5 bg-base-100 text-base-content overflow-auto">
+      <table className="table w-full table-compact">
+        <thead>
+          <tr>
+            <th>Transaction Hash</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {transactions.map((tx) => (
+            <tr key={tx.hash}>
+              <td className="font-mono">{tx.hash}</td>
+              <td>{tx.from}</td>
+              <td>{tx.to}</td>
+              <td>{Number(tx.value)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
