@@ -1,6 +1,7 @@
 import { Transaction } from 'viem';
 import { anvilClient } from 'renderer/client';
 import { useEffect, useState } from 'react';
+import { TxHashComp, AddressComp } from 'renderer/components/';
 
 export const Mempool = () => {
   const [mempool, setMempool] = useState({ pending: {}, queued: {} });
@@ -49,9 +50,16 @@ export const Mempool = () => {
           {Object.entries(pending).flatMap(([address, txs]) =>
             Object.entries(txs).map(([nonce, tx]) => (
               <tr key={tx.hash}>
-                <td className="font-mono">{tx.hash}</td>
-                <td>{tx.from}</td>
-                <td>{tx.to}</td>
+                <td className="font-mono">
+                  <TxHashComp txHash={tx.hash} />
+                </td>
+                <td>
+                  <AddressComp address={tx.from} />
+                </td>
+
+                <td>
+                  <AddressComp address={tx.to} />
+                </td>
                 <td>{Number(tx.value)}</td>
                 <td>{nonce}</td>
               </tr>

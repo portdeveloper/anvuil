@@ -95,11 +95,16 @@
     }
   },
   "dependencies": {
+    "@heroicons/react": "^2.0.18",
+    "@types/react-blockies": "^1.4.1",
+    "@types/react-copy-to-clipboard": "^5.0.4",
     "electron-debug": "^3.2.0",
     "electron-log": "^4.4.8",
     "electron-updater": "^5.3.0",
     "fs-extra": "^11.1.1",
     "react": "^18.2.0",
+    "react-blockies": "^1.4.1",
+    "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.2",
     "react-toastify": "^9.1.3",
