@@ -1,3 +1,4 @@
+import { AddressComp, TxHashComp } from 'renderer/components';
 import { Transaction } from 'viem';
 
 export const Transactions = ({
@@ -23,9 +24,15 @@ export const Transactions = ({
         <tbody>
           {transactions.map((tx) => (
             <tr key={tx.hash}>
-              <td className="font-mono">{tx.hash}</td>
-              <td>{tx.from}</td>
-              <td>{tx.to}</td>
+              <td>
+                <TxHashComp txHash={tx.hash} />
+              </td>
+              <td>
+                <AddressComp address={tx.from} />
+              </td>
+              <td>
+                <AddressComp address={tx.to} />
+              </td>
               <td>{Number(tx.value)}</td>
             </tr>
           ))}

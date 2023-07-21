@@ -51,7 +51,7 @@ export const Events = () => {
                 {Object.entries(event).map(([property, value]) => (
                   <div key={property}>
                     <strong>{property}: </strong>
-                    <span>{value}</span>
+                    <span>{value as any}</span>
                   </div>
                 ))}
               </td>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { formatEther, parseEther, Address } from 'viem';
 import { anvilClient } from 'renderer/client';
-
+import { AddressComp } from './AddressComp';
 /**
  * @todo need a way to update this component when the balance or nonce changes
  */
@@ -62,11 +62,11 @@ export const AddressBlock = ({ address }: { address: Address }) => {
     }
   };
 
-  console.log(address);
-
   return (
     <tr>
-      <td className="font-mono">{address}</td>
+      <td>
+        <AddressComp address={address} />
+      </td>
       <td>
         <div className="form-control flex flex-row">
           <input
