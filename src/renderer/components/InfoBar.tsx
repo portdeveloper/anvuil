@@ -43,29 +43,43 @@ export const InfoBar = ({
   };
 
   return (
-    <div className="flex gap-10 w-full bg-green-400 justify-between">
-      <div className="flex gap-10">
-        <div>
-          Current block: <span>{blockNumber}</span>
+    <div className="flex justify-between items-center gap-6 py-2 px-4 bg-base-200 text-base-content shadow-md w-full">
+      <div className="flex items-center gap-4">
+        <div className="flex gap-2 items-center">
+          <div className="text-sm">Current block:</div>
+          <div className="text-primary rounded-full p-1 text-sm font-semibold">
+            {blockNumber}
+          </div>
         </div>
-        <button type="button" className="bg-pink-300" onClick={toggleAutomine}>
-          AutoMining = {autoMining ? 'ON' : 'OFF'}
+        <button
+          type="button"
+          className="btn btn-primary btn-xs py-1 px-2"
+          onClick={() => mineBlock()}
+        >
+          Mine
         </button>
         <button
           type="button"
-          className="bg-pink-300"
-          onClick={() => mineBlock()}
+          className={`btn btn-xs py-1 px-2 ${
+            autoMining ? 'btn-success' : 'btn-error'
+          }`}
+          onClick={toggleAutomine}
         >
-          Mine a block
+          AutoMining = {autoMining ? 'ON' : 'OFF'}
         </button>
-
-        <div>searchbar?</div>
+        <div className="form-control w-1/3">
+          <input
+            type="text"
+            placeholder="Search..."
+            className="input input-xs input-bordered text-sm"
+          />
+        </div>
       </div>
-      <div className=" justify-end">
+      <div className="text-xs font-semibold">
         {anvilRunning ? (
-          <div className="bg-green-300">Anvil is running</div>
+          <div className="text-success">Anvil is running</div>
         ) : (
-          <div className="bg-red-300">Anvil is not running</div>
+          <div className="text-error">Anvil is not running</div>
         )}
       </div>
     </div>

@@ -3,7 +3,7 @@ import { anvilClient } from 'renderer/client';
 import { useEffect, useState } from 'react';
 
 export const Mempool = () => {
-  const [mempool, setMempool] = useState({ pending: {}, queued: {} }); // @todo type
+  const [mempool, setMempool] = useState({ pending: {}, queued: {} });
 
   useEffect(() => {
     const fetchMempool = async () => {
@@ -29,47 +29,61 @@ export const Mempool = () => {
 
   return Object.keys(pending).length === 0 &&
     Object.keys(queued).length === 0 ? (
-    <div className="h-full flex items-center justify-center p-5 bg-gray-900 text-white">
+    <div className="h-full flex items-center justify-center p-5 bg-base-100 text-base-content">
       Nothing in the mempool yet.
     </div>
   ) : (
-    <div className="flex items-center p-5 bg-gray-900 text-white overflow-hidden h-full">
-      <div className="flex flex-col h-full w-1/2 gap-4 p-5">
-        <h1 className="text-center">Pending Transactions</h1>
-        {Object.entries(pending).map(([address, txs]) => (
-          <details key={address}>
-            <summary className="text-xl">Address: {address}</summary>
-            {Object.entries(txs).map(([nonce, tx]) => (
-              <details key={tx.hash} className="ml-4">
-                <summary>Txhash: {tx.hash}</summary>
-                <div className="ml-4">
-                  <p>From: {tx.from}</p>
-                  <p>To: {tx.to}</p>
-                  <p>Value: {Number(tx.value)}</p>
-                </div>
-              </details>
-            ))}
-          </details>
-        ))}
-      </div>
-      <div className="flex flex-col h-full w-1/2 gap-4 p-5">
-        <h1 className="text-center">Queued Transactions</h1>
-        {Object.entries(queued).map(([address, txs]) => (
-          <details key={address}>
-            <summary className="text-xl">Address: {address}</summary>
-            {Object.entries(txs).map(([nonce, tx]) => (
-              <details key={tx.hash} className="ml-4">
-                <summary>Txhash: {tx.hash}</summary>
-                <div className="ml-4">
-                  <p>From: {tx.from}</p>
-                  <p>To: {tx.to}</p>
-                  <p>Value: {Number(tx.value)}</p>
-                </div>
-              </details>
-            ))}
-          </details>
-        ))}
-      </div>
+    <div className="h-full p-5 bg-base-100 text-base-content overflow-auto">
+      <h1 className="text-center text-xl">Pending Transactions</h1>
+      <table className="table w-full table-compact">
+        <thead>
+          <tr>
+            <th>Transaction Hash</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Value</th>
+            <th>Nonce</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.entries(pending).flatMap(([address, txs]) =>
+            Object.entries(txs).map(([nonce, tx]) => (
+              <tr key={tx.hash}>
+                <td className="font-mono">{tx.hash}</td>
+                <td>{tx.from}</td>
+                <td>{tx.to}</td>
+                <td>{Number(tx.value)}</td>
+                <td>{nonce}</td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+      <h1 className="text-center text-xl mt-5">Queued Transactions</h1>
+      <table className="table w-full table-compact">
+        <thead>
+          <tr>
+            <th>Transaction Hash</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Value</th>
+            <th>Nonce</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.entries(queued).flatMap(([address, txs]) =>
+            Object.entries(txs).map(([nonce, tx]) => (
+              <tr key={tx.hash}>
+                <td className="font-mono">{tx.hash}</td>
+                <td>{tx.from}</td>
+                <td>{tx.to}</td>
+                <td>{Number(tx.value)}</td>
+                <td>{nonce}</td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
     </div>
   );
 };

@@ -30,27 +30,35 @@ export const Events = () => {
   }, []);
 
   return Object.keys(logs).length === 0 ? (
-    <div className="h-full flex items-center justify-center p-5 bg-gray-900 text-white">
+    <div className="h-full flex items-center justify-center p-5 bg-base-100 text-base-content">
       No events yet.
     </div>
   ) : (
-    <div className="flex items-center p-5 bg-gray-900 text-white overflow-hidden h-full">
-      <div className="flex flex-col h-full gap-4 p-5 w-full">
-        <h1 className="text-center">Events</h1>
-        {Object.entries(logs).map(([key, event]) => (
-          <details key={key}>
-            <summary className="text-xl">{key}</summary>
-            {Object.entries(event).map(([property, value]) => (
-              <details key={property} className="ml-4">
-                <summary>{property}</summary>
-                <div className="ml-4">
-                  <p>{value as any}</p>
-                </div>
-              </details>
-            ))}
-          </details>
-        ))}
-      </div>
+    <div className="p-5 bg-base-100 text-base-content h-full overflow-auto">
+      <h1 className="text-center text-2xl mb-2">Events</h1>
+      <table className="table w-full table-compact">
+        <thead>
+          <tr>
+            <th>Event Key</th>
+            <th>Event Properties</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.entries(logs).map(([key, event]) => (
+            <tr key={key}>
+              <td className="font-mono">{key}</td>
+              <td>
+                {Object.entries(event).map(([property, value]) => (
+                  <div key={property}>
+                    <strong>{property}: </strong>
+                    <span>{value}</span>
+                  </div>
+                ))}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

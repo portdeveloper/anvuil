@@ -119,11 +119,9 @@ export default function App() {
       />
 
       <div className="h-screen flex flex-col">
-        <nav>
-          <div className="flex items-center justify-between bg-gray-800 p-3 text-white">
-            <Navbar />
-          </div>
-          <div className="flex gap-10 bg-green-400">
+        <nav className="bg-secondary">
+          <Navbar />
+          <div className="flex gap-10 ">
             <InfoBar blockNumber={blockNumber} anvilRunning={anvilRunning} />
           </div>
         </nav>
