@@ -125,7 +125,7 @@ export default function App() {
             <InfoBar blockNumber={blockNumber} anvilRunning={anvilRunning} />
           </div>
         </nav>
-        <div className="flex-grow">
+        <div className="flex-grow overflow-hidden">
           <Routes>
             <Route
               path="/"

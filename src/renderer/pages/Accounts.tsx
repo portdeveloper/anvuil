@@ -154,7 +154,7 @@ export const Accounts = ({ accounts }: { accounts: Address[] }) => {
           </button>
         </div>
       </div>
-      <div className="p-5 flex w-full max-h-[600px] overflow-y-auto">
+      <div className="p-5 flex w-full overflow-y-auto">
         <table className="table w-full table-compact">
           <thead>
             <tr>
