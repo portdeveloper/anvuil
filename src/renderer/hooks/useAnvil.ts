@@ -3,6 +3,10 @@ import { toast } from 'react-toastify';
 import { anvilClient } from 'renderer/client';
 import { Block, Address, Transaction, Hash } from 'viem';
 
+/**
+ * @todo need to update addresses once anvil is restarted
+ */
+
 const useAnvil = () => {
   const [accounts, setAccounts] = useState<Address[]>([]); // @todo type
   const [blockNumber, setBlockNumber] = useState(0);
