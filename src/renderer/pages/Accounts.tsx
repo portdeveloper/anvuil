@@ -155,7 +155,7 @@ export const Accounts = ({ accounts }: { accounts: Address[] }) => {
           </button>
         </div>
         <div className="flex flex-col gap-1">
-          <p>Set update interval for nonces and addresses:</p>
+          <p>Set update interval</p>
           <input
             type="range"
             min={1000}
@@ -179,7 +179,7 @@ export const Accounts = ({ accounts }: { accounts: Address[] }) => {
           </div>
         </div>
       </div>
-      <div className="px-5 flex w-full overflow-y-auto scrollbar-thin scrollbar-thumb-secondary">
+      <div className="px-5 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-secondary">
         <table className="table w-full table-compact">
           <thead>
             <tr>
