@@ -6,14 +6,20 @@ import { AddressComp } from './AddressComp';
  * @todo need a way to update this component when the balance or nonce changes
  */
 
-export const AddressBlock = ({ address }: { address: Address }) => {
+export const AddressBlock = ({
+  address,
+  updateInterval,
+}: {
+  address: Address;
+  updateInterval: number;
+}) => {
   const [nonce, setNonce] = useState<number | null>(null);
   const [balance, setBalance] = useState<string>('');
   const [inputEther, setInputEther] = useState<string>('');
   const [inputNonce, setInputNonce] = useState<string>('');
 
   useEffect(() => {
-    const fetchNonce = async () => {
+    const fetchNonceAndBalance = async () => {
       try {
         const count = await anvilClient.getTransactionCount({ address });
 
@@ -26,9 +32,14 @@ export const AddressBlock = ({ address }: { address: Address }) => {
         console.error('Failed to fetch nonce and balance:', error);
       }
     };
+    // Then set up the interval to run it repeatedly
+    const intervalId = setInterval(fetchNonceAndBalance, updateInterval);
 
-    fetchNonce();
-  }, []);
+    fetchNonceAndBalance();
+
+    // Provide a cleanup function to clear the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, [address, updateInterval]);
 
   const handleSetBalance = async () => {
     try {
