@@ -12,6 +12,7 @@ export const Accounts = ({ accounts }: { accounts: Address[] }) => {
   const [storageValue, setStorageValue] = useState<string>('');
   const [bytecodeAddress, setBytecodeAddress] = useState<string>('');
   const [bytecodeValue, setBytecodeValue] = useState<string>('');
+  const [updateInterval, setUpdateInterval] = useState<number>(5000); // default to updating every 5 seconds
 
   const handleStartImpersonating = async () => {
     try {
@@ -153,6 +154,30 @@ export const Accounts = ({ accounts }: { accounts: Address[] }) => {
             Set bytecode
           </button>
         </div>
+        <div className="flex flex-col gap-1">
+          <p>Set update interval for nonces and addresses:</p>
+          <input
+            type="range"
+            min={1000}
+            max={10000}
+            step="1000"
+            value={updateInterval}
+            onChange={(e) => setUpdateInterval(Number(e.target.value))}
+            className="range range-xs"
+          />
+          <div className="w-full flex justify-between text-xs">
+            <span>1</span>
+            <span>2</span>
+            <span>3</span>
+            <span>4</span>
+            <span>5</span>
+            <span>6</span>
+            <span>7</span>
+            <span>8</span>
+            <span>9</span>
+            <span>10</span>
+          </div>
+        </div>
       </div>
       <div className="px-5 flex w-full overflow-y-auto scrollbar-thin scrollbar-thumb-secondary">
         <table className="table w-full table-compact">
@@ -165,7 +190,11 @@ export const Accounts = ({ accounts }: { accounts: Address[] }) => {
           </thead>
           <tbody>
             {accounts.map((account) => (
-              <AddressBlock key={account} address={account} />
+              <AddressBlock
+                key={account}
+                address={account}
+                updateInterval={updateInterval}
+              />
             ))}
           </tbody>
         </table>

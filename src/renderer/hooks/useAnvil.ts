@@ -4,7 +4,7 @@ import { anvilClient } from 'renderer/client';
 import { Block, Address, Transaction, Hash } from 'viem';
 
 /**
- * @todo need to update addresses once anvil is restarted
+ * @todo need to update addresses once any change happens?
  */
 
 const useAnvil = (key: number) => {
