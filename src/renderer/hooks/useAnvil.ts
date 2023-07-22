@@ -7,7 +7,8 @@ import { Block, Address, Transaction, Hash } from 'viem';
  * @todo need to update addresses once anvil is restarted
  */
 
-const useAnvil = () => {
+const useAnvil = (key: number) => {
+  // add key parameter
   const [accounts, setAccounts] = useState<Address[]>([]); // @todo type
   const [blockNumber, setBlockNumber] = useState(0);
   const [blocks, setBlocks] = useState<Block[]>([]);
@@ -16,7 +17,10 @@ const useAnvil = () => {
   async function getAddresses() {
     try {
       const localAccounts = await anvilClient.getAddresses();
-      console.log('⚠️⚠️⚠️ getAddresses is called inside useAnvil.ts', localAccounts);
+      console.log(
+        '⚠️⚠️⚠️ getAddresses is called inside useAnvil.ts',
+        localAccounts
+      );
       setAccounts(localAccounts);
     } catch (error: any) {
       toast.error(error?.shortMessage);
@@ -48,7 +52,7 @@ const useAnvil = () => {
     return () => {
       unwatch();
     };
-  }, []);
+  }, [key]);
 
   return {
     accounts,
