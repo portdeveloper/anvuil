@@ -63,7 +63,7 @@ export const Accounts = ({ accounts }: { accounts: Address[] }) => {
       Anvil is not running.
     </div>
   ) : (
-    <div className="flex h-full">
+    <div className="flex h-full ">
       <div className="px-3 py-2 flex flex-col gap-7 bg-secondary w-1/5">
         <div className="flex flex-col gap-1">
           <p>Impersonate account:</p>
@@ -154,7 +154,7 @@ export const Accounts = ({ accounts }: { accounts: Address[] }) => {
           </button>
         </div>
       </div>
-      <div className="p-5 flex w-full overflow-y-auto">
+      <div className="px-5 flex w-full overflow-y-auto scrollbar-thin scrollbar-thumb-secondary">
         <table className="table w-full table-compact">
           <thead>
             <tr>
