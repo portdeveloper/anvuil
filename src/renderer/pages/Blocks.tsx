@@ -5,8 +5,9 @@ import { TxHashComp } from 'renderer/components/TxHashComp';
 import { Block } from 'viem';
 
 export const Blocks = ({ blocks }: { blocks: Block[] }) => {
-  const [jumpTime, setJumpTime] = useState<number>(0);
   const [intervalMining, setIntervalMining] = useState<number>(0);
+  const [gasLimit, setGasLimit] = useState<string>('');
+  const [jumpTime, setJumpTime] = useState<number>(0);
   const [blockTimestampInterval, setBlockTimestampInterval] =
     useState<number>(0);
 
@@ -52,88 +53,99 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
     }
   };
 
+  const handleSetGasLimit = async () => {
+    try {
+      await anvilClient.setBlockGasLimit({
+        gasLimit: BigInt(gasLimit),
+      });
+    } catch (error: any) {
+      toast.error(error);
+    }
+  };
+
   return blocks.length === 0 ? (
-    <div className="h-full flex items-center justify-center p-5 bg-base-100 text-base-content">
+    <div className="h-full flex items-center justify-center p-5">
       No blocks yet.
     </div>
   ) : (
-    <div className="flex flex-col h-full gap-2 bg-base-100 text-base-content px-2 py-1">
-      <div className="flex gap-4">
-        <div className="form-control">
-          <label className="label p-0">
-            <span className="label-text">Interval Mining (seconds)</span>
-          </label>
-          <div className="flex">
-            <input
-              type="number"
-              value={intervalMining}
-              onChange={(e) => setIntervalMining(Number(e.target.value))}
-              placeholder="Enter interval in seconds"
-              className="input input-bordered input-xs flex-grow"
-            />
-            <button
-              type="button"
-              className="btn btn-primary btn-xs ml-2"
-              onClick={handleSetIntervalMining}
-            >
-              Set
-            </button>
-          </div>
+    <div className="flex h-full ">
+      <div className="px-3 py-2 flex flex-col gap-7 bg-secondary w-1/5">
+        <div className="flex flex-col gap-1">
+          <p>Set interval for mining</p>
+          <input
+            type="number"
+            value={intervalMining}
+            onChange={(e) => setIntervalMining(Number(e.target.value))}
+            placeholder="Enter interval in seconds"
+            className="input input-bordered input-sm w-full"
+          />
+          <button
+            type="button"
+            className="btn btn-xs w-full"
+            onClick={handleSetIntervalMining}
+          >
+            Set interval mining
+          </button>
         </div>
-        <div className="form-control">
-          <label className="label p-0">
-            <span className="label-text">Jump Time (seconds)</span>
-          </label>
-          <div className="flex">
-            <input
-              type="number"
-              value={jumpTime}
-              onChange={(e) => setJumpTime(Number(e.target.value))}
-              placeholder="Enter seconds to jump"
-              className="input input-bordered input-xs flex-grow"
-            />
-            <button
-              type="button"
-              className="btn btn-primary btn-xs ml-2"
-              onClick={handleSetJumpTime}
-            >
-              Jump
-            </button>
-          </div>
+        <div className="flex flex-col gap-1">
+          <p>Set block gas limit</p>
+          <input
+            type="bigint"
+            value={gasLimit}
+            onChange={(e) => setGasLimit(e.target.value)}
+            placeholder="Enter gas limit"
+            className="input input-bordered input-sm w-full"
+          />
+          <button
+            type="button"
+            className="btn btn-xs w-full"
+            onClick={handleSetGasLimit}
+          >
+            Set block gas limit
+          </button>
         </div>
-        <div className="form-control">
-          <label className="label p-0">
-            <span className="label-text">
-              Block Timestamp Interval (seconds)
-            </span>
-          </label>
-          <div className="flex">
-            <input
-              type="number"
-              value={blockTimestampInterval}
-              onChange={(e) =>
-                setBlockTimestampInterval(Number(e.target.value))
-              }
-              placeholder="Enter seconds"
-              className="input input-bordered input-xs flex-grow"
-            />
-            <button
-              className="btn btn-primary btn-xs"
-              onClick={handleRemoveBlockTimestampInterval}
-            >
-              Remove Interval
-            </button>
-            <button
-              type="button"
-              className="btn btn-primary btn-xs ml-2"
-              onClick={handleSetBlockTimestampInterval}
-            >
-              Set Interval
-            </button>
-          </div>
+        <div className="flex flex-col gap-1">
+          <p>Jump Time (seconds):</p>
+          <input
+            type="number"
+            value={jumpTime}
+            onChange={(e) => setJumpTime(Number(e.target.value))}
+            placeholder="Enter seconds to jump"
+            className="input input-bordered input-sm w-full"
+          />
+          <button
+            type="button"
+            className="btn btn-xs w-full"
+            onClick={handleSetJumpTime}
+          >
+            Jump
+          </button>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p>Block Timestamp Interval (seconds):</p>
+          <input
+            type="number"
+            value={blockTimestampInterval}
+            onChange={(e) => setBlockTimestampInterval(Number(e.target.value))}
+            placeholder="Enter seconds"
+            className="input input-bordered input-sm w-full"
+          />
+          <button
+            className="btn btn-xs w-full"
+            onClick={handleRemoveBlockTimestampInterval}
+          >
+            Remove Interval
+          </button>
+          <button
+            type="button"
+            className="btn btn-xs w-full"
+            onClick={handleSetBlockTimestampInterval}
+          >
+            Set Interval
+          </button>
         </div>
       </div>
-      <div className="overflow-auto max-h-[calc(100vh-6em)]">
+      <div className="px-5 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-secondary">
         <table className="table w-full table-compact">
           <thead>
             <tr>
