@@ -21,8 +21,10 @@ export default function App() {
   const [directory, setDirectory] = useState(null);
   const [anvilParams, setAnvilParams] = useState('');
   const [anvilRunning, setAnvilRunning] = useState(false);
+  const [anvilKey, setAnvilKey] = useState(0); // add this state
 
-  const { accounts, blockNumber, blocks, transactions } = useAnvil();
+  const { accounts, blockNumber, blocks, transactions } =
+    useAnvil(anvilKey);
 
   useEffect(() => {
     const handleData = (data: Uint8Array) => {
@@ -69,6 +71,7 @@ export default function App() {
       console.log('⚠️⚠️⚠️ Anvil is started');
       toast.success(message);
       setAnvilRunning(true);
+      setAnvilKey(anvilKey + 1); // increment the key when anvil is killed
     } catch (err: any) {
       toast.error(err.toString());
     }
