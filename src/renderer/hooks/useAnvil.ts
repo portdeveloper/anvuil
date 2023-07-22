@@ -12,7 +12,7 @@ const useAnvil = () => {
   async function getAddresses() {
     try {
       const localAccounts = await anvilClient.getAddresses();
-      console.log('⚠️⚠️⚠️ getAddresses is called inside useAnvil.ts');
+      console.log('⚠️⚠️⚠️ getAddresses is called inside useAnvil.ts', localAccounts);
       setAccounts(localAccounts);
     } catch (error: any) {
       toast.error(error?.shortMessage);

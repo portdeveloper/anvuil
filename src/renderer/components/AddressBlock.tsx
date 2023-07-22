@@ -68,7 +68,7 @@ export const AddressBlock = ({ address }: { address: Address }) => {
         <AddressComp address={address} />
       </td>
       <td>
-        <div className="form-control flex flex-row">
+        <div className="form-control flex flex-row gap-2">
           <input
             type="text"
             value={nonce !== null ? nonce : inputNonce}
@@ -86,7 +86,7 @@ export const AddressBlock = ({ address }: { address: Address }) => {
         </div>
       </td>
       <td>
-        <div className="form-control flex flex-row">
+        <div className="form-control flex flex-row gap-2">
           <input
             type="text"
             value={inputEther !== '' ? inputEther : balance.toString()}

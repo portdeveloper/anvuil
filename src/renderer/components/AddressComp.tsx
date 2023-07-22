@@ -14,16 +14,6 @@ type TAddressProps = {
   size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl';
 };
 
-const blockieSizeMap = {
-  xs: 6,
-  sm: 7,
-  base: 8,
-  lg: 9,
-  xl: 10,
-  '2xl': 12,
-  '3xl': 15,
-};
-
 export const AddressComp = ({
   address,
   disableAddressLink,
@@ -54,8 +44,8 @@ export const AddressComp = ({
     <div className="flex h-full font-mono">
       <div className="flex-shrink-0">
         <Blockies
-          className="mx-auto rounded-full"
-          size={blockieSizeMap[size]}
+          className="mx-auto rounded-md"
+          size={8}
           seed={address.toLowerCase()}
           scale={3}
         />
