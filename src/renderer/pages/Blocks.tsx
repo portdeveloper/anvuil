@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { anvilClient } from 'renderer/client';
+import { BlockDetails } from 'renderer/components';
 import { HashComp } from 'renderer/components/HashComp';
 import { Block, Address } from 'viem';
 
@@ -11,6 +13,8 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
   const [blockTimestampInterval, setBlockTimestampInterval] =
     useState<number>(0);
   const [coinbase, setCoinbase] = useState<string>('');
+
+  let { blockHash } = useParams();
 
   const handleSetIntervalMining = async () => {
     try {
@@ -183,45 +187,49 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
         </div>
       </div>
       <div className="px-5 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-secondary">
-        <table className="table w-full table-compact">
-          <thead>
-            <tr>
-              <th>Block hash</th>
-              <th>Gas limit</th>
-              <th>Gas used</th>
-              <th>Timestamp</th>
-              <th>Transactions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {blocks.length === 0 && (
+        {blockHash ? (
+          <BlockDetails />
+        ) : (
+          <table className="table w-full table-compact">
+            <thead>
               <tr>
-                <td colSpan={5} className="text-center">
-                  No blocks found
-                </td>
+                <th>Block hash</th>
+                <th>Gas limit</th>
+                <th>Gas used</th>
+                <th>Timestamp</th>
+                <th>Transactions</th>
               </tr>
-            )}
-            {blocks.map((block) => (
-              <tr key={block.hash} className="">
-                <td>
-                  <HashComp hash={block.hash} type="block" />
-                </td>
-                <td>{Number(block.gasLimit)}</td>
-                <td>{Number(block.gasUsed)}</td>
-                <td>
-                  {new Date(Number(block.timestamp) * 1000).toLocaleString()}
-                </td>
-                <td>
-                  {block.transactions.map((tx) => (
-                    <div key={tx.toString()} className="p-2">
-                      {tx.toString()}
-                    </div>
-                  ))}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {blocks.length === 0 && (
+                <tr>
+                  <td colSpan={5} className="text-center">
+                    No blocks found
+                  </td>
+                </tr>
+              )}
+              {blocks.map((block) => (
+                <tr key={block.hash} className="">
+                  <td>
+                    <HashComp hash={block.hash} type="block" />
+                  </td>
+                  <td>{Number(block.gasLimit)}</td>
+                  <td>{Number(block.gasUsed)}</td>
+                  <td>
+                    {new Date(Number(block.timestamp) * 1000).toLocaleString()}
+                  </td>
+                  <td>
+                    {block.transactions.map((tx) => (
+                      <div key={tx.toString()} className="p-2">
+                        {tx.toString()}
+                      </div>
+                    ))}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
