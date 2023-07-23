@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { anvilClient } from 'renderer/client';
-import { TxHashComp } from 'renderer/components/TxHashComp';
+import { HashComp } from 'renderer/components/HashComp';
 import { Block, Address } from 'viem';
 
 export const Blocks = ({ blocks }: { blocks: Block[] }) => {
@@ -204,7 +204,7 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
             {blocks.map((block) => (
               <tr key={block.hash} className="">
                 <td>
-                  <TxHashComp txHash={block.hash} disableTxHashLink={true} />
+                  <HashComp hash={block.hash} type="block" />
                 </td>
                 <td>{Number(block.gasLimit)}</td>
                 <td>{Number(block.gasUsed)}</td>

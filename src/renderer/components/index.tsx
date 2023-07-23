@@ -4,4 +4,4 @@ export * from './AddressInput';
 export * from './InfoBar';
 export * from './Navbar';
 export * from './TransactionDetails';
-export * from './TxHashComp';
+export * from './HashComp';
