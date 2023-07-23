@@ -4,8 +4,13 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 export const Navbar = () => {
   const location = useLocation();
 
-  const generateLinkClass = (path: string) =>
-    `tab ${location.pathname === path ? 'tab-active' : ''}`;
+  const generateLinkClass = (path: string) => {
+    if (path === '/') {
+      return `tab ${location.pathname === path ? 'tab-active' : ''}`;
+    } else {
+      return `tab ${location.pathname.startsWith(path) ? 'tab-active' : ''}`;
+    }
+  };
 
   return (
     <div className="tabs flex justify-between items-center">

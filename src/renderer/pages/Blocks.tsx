@@ -204,7 +204,7 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
             {blocks.map((block) => (
               <tr key={block.hash} className="">
                 <td>
-                  <TxHashComp txHash={block.hash} />
+                  <TxHashComp txHash={block.hash} disableTxHashLink={true} />
                 </td>
                 <td>{Number(block.gasLimit)}</td>
                 <td>{Number(block.gasUsed)}</td>

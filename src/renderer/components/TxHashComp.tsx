@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import {
   CheckCircleIcon,
@@ -46,14 +47,12 @@ export const TxHashComp = ({
           {displayTxHash}
         </span>
       ) : (
-        <a
+        <Link
           className={`ml-1.5 text-${size} font-normal`}
-          target="_blank"
-          // href={blockExplorerTxHashLink} //@todo
-          rel="noopener noreferrer"
+          to={`/transactions/${txHash}`}
         >
           {displayTxHash}
-        </a>
+        </Link>
       )}
       {txHashCopied ? (
         <CheckCircleIcon
