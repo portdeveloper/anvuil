@@ -79,7 +79,7 @@ export const Home = ({
   };
 
   return (
-    <div className="flex h-full ">
+    <div className="flex h-full">
       <div className="px-3 py-2 flex flex-col gap-7 bg-secondary w-1/5">
         <div className="flex flex-col gap-1">
           <p>Reset fork:</p>
@@ -162,8 +162,8 @@ export const Home = ({
           </button>
         </div>
       </div>
-      <div className="px-5 py-2 flex w-4/5">
-        <div className="w-full flex justify-between text-xs">
+      <div className="px-5 w-full">
+        <div className="w-full flex justify-between text-xs px-2 py-4">
           <div className="flex flex-col gap-2 w-1/3">
             <button
               className="btn btn-sm w-full"
