@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { anvilClient } from 'renderer/client';
 import { BlockDetails } from 'renderer/components';
 import { HashComp } from 'renderer/components/HashComp';
-import { Block, Address } from 'viem';
+import { Block, Address, Hash } from 'viem';
 
 export const Blocks = ({ blocks }: { blocks: Block[] }) => {
   const [intervalMining, setIntervalMining] = useState<number>(0);
@@ -209,7 +209,7 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
                 </tr>
               )}
               {blocks.map((block) => (
-                <tr key={block.hash} className="">
+                <tr key={block.hash} className="h-[75px]">
                   <td>
                     <HashComp hash={block.hash} type="block" />
                   </td>
@@ -219,11 +219,11 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
                     {new Date(Number(block.timestamp) * 1000).toLocaleString()}
                   </td>
                   <td>
-                    {block.transactions.map((tx) => (
-                      <div key={tx.toString()} className="p-2">
-                        {tx.toString()}
-                      </div>
-                    ))}
+                    <div className="max-h-[50px] overflow-y-auto scrollbar-thin font-mono">
+                      {block.transactions.map((tx) => (
+                        <HashComp hash={tx as Hash} type="transaction" />
+                      ))}
+                    </div>
                   </td>
                 </tr>
               ))}
