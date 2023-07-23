@@ -7,23 +7,25 @@ import {
 } from '@heroicons/react/24/outline';
 import { Hash } from 'viem';
 
-type TTxHashProps = {
-  txHash: Hash | null;
-  disableTxHashLink?: boolean;
+type THashProps = {
+  hash: Hash | null;
+  type: 'transaction' | 'block';
+  disableHashLink?: boolean;
   format?: 'short' | 'long';
   size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl';
 };
 
-export const TxHashComp = ({
-  txHash,
-  disableTxHashLink,
+export const HashComp = ({
+  hash,
+  type,
+  disableHashLink,
   format,
   size = 'base',
-}: TTxHashProps) => {
-  const [txHashCopied, setTxHashCopied] = useState(false);
+}: THashProps) => {
+  const [hashCopied, setHashCopied] = useState(false);
 
   // Skeleton UI
-  if (!txHash) {
+  if (!hash) {
     return (
       <div className="animate-pulse flex space-x-4">
         <div className="rounded-md bg-slate-300 h-6 w-6"></div>
@@ -34,38 +36,36 @@ export const TxHashComp = ({
     );
   }
 
-  let displayTxHash = txHash?.slice(0, 5) + '...' + txHash?.slice(-4);
+  let displayHash = hash?.slice(0, 5) + '...' + hash?.slice(-4);
 
   if (format === 'long') {
-    displayTxHash = txHash;
+    displayHash = hash;
   }
+
+  const linkTo =
+    type === 'transaction' ? `/transactions/${hash}` : `/blocks/${hash}`;
 
   return (
     <div className="flex h-full font-mono">
-      {disableTxHashLink ? (
-        <span className={`ml-1.5 text-${size} font-normal`}>
-          {displayTxHash}
-        </span>
+      {disableHashLink ? (
+        <span className={`ml-1.5 text-${size} font-normal`}>{displayHash}</span>
       ) : (
-        <Link
-          className={`ml-1.5 text-${size} font-normal`}
-          to={`/transactions/${txHash}`}
-        >
-          {displayTxHash}
+        <Link className={`ml-1.5 text-${size} font-normal`} to={linkTo}>
+          {displayHash}
         </Link>
       )}
-      {txHashCopied ? (
+      {hashCopied ? (
         <CheckCircleIcon
           className="ml-1.5 text-xl font-normal h-5 w-5 cursor-pointer"
           aria-hidden="true"
         />
       ) : (
         <CopyToClipboard
-          text={txHash}
+          text={hash}
           onCopy={() => {
-            setTxHashCopied(true);
+            setHashCopied(true);
             setTimeout(() => {
-              setTxHashCopied(false);
+              setHashCopied(false);
             }, 800);
           }}
         >

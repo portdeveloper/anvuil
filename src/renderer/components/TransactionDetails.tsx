@@ -35,32 +35,59 @@ export const TransactionDetails = () => {
   }
 
   return (
-    <div className="p-6">
-      <button className="btn btn-primary btn-xs mb-5" onClick={handleBack}>
+    <div className="container mx-auto p-5">
+      <button className="btn btn-sm btn-primary" onClick={handleBack}>
         Back
       </button>
-      <h1 className="text-2xl font-bold mb-4">Transaction Details</h1>
-
-      <p className="mb-2">
-        <span className="font-bold">Hash:</span> {transaction.hash}
-      </p>
-      <p className="mb-2">
-        <span className="font-bold">From:</span> {transaction.from}
-      </p>
-      <p className="mb-2">
-        <span className="font-bold">To:</span> {transaction.to}
-      </p>
-      <p className="mb-2">
-        <span className="font-bold">Value:</span> {Number(transaction.value)}
-      </p>
-      <div>
-        <p> Input:</p>
-        <textarea
-          readOnly
-          value={transaction.input}
-          className="p-0 textarea-primary bg-inherit w-full h-[200px] scrollbar-thin"
-        />
-      </div>
+      {transaction ? (
+        <div>
+          <h2 className="text-3xl font-bold mb-4 text-center">
+            Transaction Details
+          </h2>
+          <table className="table w-full">
+            <tbody>
+              <tr>
+                <td>
+                  <strong>Transaction Hash:</strong>
+                </td>
+                <td>{transaction.hash}</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>From:</strong>
+                </td>
+                <td>{transaction.from}</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>To:</strong>
+                </td>
+                <td>{transaction.to}</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Value:</strong>
+                </td>
+                <td>{Number(transaction.value)}</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Input:</strong>
+                </td>
+                <td className="form-control">
+                  <textarea
+                    readOnly
+                    value={transaction.input}
+                    className="p-0 textarea-primary bg-inherit h-[250px]"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p className="text-2xl text-base-content">Loading...</p>
+      )}
     </div>
   );
 };

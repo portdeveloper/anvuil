@@ -1,8 +1,4 @@
-import {
-  AddressComp,
-  TxHashComp,
-  TransactionDetails,
-} from 'renderer/components';
+import { AddressComp, HashComp, TransactionDetails } from 'renderer/components';
 import { Transaction, Hash } from 'viem';
 import { useParams } from 'react-router-dom';
 
@@ -42,7 +38,7 @@ export const Transactions = ({
                 transactions.map((tx) => (
                   <tr key={tx.hash}>
                     <td>
-                      <TxHashComp txHash={tx.hash} />
+                      <HashComp hash={tx.hash} type="transaction" />
                     </td>
                     <td>
                       <AddressComp address={tx.from} />
