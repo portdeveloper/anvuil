@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { anvilClient } from 'renderer/client';
 import { TxHashComp } from 'renderer/components/TxHashComp';
-import { Block } from 'viem';
+import { Block, Address } from 'viem';
 
 export const Blocks = ({ blocks }: { blocks: Block[] }) => {
   const [intervalMining, setIntervalMining] = useState<number>(0);
@@ -10,6 +10,7 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
   const [jumpTime, setJumpTime] = useState<number>(0);
   const [blockTimestampInterval, setBlockTimestampInterval] =
     useState<number>(0);
+  const [coinbase, setCoinbase] = useState<string>('');
 
   const handleSetIntervalMining = async () => {
     try {
@@ -63,8 +64,19 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
     }
   };
 
+  const handleSetCoinbase = async () => {
+    try {
+      await anvilClient.setCoinbase({
+        address: coinbase as Address,
+      });
+      toast.info(`Set coinbase to ${coinbase}`);
+    } catch (error: any) {
+      toast.error(error);
+    }
+  };
+
   return (
-    <div className="flex h-full ">
+    <div className="flex h-full">
       <div className="px-3 py-2 flex flex-col gap-7 bg-secondary w-1/5">
         <div className="flex flex-col gap-1">
           <p>Set interval for mining</p>
@@ -150,6 +162,23 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
             onClick={handleSetBlockTimestampInterval}
           >
             Set Interval
+          </button>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p>Set coinbase</p>
+          <input
+            type="text"
+            value={coinbase}
+            onChange={(e) => setCoinbase(e.target.value)}
+            placeholder="Enter coinbase address"
+            className="input input-bordered input-sm w-full"
+          />
+          <button
+            type="button"
+            className="btn btn-xs w-full"
+            onClick={handleSetCoinbase}
+          >
+            Set coinbase
           </button>
         </div>
       </div>
