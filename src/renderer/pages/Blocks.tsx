@@ -6,7 +6,7 @@ import { Block } from 'viem';
 
 export const Blocks = ({ blocks }: { blocks: Block[] }) => {
   const [intervalMining, setIntervalMining] = useState<number>(0);
-  const [gasLimit, setGasLimit] = useState<string>('');
+  const [gasLimit, setGasLimit] = useState<number>(30000000);
   const [jumpTime, setJumpTime] = useState<number>(0);
   const [blockTimestampInterval, setBlockTimestampInterval] =
     useState<number>(0);
@@ -63,11 +63,7 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
     }
   };
 
-  return blocks.length === 0 ? (
-    <div className="h-full flex items-center justify-center p-5">
-      No blocks yet.
-    </div>
-  ) : (
+  return (
     <div className="flex h-full ">
       <div className="px-3 py-2 flex flex-col gap-7 bg-secondary w-1/5">
         <div className="flex flex-col gap-1">
@@ -75,7 +71,10 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
           <input
             type="number"
             value={intervalMining}
-            onChange={(e) => setIntervalMining(Number(e.target.value))}
+            onChange={(e) => {
+              const newValue = Number(e.target.value);
+              setIntervalMining(newValue >= 0 ? newValue : 0);
+            }}
             placeholder="Enter interval in seconds"
             className="input input-bordered input-sm w-full"
           />
@@ -92,7 +91,10 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
           <input
             type="bigint"
             value={gasLimit}
-            onChange={(e) => setGasLimit(e.target.value)}
+            onChange={(e) => {
+              const newValue = Number(e.target.value);
+              setGasLimit(newValue >= 0 ? newValue : 0);
+            }}
             placeholder="Enter gas limit"
             className="input input-bordered input-sm w-full"
           />
@@ -109,7 +111,10 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
           <input
             type="number"
             value={jumpTime}
-            onChange={(e) => setJumpTime(Number(e.target.value))}
+            onChange={(e) => {
+              const newValue = Number(e.target.value);
+              setJumpTime(newValue >= 0 ? newValue : 0);
+            }}
             placeholder="Enter seconds to jump"
             className="input input-bordered input-sm w-full"
           />
@@ -126,7 +131,10 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
           <input
             type="number"
             value={blockTimestampInterval}
-            onChange={(e) => setBlockTimestampInterval(Number(e.target.value))}
+            onChange={(e) => {
+              const newValue = Number(e.target.value);
+              setBlockTimestampInterval(newValue >= 0 ? newValue : 0);
+            }}
             placeholder="Enter seconds"
             className="input input-bordered input-sm w-full"
           />
@@ -157,6 +165,13 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
             </tr>
           </thead>
           <tbody>
+            {blocks.length === 0 && (
+              <tr>
+                <td colSpan={5} className="text-center">
+                  No blocks found
+                </td>
+              </tr>
+            )}
             {blocks.map((block) => (
               <tr key={block.hash} className="">
                 <td>
