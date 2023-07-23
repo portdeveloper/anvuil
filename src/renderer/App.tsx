@@ -11,7 +11,7 @@ import {
   Mempool,
   Events,
 } from 'renderer/pages';
-import { Navbar, InfoBar } from 'renderer/components';
+import { Navbar, InfoBar, TransactionDetails } from 'renderer/components';
 import 'react-toastify/dist/ReactToastify.css';
 import outputReducer from '../utils/outputReducer';
 import useAnvil from './hooks/useAnvil';
@@ -23,8 +23,7 @@ export default function App() {
   const [anvilRunning, setAnvilRunning] = useState(false);
   const [anvilKey, setAnvilKey] = useState(0); // add this state
 
-  const { accounts, blockNumber, blocks, transactions } =
-    useAnvil(anvilKey);
+  const { accounts, blockNumber, blocks, transactions } = useAnvil(anvilKey);
 
   useEffect(() => {
     const handleData = (data: Uint8Array) => {
@@ -150,7 +149,10 @@ export default function App() {
             <Route
               path="/transactions"
               element={<Transactions transactions={transactions} />}
-            />
+            >
+              <Route index element={<></>} />
+              <Route path=":txHash" element={<TransactionDetails />} />
+            </Route>
             <Route path="/mempool" element={<Mempool />} />
             <Route path="/events" element={<Events />} />
             <Route
