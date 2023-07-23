@@ -11,11 +11,6 @@ type HomeProps = {
   killAnvil: () => void;
 };
 
-/**
- * @todo check if setLoggingEnabled works
- * is it enabled or disabled by default?
- */
-
 export const Home = ({
   selectDirectory,
   anvilParams,
@@ -25,7 +20,7 @@ export const Home = ({
 }: HomeProps) => {
   const [resetForkBlockNumber, setResetForkBlockNumber] = useState<number>(0);
   const [resetForkRpcUrl, setResetForkRpcUrl] = useState<string>('');
-  const [loggingEnabled, setLoggingEnabled] = useState<boolean>(false);
+  const [loggingEnabled, setLoggingEnabled] = useState<boolean>(true);
   const [RpcUrl, setRpcUrl] = useState<string>('');
   const [snapshotId, setSnapshotId] = useState<string>('');
 
@@ -48,17 +43,18 @@ export const Home = ({
     }
   };
 
-  useEffect(() => {
-    const handleSetLoggingEnabled = async () => {
-      try {
-        await anvilClient.setLoggingEnabled(loggingEnabled);
-      } catch (error: any) {
-        toast.error(error);
-      }
-    };
+  const handleLoggingCheckboxChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const isChecked = event.target.checked;
+    setLoggingEnabled(isChecked);
 
-    handleSetLoggingEnabled();
-  }, [loggingEnabled]);
+    try {
+      await anvilClient.setLoggingEnabled(isChecked);
+    } catch (error: any) {
+      toast.error(error);
+    }
+  };
 
   const handleSnapshotState = async () => {
     try {
@@ -125,17 +121,7 @@ export const Home = ({
             Set RPC URL
           </button>
         </div>
-        <div className="flex gap-1 form-control">
-          <label className="label cursor-pointer">
-            <span className="label-text">Set logging enabled</span>
-            <input
-              type="checkbox"
-              checked={loggingEnabled}
-              onChange={(e) => setLoggingEnabled(e.target.checked)}
-              className="toggle toggle-primary toggle-sm"
-            />
-          </label>
-        </div>
+
         <div className="flex gap-1 form-control">
           <p>Snapshot</p>
           <button
@@ -180,7 +166,17 @@ export const Home = ({
               onChange={(e) => setAnvilParams(e.target.value)}
               placeholder="Enter Anvil parameters"
             />
-
+            <div className="flex gap-1 form-control">
+              <label className="label cursor-pointer">
+                <span className="label-text">Set logging enabled</span>
+                <input
+                  type="checkbox"
+                  checked={loggingEnabled}
+                  onChange={handleLoggingCheckboxChange}
+                  className="toggle toggle-primary toggle-sm"
+                />
+              </label>
+            </div>
             <button
               className="btn btn-success btn-sm"
               type="button"
@@ -188,7 +184,6 @@ export const Home = ({
             >
               Start Anvil
             </button>
-
             <button
               className="btn btn-error btn-sm"
               type="button"
