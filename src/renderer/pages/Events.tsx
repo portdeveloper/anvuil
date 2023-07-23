@@ -29,36 +29,36 @@ export const Events = () => {
     };
   }, []);
 
-  return Object.keys(logs).length === 0 ? (
-    <div className="h-full flex items-center justify-center p-5 bg-base-100 text-base-content">
-      No events yet.
-    </div>
-  ) : (
-    <div className="p-5 bg-base-100 text-base-content h-full overflow-auto">
-      <h1 className="text-center text-2xl mb-2">Events</h1>
-      <table className="table w-full table-compact">
-        <thead>
-          <tr>
-            <th>Event Key</th>
-            <th>Event Properties</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Object.entries(logs).map(([key, event]) => (
-            <tr key={key}>
-              <td className="font-mono">{key}</td>
-              <td>
-                {Object.entries(event).map(([property, value]) => (
-                  <div key={property}>
-                    <strong>{property}: </strong>
-                    <span>{value as any}</span>
-                  </div>
-                ))}
-              </td>
+  return (
+    <div className="flex h-full">
+      <div className="px-3 py-2 flex flex-col gap-7 bg-secondary w-1/5">
+        {/* Add controls here, if required */}
+      </div>
+      <div className="px-5 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-secondary">
+        <table className="table w-full table-compact">
+          <thead>
+            <tr>
+              <th>Event Key</th>
+              <th>Event Properties</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {Object.entries(logs).map(([key, event]) => (
+              <tr key={key}>
+                <td className="font-mono">{key}</td>
+                <td>
+                  {Object.entries(event).map(([property, value]) => (
+                    <div key={property}>
+                      <strong>{property}: </strong>
+                      <span>{value as any}</span>
+                    </div>
+                  ))}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
