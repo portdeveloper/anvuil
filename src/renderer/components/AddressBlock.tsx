@@ -4,6 +4,7 @@ import { anvilClient } from 'renderer/client';
 import { AddressComp } from './AddressComp';
 /**
  * @todo need a way to update this component when the balance or nonce changes
+ * setting the nonce is pretty rare, might remove?
  */
 
 export const AddressBlock = ({
