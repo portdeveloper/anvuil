@@ -11,7 +11,12 @@ import {
   Mempool,
   Events,
 } from 'renderer/pages';
-import { Navbar, InfoBar, TransactionDetails } from 'renderer/components';
+import {
+  Navbar,
+  InfoBar,
+  TransactionDetails,
+  BlockDetails,
+} from 'renderer/components';
 import 'react-toastify/dist/ReactToastify.css';
 import outputReducer from '../utils/outputReducer';
 import useAnvil from './hooks/useAnvil';
@@ -145,7 +150,10 @@ export default function App() {
               path="/accounts"
               element={<Accounts accounts={accounts} />}
             />
-            <Route path="/blocks" element={<Blocks blocks={blocks} />} />
+            <Route path="/blocks" element={<Blocks blocks={blocks} />}>
+              <Route index element={<></>} />
+              <Route path=":blockHash" element={<BlockDetails />} />
+            </Route>
             <Route
               path="/transactions"
               element={<Transactions transactions={transactions} />}

@@ -1,5 +1,5 @@
 import { AddressComp, HashComp, TransactionDetails } from 'renderer/components';
-import { Transaction, Hash } from 'viem';
+import { Transaction } from 'viem';
 import { useParams } from 'react-router-dom';
 
 export const Transactions = ({
