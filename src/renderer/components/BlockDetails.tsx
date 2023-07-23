@@ -3,6 +3,7 @@ import { anvilClient } from 'renderer/client';
 import { Hash, Block } from 'viem';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
+import { HashComp } from './HashComp';
 
 export const BlockDetails = () => {
   const [block, setBlock] = useState<Block | null>(null);
@@ -82,9 +83,11 @@ export const BlockDetails = () => {
                 </td>
                 <td>
                   {block.transactions.map((tx) => (
-                    <div key={tx.toString()} className="p-2">
-                      {tx.toString()}
-                    </div>
+                    <HashComp
+                      hash={tx as Hash}
+                      type="transaction"
+                      format="long"
+                    />
                   ))}
                 </td>
               </tr>
