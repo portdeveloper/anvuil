@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { anvilClient } from 'renderer/client';
-import { BlockDetails } from 'renderer/components';
-import { HashComp } from 'renderer/components/HashComp';
+import { BlockDetails, HashComp, Pagination } from 'renderer/components';
 import { Block, Address, Hash } from 'viem';
 
 const BLOCKS_PER_PAGE = 10;
@@ -23,17 +22,7 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
   const indexOfFirstBlock = indexOfLastBlock - BLOCKS_PER_PAGE;
   const currentBlocks = blocks.slice(indexOfFirstBlock, indexOfLastBlock);
 
-  const nextPage = () => {
-    if (currentPage < Math.ceil(blocks.length / BLOCKS_PER_PAGE)) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const prevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   const handleSetIntervalMining = async () => {
     try {
@@ -253,20 +242,11 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
             </tbody>
           </table>
         )}
-        <div className="join flex justify-end py-2">
-          <button
-            className="join-item btn btn-accent btn-xs"
-            onClick={prevPage}
-          >
-            Previous
-          </button>
-          <button
-            className="join-item btn btn-accent btn-xs"
-            onClick={nextPage}
-          >
-            Next
-          </button>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalItems={blocks.length}
+          paginate={paginate}
+        />
       </div>
     </div>
   );
