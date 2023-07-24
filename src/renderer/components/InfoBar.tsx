@@ -47,7 +47,7 @@ export const InfoBar = ({
       <div className="flex items-center gap-4">
         <div className="flex gap-2 items-center">
           <div className="text-sm">Current block:</div>
-          <div className="text-primary rounded-full p-1 text-sm font-semibold">
+          <div className="text-primary text-md font-semibold w-20 ">
             {blockNumber}
           </div>
         </div>
