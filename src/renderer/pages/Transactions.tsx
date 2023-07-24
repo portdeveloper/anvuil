@@ -22,6 +22,7 @@ export const Transactions = ({
             <thead>
               <tr>
                 <th>Transaction Hash</th>
+                <th>Block Number</th>
                 <th>From</th>
                 <th>To</th>
                 <th>Value</th>
@@ -40,6 +41,7 @@ export const Transactions = ({
                     <td>
                       <HashComp hash={tx.hash} type="transaction" />
                     </td>
+                    <td>{Number(tx.blockNumber)}</td>
                     <td>
                       <AddressComp address={tx.from} />
                     </td>
