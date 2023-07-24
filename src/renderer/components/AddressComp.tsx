@@ -6,6 +6,7 @@ import {
   CheckCircleIcon,
   DocumentDuplicateIcon,
 } from '@heroicons/react/24/outline';
+import { Link } from 'react-router-dom';
 
 type TAddressProps = {
   address: Address | null;
@@ -55,14 +56,12 @@ export const AddressComp = ({
           {displayAddress}
         </span>
       ) : (
-        <a
+        <Link
           className={`ml-1.5 text-${size} font-normal`}
-          target="_blank"
-          // href={blockExplorerAddressLink} //@todo ???
-          rel="noopener noreferrer"
+          to={`/accounts/${address}`}
         >
           {displayAddress}
-        </a>
+        </Link>
       )}
       {addressCopied ? (
         <CheckCircleIcon
