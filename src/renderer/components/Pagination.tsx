@@ -13,7 +13,7 @@ export const Pagination = ({
 }: PaginationProps) => {
   const isPrevButtonDisabled = currentPage === 1;
   const isNextButtonDisabled =
-    currentPage >= Math.ceil(totalItems / ITEMS_PER_PAGE);
+    currentPage - 1 > Math.ceil(totalItems / ITEMS_PER_PAGE);
 
   const nextPage = () => {
     if (!isNextButtonDisabled) {
