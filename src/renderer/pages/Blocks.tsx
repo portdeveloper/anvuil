@@ -6,6 +6,8 @@ import { BlockDetails } from 'renderer/components';
 import { HashComp } from 'renderer/components/HashComp';
 import { Block, Address, Hash } from 'viem';
 
+const BLOCKS_PER_PAGE = 10;
+
 export const Blocks = ({ blocks }: { blocks: Block[] }) => {
   const [intervalMining, setIntervalMining] = useState<number>(0);
   const [gasLimit, setGasLimit] = useState<number>(30000000);
@@ -13,8 +15,25 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
   const [blockTimestampInterval, setBlockTimestampInterval] =
     useState<number>(0);
   const [coinbase, setCoinbase] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState(1);
 
   let { blockHash } = useParams();
+
+  const indexOfLastBlock = currentPage * BLOCKS_PER_PAGE;
+  const indexOfFirstBlock = indexOfLastBlock - BLOCKS_PER_PAGE;
+  const currentBlocks = blocks.slice(indexOfFirstBlock, indexOfLastBlock);
+
+  const nextPage = () => {
+    if (currentPage < Math.ceil(blocks.length / BLOCKS_PER_PAGE)) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
   const handleSetIntervalMining = async () => {
     try {
@@ -209,7 +228,7 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
                   </td>
                 </tr>
               )}
-              {blocks.map((block) => (
+              {currentBlocks.map((block) => (
                 <tr key={block.hash} className="h-[75px]">
                   <td>
                     <HashComp hash={block.hash} type="block" />
@@ -234,6 +253,20 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
             </tbody>
           </table>
         )}
+        <div className="join flex justify-end py-2">
+          <button
+            className="join-item btn btn-accent btn-xs"
+            onClick={prevPage}
+          >
+            Previous
+          </button>
+          <button
+            className="join-item btn btn-accent btn-xs"
+            onClick={nextPage}
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );
