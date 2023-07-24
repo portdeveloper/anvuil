@@ -65,97 +65,99 @@ export const Accounts = ({ accounts }: { accounts: Address[] }) => {
     </div>
   ) : (
     <div className="flex h-full ">
-      <div className="px-3 py-2 flex flex-col gap-7 bg-secondary w-1/5">
-        <div className="flex flex-col gap-1">
-          <p>Impersonate account:</p>
-          <AddressInput
-            value={impersonatedAccount}
-            onChange={setImpersonatedAccount}
-            name="impersonatedAccount"
-            placeholder="Enter address"
-          />
-          <button
-            type="button"
-            className="btn btn-xs w-full"
-            onClick={handleStartImpersonating}
-          >
-            Start impersonating
-          </button>
-          <button
-            type="button"
-            className="btn btn-xs w-full"
-            onClick={handleStopImpersonating}
-          >
-            Stop impersonating
-          </button>
-          <div>
-            <p className="text-sm">Impersonated account:</p>
-            {isImpersonating ? (
-              <AddressComp address={impersonatedAccount as Address} />
-            ) : (
-              <p className="text-xs my-1">No account is impersonated</p>
-            )}
+      <div className="px-3 py-2 flex flex-col gap-7 bg-secondary w-1/5 justify-between">
+        <div className="flex flex-col gap-7">
+          <div className="flex flex-col gap-1">
+            <p>Impersonate account:</p>
+            <AddressInput
+              value={impersonatedAccount}
+              onChange={setImpersonatedAccount}
+              name="impersonatedAccount"
+              placeholder="Enter address"
+            />
+            <button
+              type="button"
+              className="btn btn-xs w-full"
+              onClick={handleStartImpersonating}
+            >
+              Start impersonating
+            </button>
+            <button
+              type="button"
+              className="btn btn-xs w-full"
+              onClick={handleStopImpersonating}
+            >
+              Stop impersonating
+            </button>
+            <div>
+              <p className="text-sm">Impersonated account:</p>
+              {isImpersonating ? (
+                <AddressComp address={impersonatedAccount as Address} />
+              ) : (
+                <p className="text-xs my-1">No account is impersonated</p>
+              )}
+            </div>
+          </div>
+          <div className="flex flex-col gap-1">
+            <p>Set contract storage:</p>
+            <AddressInput
+              value={storageAddress}
+              onChange={setStorageAddress}
+              name="storageAddress"
+              placeholder="Enter address"
+            />
+            <input
+              type="number"
+              value={storageIndex}
+              onChange={(e) => {
+                const newValue = Number(e.target.value);
+                setStorageIndex(newValue >= 0 ? newValue : 0);
+              }}
+              placeholder="Enter index"
+              className="input input-bordered input-sm w-full"
+            />
+
+            <input
+              type="text"
+              value={storageValue}
+              onChange={(e) => setStorageValue(e.target.value)}
+              placeholder="Enter value"
+              className="input input-bordered input-sm w-full"
+            />
+            <button
+              type="button"
+              className="btn btn-xs w-full"
+              onClick={handleSetStorage}
+            >
+              Set storage
+            </button>
+          </div>
+          <div className="flex flex-col gap-1">
+            <p>Set contract bytecode:</p>
+            <AddressInput
+              value={bytecodeAddress}
+              onChange={setBytecodeAddress}
+              name="storageAddress"
+              placeholder="Enter address"
+            />
+            <input
+              type="text"
+              value={bytecodeValue}
+              onChange={(e) => setBytecodeValue(e.target.value)}
+              placeholder="Enter bytecode"
+              className="input input-bordered input-sm w-full"
+            />
+            <button
+              type="button"
+              className="btn btn-xs w-full"
+              onClick={handleSetBytecode}
+            >
+              Set bytecode
+            </button>
           </div>
         </div>
         <div className="flex flex-col gap-1">
-          <p>Set contract storage:</p>
-          <AddressInput
-            value={storageAddress}
-            onChange={setStorageAddress}
-            name="storageAddress"
-            placeholder="Enter address"
-          />
-          <input
-            type="number"
-            value={storageIndex}
-            onChange={(e) => {
-              const newValue = Number(e.target.value);
-              setStorageIndex(newValue >= 0 ? newValue : 0);
-            }}
-            placeholder="Enter index"
-            className="input input-bordered input-sm w-full"
-          />
-
-          <input
-            type="text"
-            value={storageValue}
-            onChange={(e) => setStorageValue(e.target.value)}
-            placeholder="Enter value"
-            className="input input-bordered input-sm w-full"
-          />
-          <button
-            type="button"
-            className="btn btn-xs w-full"
-            onClick={handleSetStorage}
-          >
-            Set storage
-          </button>
-        </div>
-        <div className="flex flex-col gap-1">
-          <p>Set contract bytecode:</p>
-          <AddressInput
-            value={bytecodeAddress}
-            onChange={setBytecodeAddress}
-            name="storageAddress"
-            placeholder="Enter address"
-          />
-          <input
-            type="text"
-            value={bytecodeValue}
-            onChange={(e) => setBytecodeValue(e.target.value)}
-            placeholder="Enter bytecode"
-            className="input input-bordered input-sm w-full"
-          />
-          <button
-            type="button"
-            className="btn btn-xs w-full"
-            onClick={handleSetBytecode}
-          >
-            Set bytecode
-          </button>
-        </div>
-        <div className="flex flex-col gap-1">
-          <p>Set update interval</p>
+          <p>Set update interval (s)</p>
           <input
             type="range"
             min={1000}

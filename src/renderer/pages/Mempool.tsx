@@ -40,7 +40,10 @@ export const Mempool = () => {
 
   return (
     <div className="flex h-full">
-      <div className="px-3 py-2 flex flex-col gap-7 bg-secondary w-1/5">
+      <div className="px-3 py-2 flex flex-col gap-7 bg-secondary w-1/5 justify-between">
+        <div className="flex flex-col gap-7">
+          <p>testing...</p>
+        </div>
         <div className="flex flex-col gap-1">
           <p>Set update interval (s)</p>
           <input
