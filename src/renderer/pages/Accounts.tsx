@@ -156,7 +156,7 @@ export const Accounts = ({ accounts }: { accounts: Address[] }) => {
             </button>
           </div>
         </div>
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 mb-2">
           <p>Set update interval (s)</p>
           <input
             type="range"
