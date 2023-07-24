@@ -218,7 +218,7 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
                 </tr>
               )}
               {currentBlocks.map((block) => (
-                <tr key={block.hash} className="h-[75px]">
+                <tr key={block.hash} className="h-[50px]">
                   <td>
                     <HashComp hash={block.hash} type="block" />
                   </td>

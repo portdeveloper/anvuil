@@ -56,7 +56,7 @@ export const Transactions = ({
                 </tr>
               ) : (
                 currentTransactions.map((tx) => (
-                  <tr key={tx.hash}>
+                  <tr key={tx.hash} className="h-[50px]">
                     <td>
                       <HashComp hash={tx.hash} type="transaction" />
                     </td>
