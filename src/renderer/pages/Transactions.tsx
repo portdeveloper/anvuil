@@ -1,13 +1,32 @@
-import { AddressComp, HashComp, TransactionDetails } from 'renderer/components';
+import {
+  AddressComp,
+  HashComp,
+  Pagination,
+  TransactionDetails,
+} from 'renderer/components';
 import { Transaction } from 'viem';
 import { useParams } from 'react-router-dom';
+import { useState } from 'react';
+
+const BLOCKS_PER_PAGE = 10;
 
 export const Transactions = ({
   transactions,
 }: {
   transactions: Transaction[];
 }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+
   let { txHash } = useParams();
+
+  const indexOfLastBlock = currentPage * BLOCKS_PER_PAGE;
+  const indexOfFirstBlock = indexOfLastBlock - BLOCKS_PER_PAGE;
+  const currentTransactions = transactions.slice(
+    indexOfFirstBlock,
+    indexOfLastBlock
+  );
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return (
     <div className="flex h-full">
@@ -36,7 +55,7 @@ export const Transactions = ({
                   </td>
                 </tr>
               ) : (
-                transactions.map((tx) => (
+                currentTransactions.map((tx) => (
                   <tr key={tx.hash}>
                     <td>
                       <HashComp hash={tx.hash} type="transaction" />
@@ -59,6 +78,11 @@ export const Transactions = ({
             </tbody>
           </table>
         )}
+        <Pagination
+          currentPage={currentPage}
+          totalItems={transactions.length}
+          paginate={paginate}
+        />
       </div>
     </div>
   );
