@@ -4,7 +4,11 @@ interface PaginationProps {
   paginate: (pageNumber: number) => void;
 }
 
-const ITEMS_PER_PAGE = 20;
+const ITEMS_PER_PAGE = 10;
+/**
+ * @todo the logic for blocks page and transactions page can be different because
+ * there might be blocks with no transactions in them.
+ */
 
 export const Pagination = ({
   currentPage,
@@ -13,7 +17,7 @@ export const Pagination = ({
 }: PaginationProps) => {
   const isPrevButtonDisabled = currentPage === 1;
   const isNextButtonDisabled =
-    currentPage - 1 > Math.ceil(totalItems / ITEMS_PER_PAGE);
+    currentPage >= Math.ceil(totalItems / ITEMS_PER_PAGE);
 
   const nextPage = () => {
     if (!isNextButtonDisabled) {
@@ -28,7 +32,7 @@ export const Pagination = ({
   };
 
   return (
-    <div className="join flex justify-end py-2">
+    <div className="join flex justify-end py-2 items-end">
       <button
         className={`join-item btn btn-xs ${
           isPrevButtonDisabled ? 'btn-disabled' : 'btn-accent'
