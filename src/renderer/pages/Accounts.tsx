@@ -1,10 +1,18 @@
-import { Address, Hash } from 'viem';
+import { Address, Hash, Transaction } from 'viem';
 import { AddressBlock, AddressComp, AddressInput } from '../components/';
 import { useState } from 'react';
 import { anvilClient } from 'renderer/client';
 import { toast } from 'react-toastify';
+import { useParams } from 'react-router-dom';
+import { AddressDetails } from 'renderer/components/AddressDetails';
 
-export const Accounts = ({ accounts }: { accounts: Address[] }) => {
+export const Accounts = ({
+  accounts,
+  transactions,
+}: {
+  accounts: Address[];
+  transactions: Transaction[];
+}) => {
   const [impersonatedAccount, setImpersonatedAccount] = useState<string>('');
   const [isImpersonating, setIsImpersonating] = useState<boolean>(false);
   const [storageAddress, setStorageAddress] = useState<string>('');
@@ -13,6 +21,8 @@ export const Accounts = ({ accounts }: { accounts: Address[] }) => {
   const [bytecodeAddress, setBytecodeAddress] = useState<string>('');
   const [bytecodeValue, setBytecodeValue] = useState<string>('');
   const [updateInterval, setUpdateInterval] = useState<number>(5000); // default to updating every 5 seconds
+
+  let { address } = useParams();
 
   const handleStartImpersonating = async () => {
     try {
@@ -182,24 +192,28 @@ export const Accounts = ({ accounts }: { accounts: Address[] }) => {
         </div>
       </div>
       <div className="px-5 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-secondary">
-        <table className="table w-full table-compact">
-          <thead>
-            <tr>
-              <th>Address</th>
-              <th>Nonce</th>
-              <th>Balance in Ether</th>
-            </tr>
-          </thead>
-          <tbody>
-            {accounts.map((account) => (
-              <AddressBlock
-                key={account}
-                address={account}
-                updateInterval={updateInterval}
-              />
-            ))}
-          </tbody>
-        </table>
+        {address ? (
+          <AddressDetails transactions={transactions} />
+        ) : (
+          <table className="table w-full table-compact">
+            <thead>
+              <tr>
+                <th>Address</th>
+                <th>Nonce</th>
+                <th>Balance in Ether</th>
+              </tr>
+            </thead>
+            <tbody>
+              {accounts.map((account) => (
+                <AddressBlock
+                  key={account}
+                  address={account}
+                  updateInterval={updateInterval}
+                />
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

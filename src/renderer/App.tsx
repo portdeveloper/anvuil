@@ -20,6 +20,7 @@ import {
 import 'react-toastify/dist/ReactToastify.css';
 import outputReducer from '../utils/outputReducer';
 import useAnvil from './hooks/useAnvil';
+import { AddressDetails } from './components/AddressDetails';
 
 export default function App() {
   const [output, dispatchOutput] = useReducer(outputReducer, []);
@@ -148,8 +149,16 @@ export default function App() {
             />
             <Route
               path="/accounts"
-              element={<Accounts accounts={accounts} />}
-            />
+              element={
+                <Accounts accounts={accounts} transactions={transactions} />
+              }
+            >
+              <Route index element={<></>} />
+              <Route
+                path=":address"
+                element={<AddressDetails transactions={[]} />}
+              />
+            </Route>
             <Route path="/blocks" element={<Blocks blocks={blocks} />}>
               <Route index element={<></>} />
               <Route path=":blockHash" element={<BlockDetails />} />
