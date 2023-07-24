@@ -3,23 +3,17 @@ import { toast } from 'react-toastify';
 import { anvilClient } from 'renderer/client';
 import { Block, Address, Transaction, Hash } from 'viem';
 
-/**
- * @todo need to update addresses once any change happens?
- * @todo cannot reset state gracefully @see
- * @todo NEED TO STOP USEANVIL !!! remove key and related state!
- */
-
 const useAnvil = () => {
-  const [accounts, setAccounts] = useState<Address[]>([]); // @todo type
+  const [accounts, setAccounts] = useState<Address[]>([]);
   const [blockNumber, setBlockNumber] = useState(0);
   const [blocks, setBlocks] = useState<Block[]>([]);
-  const [transactions, setTransactions] = useState<Transaction[]>([]); // @todo type
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [unwatch, setUnwatch] = useState<(() => void) | null>(null);
 
   const resetStateAndUnwatch = () => {
     if (unwatch) {
       unwatch();
-      console.log('⚠️⚠️⚠️ UNWATCH is called inside useAnvil.ts')
+      console.log('⚠️⚠️⚠️ UNWATCH is called inside useAnvil.ts');
     }
     setAccounts([]);
     setBlockNumber(0);
