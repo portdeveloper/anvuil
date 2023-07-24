@@ -5,14 +5,27 @@ import { Block, Address, Transaction, Hash } from 'viem';
 
 /**
  * @todo need to update addresses once any change happens?
+ * @todo cannot reset state gracefully @see
+ * @todo NEED TO STOP USEANVIL !!! remove key and related state!
  */
 
-const useAnvil = (key: number) => {
-  // add key parameter
+const useAnvil = () => {
   const [accounts, setAccounts] = useState<Address[]>([]); // @todo type
   const [blockNumber, setBlockNumber] = useState(0);
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]); // @todo type
+  const [unwatch, setUnwatch] = useState<(() => void) | null>(null);
+
+  const resetStateAndUnwatch = () => {
+    if (unwatch) {
+      unwatch();
+      console.log('⚠️⚠️⚠️ UNWATCH is called inside useAnvil.ts')
+    }
+    setAccounts([]);
+    setBlockNumber(0);
+    setBlocks([]);
+    setTransactions([]);
+  };
 
   async function getAddresses() {
     try {
@@ -28,7 +41,7 @@ const useAnvil = (key: number) => {
   }
 
   useEffect(() => {
-    const unwatch = anvilClient.watchBlocks({
+    const unwatchFunction = anvilClient.watchBlocks({
       onBlock: async (block) => {
         setBlockNumber(Number(block.number));
         setBlocks((prevBlocks) => [...prevBlocks, block]);
@@ -46,19 +59,20 @@ const useAnvil = (key: number) => {
       onError: (error) => toast.error(error.message),
     });
 
+    setUnwatch(() => unwatchFunction);
+
     getAddresses();
     console.log('⚠️⚠️⚠️ a new watchBlocks is created in useAnvil.ts ⚠️⚠️⚠️');
 
-    return () => {
-      unwatch();
-    };
-  }, [key]);
+    return resetStateAndUnwatch;
+  }, []);
 
   return {
     accounts,
     blockNumber,
     blocks,
     transactions,
+    resetStateAndUnwatch,
   };
 };
 
