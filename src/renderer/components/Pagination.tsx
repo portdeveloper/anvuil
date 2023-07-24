@@ -11,23 +11,38 @@ export const Pagination = ({
   totalItems,
   paginate,
 }: PaginationProps) => {
+  const isPrevButtonDisabled = currentPage === 1;
+  const isNextButtonDisabled =
+    currentPage >= Math.ceil(totalItems / ITEMS_PER_PAGE);
+
   const nextPage = () => {
-    if (currentPage < Math.ceil(totalItems / ITEMS_PER_PAGE)) {
+    if (!isNextButtonDisabled) {
       paginate(currentPage + 1);
     }
   };
 
   const prevPage = () => {
-    if (currentPage > 1) {
+    if (!isPrevButtonDisabled) {
       paginate(currentPage - 1);
     }
   };
+
   return (
     <div className="join flex justify-end py-2">
-      <button className="join-item btn btn-accent btn-xs" onClick={prevPage}>
+      <button
+        className={`join-item btn btn-xs ${
+          isPrevButtonDisabled ? 'btn-disabled' : 'btn-accent'
+        }`}
+        onClick={prevPage}
+      >
         Previous
       </button>
-      <button className="join-item btn btn-accent btn-xs" onClick={nextPage}>
+      <button
+        className={`join-item btn btn-xs ${
+          isNextButtonDisabled ? 'btn-disabled' : 'btn-accent'
+        }`}
+        onClick={nextPage}
+      >
         Next
       </button>
     </div>
