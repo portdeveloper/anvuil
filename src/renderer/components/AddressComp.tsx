@@ -41,7 +41,7 @@ export const AddressComp = ({
   }
 
   return (
-    <div className="flex h-full font-mono">
+    <div className="flex items-center h-full font-mono">
       <div className="flex-shrink-0">
         <Blockies
           className="mx-auto rounded-md"
@@ -58,7 +58,7 @@ export const AddressComp = ({
         <a
           className={`ml-1.5 text-${size} font-normal`}
           target="_blank"
-          // href={blockExplorerAddressLink} //@todo
+          // href={blockExplorerAddressLink} //@todo ???
           rel="noopener noreferrer"
         >
           {displayAddress}
