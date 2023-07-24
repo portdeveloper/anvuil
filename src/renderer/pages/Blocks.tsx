@@ -194,6 +194,7 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
             <thead>
               <tr>
                 <th>Block hash</th>
+                <th>Block number</th>
                 <th>Gas limit</th>
                 <th>Gas used</th>
                 <th>Timestamp</th>
@@ -213,6 +214,7 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
                   <td>
                     <HashComp hash={block.hash} type="block" />
                   </td>
+                  <td>{Number(block.number)}</td>
                   <td>{Number(block.gasLimit)}</td>
                   <td>{Number(block.gasUsed)}</td>
                   <td>
@@ -221,7 +223,9 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
                   <td>
                     <div className="max-h-[50px] overflow-y-auto scrollbar-thin font-mono">
                       {block.transactions.map((tx) => (
-                        <HashComp hash={tx as Hash} type="transaction" />
+                        <div key={tx as string}>
+                          <HashComp hash={tx as Hash} type="transaction" />
+                        </div>
                       ))}
                     </div>
                   </td>
