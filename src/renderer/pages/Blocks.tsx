@@ -193,7 +193,7 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
           </button>
         </div>
       </div>
-      <div className="px-5 w-full  overflow-y-auto scrollbar-thin scrollbar-thumb-secondary ">
+      <div className="px-5 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-secondary ">
         <div className="h-[550px]">
           {blockHash ? (
             <BlockDetails />
