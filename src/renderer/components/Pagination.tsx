@@ -32,7 +32,7 @@ export const Pagination = ({
   };
 
   return (
-    <div className="join flex justify-end py-2 items-end">
+    <div className="join flex justify-end py-2">
       <button
         className={`join-item btn btn-xs ${
           isPrevButtonDisabled ? 'btn-disabled' : 'btn-accent'
