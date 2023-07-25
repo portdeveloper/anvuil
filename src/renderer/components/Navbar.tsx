@@ -30,6 +30,7 @@ export const Navbar = () => {
         });
         if (block) {
           navigate(`/blocks/${searchInput}`);
+          setSearchInput('');
           return;
         }
       } catch (error: any) {
@@ -42,6 +43,7 @@ export const Navbar = () => {
         });
         if (transaction) {
           navigate(`/transactions/${searchInput}`);
+          setSearchInput('');
           return;
         }
       } catch (error: any) {
