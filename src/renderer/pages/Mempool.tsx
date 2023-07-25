@@ -2,6 +2,7 @@ import { Hash, Transaction } from 'viem';
 import { anvilClient } from 'renderer/client';
 import { useEffect, useState } from 'react';
 import { AddressComp, HashComp } from 'renderer/components/';
+import { HashInput } from 'renderer/components/HashInput';
 
 export const Mempool = () => {
   const [mempool, setMempool] = useState({ pending: {}, queued: {} });
@@ -55,12 +56,11 @@ export const Mempool = () => {
         <div className="flex flex-col gap-7">
           <div className="flex flex-col gap-1">
             <p>Drop Transaction by hash</p>
-            <input
-              type="bigint"
+            <HashInput
               value={txToBeDropped}
-              onChange={(e) => setTxToBeDropped(e.target.value)}
+              onChange={setTxToBeDropped}
+              name="txToBeDropped"
               placeholder="Enter tx hash"
-              className="input input-bordered input-sm w-full"
             />
             <button
               type="button"

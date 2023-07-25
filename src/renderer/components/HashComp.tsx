@@ -36,7 +36,7 @@ export const HashComp = ({
     );
   }
 
-  let displayHash = hash?.slice(0, 5) + '...' + hash?.slice(-4);
+  let displayHash = hash?.slice(0, 6) + '...' + hash?.slice(-4);
 
   if (format === 'long') {
     displayHash = hash;
