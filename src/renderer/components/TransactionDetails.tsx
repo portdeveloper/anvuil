@@ -41,7 +41,7 @@ export const TransactionDetails = () => {
       </button>
       {transaction ? (
         <div>
-          <h2 className="text-3xl font-bold mb-4 text-center">
+          <h2 className="text-2xl font-bold mb-2 text-center">
             Transaction Details
           </h2>
           <table className="table w-full">
