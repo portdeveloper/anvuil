@@ -4,16 +4,23 @@ import {
   Pagination,
   TransactionDetails,
 } from 'renderer/components';
-import { Transaction } from 'viem';
+import { Address, Transaction, formatEther } from 'viem';
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 
 const TRANSACTIONS_PER_PAGE = 10;
 
+// @todo move this to a type file
+type TransactionExtended = Transaction & {
+  contractAddress: Address | null;
+  status?: string;
+  gasUsed?: bigint;
+};
+
 export const Transactions = ({
   transactions,
 }: {
-  transactions: Transaction[];
+  transactions: TransactionExtended[];
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -69,12 +76,17 @@ export const Transactions = ({
                         </td>
                         <td>
                           {tx.to === null ? (
-                            <span className="text-xs">Contract Creation</span>
+                            <div className="relative">
+                              <AddressComp address={tx.contractAddress} />
+                              <span className="absolute top-4 left-8 text-xs">
+                                (Contract Creation)
+                              </span>
+                            </div>
                           ) : (
                             <AddressComp address={tx.to} />
                           )}
                         </td>
-                        <td>{Number(tx.value)}</td>
+                        <td>{formatEther(tx.value)}</td>
                       </tr>
                     ))
                   )}
