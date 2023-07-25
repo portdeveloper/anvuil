@@ -34,50 +34,52 @@ export const Transactions = ({
         <div className="flex flex-col gap-1"></div>
       </div>
       <div className="px-5 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-secondary">
-        {txHash ? (
-          <TransactionDetails />
-        ) : (
-          <table className="table w-full table-compact">
-            <thead>
-              <tr>
-                <th>Transaction Hash</th>
-                <th>Block Number</th>
-                <th>From</th>
-                <th>To</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              {transactions.length === 0 ? (
+        <div className="h-[550px]">
+          {txHash ? (
+            <TransactionDetails />
+          ) : (
+            <table className="table w-full table-compact">
+              <thead>
                 <tr>
-                  <td colSpan={4} className="text-center">
-                    No transactions found
-                  </td>
+                  <th>Transaction Hash</th>
+                  <th>Block Number</th>
+                  <th>From</th>
+                  <th>To</th>
+                  <th>Value</th>
                 </tr>
-              ) : (
-                currentTransactions.map((tx) => (
-                  <tr key={tx.hash} className="h-[50px]">
-                    <td>
-                      <HashComp hash={tx.hash} type="transaction" />
+              </thead>
+              <tbody>
+                {transactions.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="text-center">
+                      No transactions found
                     </td>
-                    <td>{Number(tx.blockNumber)}</td>
-                    <td>
-                      <AddressComp address={tx.from} />
-                    </td>
-                    <td>
-                      {tx.to === null ? (
-                        <span className="text-xs">Contract Creation</span>
-                      ) : (
-                        <AddressComp address={tx.to} />
-                      )}
-                    </td>
-                    <td>{Number(tx.value)}</td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        )}
+                ) : (
+                  currentTransactions.map((tx) => (
+                    <tr key={tx.hash} className="h-[50px]">
+                      <td>
+                        <HashComp hash={tx.hash} type="transaction" />
+                      </td>
+                      <td>{Number(tx.blockNumber)}</td>
+                      <td>
+                        <AddressComp address={tx.from} />
+                      </td>
+                      <td>
+                        {tx.to === null ? (
+                          <span className="text-xs">Contract Creation</span>
+                        ) : (
+                          <AddressComp address={tx.to} />
+                        )}
+                      </td>
+                      <td>{Number(tx.value)}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          )}
+        </div>
         <Pagination
           currentPage={currentPage}
           totalItems={transactions.length}
