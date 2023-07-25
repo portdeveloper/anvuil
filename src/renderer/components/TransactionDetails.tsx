@@ -6,6 +6,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 export const TransactionDetails = () => {
   const [transaction, setTransaction] = useState<Transaction | null>(null);
+  const [confirmations, setConfirmations] = useState<Number | null>(null);
+
   const navigate = useNavigate();
   const { txHash } = useParams(); // extracting txHash using useParams
 
@@ -20,7 +22,11 @@ export const TransactionDetails = () => {
           const tx = await anvilClient.getTransaction({
             hash: txHash as Hash,
           });
+          const confirmations = await anvilClient.getTransactionConfirmations({
+            hash: txHash as Hash,
+          });
           setTransaction(tx);
+          setConfirmations(Number(confirmations));
         } catch (error: any) {
           toast.error(error);
         }
@@ -69,6 +75,12 @@ export const TransactionDetails = () => {
                   <strong>Value:</strong>
                 </td>
                 <td>{Number(transaction.value)}</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Confirmations:</strong>
+                </td>
+                <td>{Number(confirmations)}</td>
               </tr>
               <tr>
                 <td>
