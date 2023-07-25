@@ -8,7 +8,7 @@ import { Transaction } from 'viem';
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 
-const BLOCKS_PER_PAGE = 10;
+const TRANSACTIONS_PER_PAGE = 10;
 
 export const Transactions = ({
   transactions,
@@ -19,11 +19,11 @@ export const Transactions = ({
 
   let { txHash } = useParams();
 
-  const indexOfLastBlock = currentPage * BLOCKS_PER_PAGE;
-  const indexOfFirstBlock = indexOfLastBlock - BLOCKS_PER_PAGE;
+  const indexOfLastTransaction = currentPage * TRANSACTIONS_PER_PAGE;
+  const indexOfFirstTransaction = indexOfLastTransaction - TRANSACTIONS_PER_PAGE;
   const currentTransactions = transactions.slice(
-    indexOfFirstBlock,
-    indexOfLastBlock
+    indexOfFirstTransaction,
+    indexOfLastTransaction
   );
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
