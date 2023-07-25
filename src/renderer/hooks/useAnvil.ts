@@ -3,11 +3,32 @@ import { toast } from 'react-toastify';
 import { anvilClient } from 'renderer/client';
 import { Block, Address, Transaction, Hash } from 'viem';
 
+type TransactionExtended = Transaction & {
+  contractAddress: Address | null;
+  status?: string;
+  gasUsed?: bigint;
+};
+
+// @todo move this to a helper folder
+const fetchTransactionData = async (
+  txHash: Hash
+): Promise<TransactionExtended> => {
+  const transaction = await anvilClient.getTransaction({ hash: txHash });
+  const receipt = await anvilClient.getTransactionReceipt({ hash: txHash });
+
+  return {
+    ...transaction,
+    contractAddress: receipt.contractAddress,
+    status: receipt.status,
+    gasUsed: receipt.gasUsed,
+  };
+};
+
 const useAnvil = () => {
   const [accounts, setAccounts] = useState<Address[]>([]);
   const [blockNumber, setBlockNumber] = useState(0);
   const [blocks, setBlocks] = useState<Block[]>([]);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [transactions, setTransactions] = useState<TransactionExtended[]>([]);
   const [unwatch, setUnwatch] = useState<(() => void) | null>(null);
 
   const resetStateAndUnwatch = () => {
@@ -42,9 +63,7 @@ const useAnvil = () => {
         console.log('⚠️ watchBlocks is called inside useAnvil.ts');
 
         const blockTransactions = await Promise.all(
-          block.transactions.map((txHash) =>
-            anvilClient.getTransaction({ hash: txHash as Hash })
-          )
+          block.transactions.map((tx) => fetchTransactionData(tx as Hash))
         );
         console.log('⚠️ getTransaction is called inside useAnvil.ts');
 
