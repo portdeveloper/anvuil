@@ -68,29 +68,35 @@ export const Events = () => {
         </div>
       </div>
       <div className="px-5 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-secondary">
-        <table className="table w-full table-compact">
-          <thead>
-            <tr>
-              <th>Event Key</th>
-              <th>Event Properties</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.entries(logs).map(([key, event]) => (
-              <tr key={key}>
-                <td className="font-mono">{key}</td>
-                <td>
-                  {Object.entries(event).map(([property, value]) => (
-                    <div key={property}>
-                      <strong>{property}: </strong>
-                      <span>{value as any}</span>
-                    </div>
-                  ))}
-                </td>
+        {logs.length === 0 ? (
+          <div className="h-[550px] flex items-center justify-center">
+            <p className="text-center">No events found</p>
+          </div>
+        ) : (
+          <table className="table w-full table-compact">
+            <thead>
+              <tr>
+                <th>Event Key</th>
+                <th>Event Properties</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {Object.entries(logs).map(([key, event]) => (
+                <tr key={key}>
+                  <td className="font-mono">{key}</td>
+                  <td>
+                    {Object.entries(event).map(([property, value]) => (
+                      <div key={property}>
+                        <strong>{property}: </strong>
+                        <span>{value as any}</span>
+                      </div>
+                    ))}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
