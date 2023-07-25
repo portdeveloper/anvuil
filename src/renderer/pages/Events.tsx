@@ -3,6 +3,14 @@ import { toast } from 'react-toastify';
 import { anvilClient } from 'renderer/client';
 import { Log } from 'viem';
 
+/**
+ * @todo add pagination to Events.tsx
+ * @todo might be better to get the logs not using fromBlock: 0n
+ *      or better use watchEvents?
+ *      or getFilterChanges
+ *            Returns a list of logs or hashes based on a Filter since the last time it was called.
+ */
+
 export const Events = () => {
   const [logs, setLogs] = useState<Log[]>([]);
   const [updateInterval, setUpdateInterval] = useState<number>(5000); // default to updating every 5 seconds
