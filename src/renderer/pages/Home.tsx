@@ -78,17 +78,19 @@ export const Home = ({
     <div className="flex h-full">
       <div className="px-3 py-2 flex flex-col gap-7 bg-secondary w-1/5">
         <div className="flex flex-col gap-1">
-          <p>Reset fork:</p>
-          <input
-            type="number"
-            value={resetForkBlockNumber}
-            onChange={(e) => {
-              const newValue = Number(e.target.value);
-              setResetForkBlockNumber(newValue >= 0 ? newValue : 0);
-            }}
-            placeholder="Enter block number"
-            className="input input-bordered input-sm w-full"
-          />
+          <p>Reset fork</p>
+          <div className='tooltip' data-tip="Block number">
+            <input
+              type="number"
+              value={resetForkBlockNumber}
+              onChange={(e) => {
+                const newValue = Number(e.target.value);
+                setResetForkBlockNumber(newValue >= 0 ? newValue : 0);
+              }}
+              placeholder="Enter block number"
+              className="input input-bordered input-sm w-full"
+            />
+          </div>
           <input
             type="text"
             value={resetForkRpcUrl}
