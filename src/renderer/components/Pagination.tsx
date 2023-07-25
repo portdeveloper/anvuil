@@ -5,10 +5,6 @@ interface PaginationProps {
 }
 
 const ITEMS_PER_PAGE = 10;
-/**
- * @todo the logic for blocks page and transactions page can be different because
- * there might be blocks with no transactions in them.
- */
 
 export const Pagination = ({
   currentPage,
