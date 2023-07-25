@@ -24,17 +24,22 @@ export const Home = ({
   const [RpcUrl, setRpcUrl] = useState<string>('');
   const [snapshotId, setSnapshotId] = useState<string>('');
 
+  // @todo handleResetFork does not work as expected?
   const handleResetFork = async () => {
     try {
       await anvilClient.reset({
         blockNumber: BigInt(resetForkBlockNumber),
         jsonRpcUrl: resetForkRpcUrl,
       });
+      toast.success(
+        `Fork reset to block ${resetForkBlockNumber}, RPC URL: ${resetForkRpcUrl}`
+      );
     } catch (error: any) {
       toast.error(error);
     }
   };
 
+  // @todo handleSetRpcUrl does not work as expected?
   const handleSetRpcUrl = async () => {
     try {
       await anvilClient.setRpcUrl(RpcUrl);
@@ -58,7 +63,9 @@ export const Home = ({
 
   const handleSnapshotState = async () => {
     try {
-      await anvilClient.snapshot();
+      const id = await anvilClient.snapshot();
+      setSnapshotId(id);
+      toast.success(`Snapshot created with ID: ${id}`);
     } catch (error: any) {
       toast.error(error);
     }
@@ -69,6 +76,7 @@ export const Home = ({
       await anvilClient.revert({
         id: snapshotId as Hash,
       });
+      toast.success(`Reverted to snapshot with ID: ${snapshotId}`);
     } catch (error: any) {
       toast.error(error);
     }
@@ -79,7 +87,7 @@ export const Home = ({
       <div className="px-3 py-2 flex flex-col gap-7 bg-secondary w-1/5">
         <div className="flex flex-col gap-1">
           <p>Reset fork</p>
-          <div className='tooltip' data-tip="Block number">
+          <div className="tooltip" data-tip="Block number">
             <input
               type="number"
               value={resetForkBlockNumber}
@@ -160,14 +168,18 @@ export const Home = ({
             >
               Select Directory
             </button>
-
-            <input
-              className="input input-bordered input-sm w-full"
-              type="text"
-              value={anvilParams}
-              onChange={(e) => setAnvilParams(e.target.value)}
-              placeholder="Enter Anvil parameters"
-            />
+            <div
+              className="tooltip"
+              data-tip="e.g. --accounts 15 --balance 300"
+            >
+              <input
+                className="input input-bordered input-sm w-full"
+                type="text"
+                value={anvilParams}
+                onChange={(e) => setAnvilParams(e.target.value)}
+                placeholder="Enter Anvil parameters"
+              />
+            </div>
             <div className="flex gap-1 form-control">
               <label className="label cursor-pointer">
                 <span className="label-text">Set logging enabled</span>
