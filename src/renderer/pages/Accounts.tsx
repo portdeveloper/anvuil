@@ -116,17 +116,17 @@ export const Accounts = ({
               name="storageAddress"
               placeholder="Enter address"
             />
-            <input
-              type="number"
-              value={storageIndex}
-              onChange={(e) => {
-                const newValue = Number(e.target.value);
-                setStorageIndex(newValue >= 0 ? newValue : 0);
-              }}
-              placeholder="Enter index"
-              className="input input-bordered input-sm w-full"
-            />
-
+            <div className="tooltip" data-tip="Storage index">
+              <input
+                type="number"
+                value={storageIndex}
+                onChange={(e) => {
+                  const newValue = Number(e.target.value);
+                  setStorageIndex(newValue >= 0 ? newValue : 0);
+                }}
+                className="input input-bordered input-sm w-full"
+              />
+            </div>
             <input
               type="text"
               value={storageValue}
