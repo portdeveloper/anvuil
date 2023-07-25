@@ -42,7 +42,7 @@ export const BlockDetails = () => {
       </button>
       {block ? (
         <div>
-          <h2 className="text-3xl font-bold mb-4 text-center">Block Details</h2>
+          <h2 className="text-2xl font-bold mb-2 text-center">Block Details</h2>
           <table className="table w-full">
             <tbody>
               <tr>
