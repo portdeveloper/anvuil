@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { anvilClient } from 'renderer/client';
-import { BlockDetails, HashComp, Pagination } from 'renderer/components';
+import { AddressInput, BlockDetails, HashComp, Pagination } from 'renderer/components';
 import { Block, Address, Hash } from 'viem';
 
 const BLOCKS_PER_PAGE = 10;
@@ -178,12 +178,11 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
         </div>
         <div className="flex flex-col gap-1">
           <p>Set coinbase</p>
-          <input
-            type="text"
+          <AddressInput
             value={coinbase}
-            onChange={(e) => setCoinbase(e.target.value)}
-            placeholder="Enter coinbase address"
-            className="input input-bordered input-sm w-full"
+            onChange={setCoinbase}
+            name="coinbase"
+            placeholder="Enter address"
           />
           <button
             type="button"

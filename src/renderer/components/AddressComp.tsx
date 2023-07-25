@@ -35,7 +35,7 @@ export const AddressComp = ({
     );
   }
 
-  let displayAddress = address?.slice(0, 5) + '...' + address?.slice(-4);
+  let displayAddress = address?.slice(0, 6) + '...' + address?.slice(-4);
 
   if (format === 'long') {
     displayAddress = address;
