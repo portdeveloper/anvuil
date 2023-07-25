@@ -7,6 +7,12 @@ export const Mempool = () => {
   const [mempool, setMempool] = useState({ pending: {}, queued: {} });
   const [updateInterval, setUpdateInterval] = useState<number>(5000); // default to updating every 5 seconds
   const [triggerFetch, setTriggerFetch] = useState(0);
+  const [txToBeDropped, setTxToBeDropped] = useState<string>('');
+
+  const pending: { [address: string]: { [nonce: string]: Transaction } } =
+    mempool.pending as any;
+  const queued: { [address: string]: { [nonce: string]: Transaction } } =
+    mempool.queued as any;
 
   useEffect(() => {
     const fetchMempool = async () => {
@@ -33,16 +39,37 @@ export const Mempool = () => {
     return () => clearInterval(intervalId);
   }, [triggerFetch]);
 
-  const pending: { [address: string]: { [nonce: string]: Transaction } } =
-    mempool.pending as any;
-  const queued: { [address: string]: { [nonce: string]: Transaction } } =
-    mempool.queued as any;
+  const handleDropTxByHash = async () => {
+    try {
+      await anvilClient.dropTransaction({ hash: txToBeDropped as Hash });
+      console.log('⚠️⚠️⚠️ Transaction dropped', txToBeDropped);
+      setTriggerFetch((prev) => prev + 1);
+    } catch (error) {
+      console.error('Failed to drop transaction: ', error);
+    }
+  };
 
   return (
     <div className="flex h-full">
       <div className="px-3 py-2 flex flex-col gap-7 bg-secondary w-1/5 justify-between">
         <div className="flex flex-col gap-7">
-          <p>testing...</p>
+          <div className="flex flex-col gap-1">
+            <p>Drop Transaction by hash</p>
+            <input
+              type="bigint"
+              value={txToBeDropped}
+              onChange={(e) => setTxToBeDropped(e.target.value)}
+              placeholder="Enter tx hash"
+              className="input input-bordered input-sm w-full"
+            />
+            <button
+              type="button"
+              className="btn btn-xs w-full"
+              onClick={handleDropTxByHash}
+            >
+              Drop transaction
+            </button>
+          </div>
         </div>
         <div className="flex flex-col gap-1 mb-2">
           <p>Set update interval (s)</p>
