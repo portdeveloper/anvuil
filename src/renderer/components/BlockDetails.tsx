@@ -83,11 +83,13 @@ export const BlockDetails = () => {
                 </td>
                 <td>
                   {block.transactions.map((tx) => (
-                    <HashComp
-                      hash={tx as Hash}
-                      type="transaction"
-                      format="long"
-                    />
+                    <div key={tx.toString()}>
+                      <HashComp
+                        hash={tx as Hash}
+                        type="transaction"
+                        format="long"
+                      />
+                    </div>
                   ))}
                 </td>
               </tr>

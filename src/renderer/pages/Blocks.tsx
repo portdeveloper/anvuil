@@ -2,7 +2,12 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { anvilClient } from 'renderer/client';
-import { AddressInput, BlockDetails, HashComp, Pagination } from 'renderer/components';
+import {
+  AddressInput,
+  BlockDetails,
+  HashComp,
+  Pagination,
+} from 'renderer/components';
 import { Block, Address, Hash } from 'viem';
 
 const BLOCKS_PER_PAGE = 10;
@@ -233,7 +238,7 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
                     <td>
                       <div className="max-h-[50px] overflow-y-auto scrollbar-thin font-mono">
                         {block.transactions.map((tx) => (
-                          <div key={tx as string}>
+                          <div key={tx.toString()}>
                             <HashComp hash={tx as Hash} type="transaction" />
                           </div>
                         ))}
