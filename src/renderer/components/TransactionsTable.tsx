@@ -1,12 +1,6 @@
-import { Address, Transaction, formatEther } from 'viem';
+import { formatEther } from 'viem';
 import { AddressComp, HashComp } from 'renderer/components';
-
-// @todo move this to a type file
-type TransactionExtended = Transaction & {
-  contractAddress: Address | null;
-  status?: string;
-  gasUsed?: bigint;
-};
+import { TransactionExtended } from 'renderer/utils';
 
 export const TransactionsTable = ({
   transactions,

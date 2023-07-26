@@ -1,20 +1,10 @@
-import { Hash, Address, Transaction } from 'viem';
-import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
-import { HashComp } from './HashComp';
-import { AddressComp } from './AddressComp';
 import { Pagination } from './Pagination';
 import { useState } from 'react';
 import { TransactionsTable } from './TransactionsTable';
+import { TransactionExtended } from 'renderer/utils';
 
 const ADRESSES_PER_PAGE = 10;
-
-// @todo move this to a type file
-type TransactionExtended = Transaction & {
-  contractAddress: Address | null;
-  status?: string;
-  gasUsed?: bigint;
-};
 
 export const AddressDetails = ({
   transactions,

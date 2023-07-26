@@ -1,22 +1,10 @@
-import {
-  AddressComp,
-  HashComp,
-  Pagination,
-  TransactionDetails,
-} from 'renderer/components';
-import { Address, Transaction, formatEther } from 'viem';
+import { Pagination, TransactionDetails } from 'renderer/components';
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { TransactionsTable } from 'renderer/components/TransactionsTable';
+import { TransactionExtended } from 'renderer/utils';
 
 const TRANSACTIONS_PER_PAGE = 10;
-
-// @todo move this to a type file
-type TransactionExtended = Transaction & {
-  contractAddress: Address | null;
-  status?: string;
-  gasUsed?: bigint;
-};
 
 export const Transactions = ({
   transactions,
