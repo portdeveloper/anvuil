@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { TransactionsTable } from './TransactionsTable';
 import { TransactionExtended } from 'renderer/utils';
 import { anvilClient } from 'renderer/client';
-import { Address } from 'viem';
+import { Address, toHex } from 'viem';
 
 const ADRESSES_PER_PAGE = 10;
 
@@ -16,6 +16,8 @@ export const AddressDetails = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [bytecode, setBytecode] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('transactions');
+  const [slot, setSlot] = useState<bigint>(0n); // Keep track of the current slot number
+  const [storageData, setStorageData] = useState<string | null>(null); // Store the data from the chosen slot
 
   const { address } = useParams();
   const navigate = useNavigate();
@@ -30,6 +32,20 @@ export const AddressDetails = ({
 
     checkIsContract();
   }, [address]);
+
+  const fetchStorage = async () => {
+    if (bytecode) {
+      const storageSlotData = await anvilClient.getStorageAt({
+        address: address as Address,
+        slot: toHex(slot), // Convert the slot number to Hex
+      });
+      setStorageData(storageSlotData);
+    }
+  };
+
+  useEffect(() => {
+    fetchStorage();
+  }, [address, bytecode, slot]);
 
   const indexOfLastAddress = currentPage * ADRESSES_PER_PAGE;
   const indexOfFirstAddress = indexOfLastAddress - ADRESSES_PER_PAGE;
@@ -116,7 +132,29 @@ export const AddressDetails = ({
             </div>
           </div>
         )}
-        {activeTab === 'storage' && <div>storage tab</div>}
+        {activeTab === 'storage' && (
+          <div className="p-5">
+            <div className="form-control flex flex-row mb-4">
+              <label className="label">
+                <span className="label-text">Slot number:</span>
+              </label>
+              <input
+                type="text"
+                className="input input-bordered w-1/12"
+                value={slot.toString()}
+                onChange={(e) => setSlot(BigInt(e.target.value))}
+                min="0"
+              />
+            </div>
+            <div className="mockup-code -indent-5 overflow-y-auto max-h-[500px]">
+              <pre className="px-5">
+                <code className="whitespace-pre-wrap overflow-auto break-words">
+                  {storageData}
+                </code>
+              </pre>
+            </div>
+          </div>
+        )}
         {activeTab === 'logs' && <div>logs tab</div>}
       </div>
     </div>
