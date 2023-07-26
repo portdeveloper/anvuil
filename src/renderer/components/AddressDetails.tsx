@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { TransactionsTable } from './TransactionsTable';
 import { TransactionExtended } from 'renderer/utils';
 import { anvilClient } from 'renderer/client';
-import { Address, toHex } from 'viem';
+import { Address, toHex, Hex } from 'viem';
 
 const ADRESSES_PER_PAGE = 10;
 
@@ -14,10 +14,10 @@ export const AddressDetails = ({
   transactions: TransactionExtended[];
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [bytecode, setBytecode] = useState<string | null>(null);
+  const [bytecode, setBytecode] = useState<Hex | null>(null);
   const [activeTab, setActiveTab] = useState('transactions');
   const [slot, setSlot] = useState<bigint>(0n); // Keep track of the current slot number
-  const [storageData, setStorageData] = useState<string | null>(null); // Store the data from the chosen slot
+  const [storageData, setStorageData] = useState<Hex | null>(null); // Store the data from the chosen slot
 
   const { address } = useParams();
   const navigate = useNavigate();
@@ -27,7 +27,9 @@ export const AddressDetails = ({
       const contractBytecode = await anvilClient.getBytecode({
         address: address as Address,
       });
-      setBytecode(contractBytecode !== '0x' ? contractBytecode : null);
+      setBytecode(
+        contractBytecode && contractBytecode !== '0x' ? contractBytecode : null
+      );
     };
 
     checkIsContract();
@@ -39,7 +41,7 @@ export const AddressDetails = ({
         address: address as Address,
         slot: toHex(slot), // Convert the slot number to Hex
       });
-      setStorageData(storageSlotData);
+      setStorageData(storageSlotData || null);
     }
   };
 
