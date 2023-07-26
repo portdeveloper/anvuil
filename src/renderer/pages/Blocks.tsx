@@ -100,10 +100,7 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
           <input
             type="number"
             value={intervalMining}
-            onChange={(e) => {
-              const newValue = Number(e.target.value);
-              setIntervalMining(newValue >= 0 ? newValue : 0);
-            }}
+            onChange={(e) => setIntervalMining(Number(e.target.value))}
             placeholder="Enter interval in seconds"
             className="input input-bordered input-sm w-full"
           />
@@ -120,12 +117,10 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
           <input
             type="bigint"
             value={gasLimit}
-            onChange={(e) => {
-              const newValue = Number(e.target.value);
-              setGasLimit(newValue >= 0 ? newValue : 0);
-            }}
+            onChange={(e) => setGasLimit(Number(e.target.value))}
             placeholder="Enter gas limit"
             className="input input-bordered input-sm w-full"
+            min={0}
           />
           <button
             type="button"
@@ -140,12 +135,10 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
           <input
             type="number"
             value={jumpTime}
-            onChange={(e) => {
-              const newValue = Number(e.target.value);
-              setJumpTime(newValue >= 0 ? newValue : 0);
-            }}
+            onChange={(e) => setJumpTime(Number(e.target.value))}
             placeholder="Enter seconds to jump"
             className="input input-bordered input-sm w-full"
+            min={0}
           />
           <button
             type="button"
@@ -160,10 +153,7 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
           <input
             type="number"
             value={blockTimestampInterval}
-            onChange={(e) => {
-              const newValue = Number(e.target.value);
-              setBlockTimestampInterval(newValue >= 0 ? newValue : 0);
-            }}
+            onChange={(e) => setBlockTimestampInterval(Number(e.target.value))}
             placeholder="Enter seconds"
             className="input input-bordered input-sm w-full"
           />
