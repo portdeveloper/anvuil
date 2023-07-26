@@ -1,28 +1,8 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { anvilClient } from 'renderer/client';
-import { Block, Address, Transaction, Hash } from 'viem';
-
-type TransactionExtended = Transaction & {
-  contractAddress: Address | null;
-  status?: string;
-  gasUsed?: bigint;
-};
-
-// @todo move this to a helper folder
-const fetchTransactionData = async (
-  txHash: Hash
-): Promise<TransactionExtended> => {
-  const transaction = await anvilClient.getTransaction({ hash: txHash });
-  const receipt = await anvilClient.getTransactionReceipt({ hash: txHash });
-
-  return {
-    ...transaction,
-    contractAddress: receipt.contractAddress,
-    status: receipt.status,
-    gasUsed: receipt.gasUsed,
-  };
-};
+import { Block, Address, Hash } from 'viem';
+import { TransactionExtended, fetchTransactionData } from 'renderer/utils';
 
 const useAnvil = () => {
   const [accounts, setAccounts] = useState<Address[]>([]);

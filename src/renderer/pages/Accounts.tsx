@@ -1,17 +1,18 @@
-import { Address, Hash, Transaction } from 'viem';
+import { Address, Hash } from 'viem';
 import { AddressBlock, AddressComp, AddressInput } from '../components/';
 import { useState } from 'react';
 import { anvilClient } from 'renderer/client';
 import { toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
 import { AddressDetails } from 'renderer/components/AddressDetails';
+import { TransactionExtended } from 'renderer/utils';
 
 export const Accounts = ({
   accounts,
   transactions,
 }: {
   accounts: Address[];
-  transactions: Transaction[];
+  transactions: TransactionExtended[];
 }) => {
   const [impersonatedAccount, setImpersonatedAccount] = useState<string>('');
   const [isImpersonating, setIsImpersonating] = useState<boolean>(false);
