@@ -91,12 +91,10 @@ export const Home = ({
             <input
               type="number"
               value={resetForkBlockNumber}
-              onChange={(e) => {
-                const newValue = Number(e.target.value);
-                setResetForkBlockNumber(newValue >= 0 ? newValue : 0);
-              }}
+              onChange={(e) => setResetForkBlockNumber(Number(e.target.value))}
               placeholder="Enter block number"
               className="input input-bordered input-sm w-full"
+              min={0}
             />
           </div>
           <input

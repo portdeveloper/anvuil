@@ -121,11 +121,9 @@ export const Accounts = ({
               <input
                 type="number"
                 value={storageIndex}
-                onChange={(e) => {
-                  const newValue = Number(e.target.value);
-                  setStorageIndex(newValue >= 0 ? newValue : 0);
-                }}
+                onChange={(e) => setStorageIndex(Number(e.target.value))}
                 className="input input-bordered input-sm w-full"
+                min={0}
               />
             </div>
             <input
