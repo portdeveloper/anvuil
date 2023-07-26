@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import { TransactionsTable } from './TransactionsTable';
 import { TransactionExtended } from 'renderer/utils';
 import { anvilClient } from 'renderer/client';
-import { Address, toHex, Hex } from 'viem';
+import { Address, toHex, Hex, Log } from 'viem';
+import { toast } from 'react-toastify';
 
 const ADRESSES_PER_PAGE = 10;
 
@@ -18,6 +19,7 @@ export const AddressDetails = ({
   const [activeTab, setActiveTab] = useState('transactions');
   const [slot, setSlot] = useState<bigint>(0n); // Keep track of the current slot number
   const [storageData, setStorageData] = useState<Hex | null>(null); // Store the data from the chosen slot
+  const [logs, setLogs] = useState<Log[]>([]);
 
   const { address } = useParams();
   const navigate = useNavigate();
@@ -44,6 +46,23 @@ export const AddressDetails = ({
       setStorageData(storageSlotData || null);
     }
   };
+
+  const fetchLogs = async () => {
+    try {
+      const logs = await anvilClient.getLogs({
+        fromBlock: 0n,
+      });
+      console.log('⚠️⚠️⚠️ Events are fetched inside AddressDetails.tsx');
+
+      setLogs(logs);
+    } catch (error: any) {
+      toast.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchLogs();
+  }, [activeTab]);
 
   useEffect(() => {
     fetchStorage();
@@ -157,7 +176,50 @@ export const AddressDetails = ({
             </div>
           </div>
         )}
-        {activeTab === 'logs' && <div>logs tab</div>}
+        {activeTab === 'logs' && (
+          <>
+            <div className="flex justify-end ">
+              <button
+                type="button"
+                onClick={fetchLogs}
+                className="btn btn-primary btn-xs"
+              >
+                Fetch logs
+              </button>
+            </div>
+            <div className="px-5 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-secondary">
+              {logs.length === 0 ? (
+                <div className="h-[550px] flex items-center justify-center">
+                  <p className="text-center">No events found</p>
+                </div>
+              ) : (
+                <table className="table w-full table-compact">
+                  <thead>
+                    <tr>
+                      <th>Event Key</th>
+                      <th>Event Properties</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Object.entries(logs).map(([key, event]) => (
+                      <tr key={key}>
+                        <td className="font-mono">{key}</td>
+                        <td>
+                          {Object.entries(event).map(([property, value]) => (
+                            <div key={property}>
+                              <strong>{property}: </strong>
+                              <span>{value as any}</span>
+                            </div>
+                          ))}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
