@@ -4,6 +4,10 @@ import { Hash, Transaction } from 'viem';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
 
+/**
+ * @todo add contract address if there is a contract created
+ */
+
 export const TransactionDetails = () => {
   const [transaction, setTransaction] = useState<Transaction | null>(null);
   const [confirmations, setConfirmations] = useState<Number | null>(null);
