@@ -199,62 +199,69 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
         </div>
       </div>
       <div className="px-5 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-secondary ">
-        <div className="h-[550px]">
+        <div>
           {blockHash ? (
             <BlockDetails />
           ) : (
-            <table className="table w-full table-compact">
-              <thead>
-                <tr>
-                  <th>Block hash</th>
-                  <th>Block number</th>
-                  <th>Gas limit</th>
-                  <th>Gas used</th>
-                  <th>Timestamp</th>
-                  <th>Transactions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {blocks.length === 0 && (
-                  <tr>
-                    <td colSpan={5} className="text-center">
-                      No blocks found
-                    </td>
-                  </tr>
-                )}
-                {currentBlocks.map((block) => (
-                  <tr key={block.hash} className="h-[50px]">
-                    <td>
-                      <HashComp hash={block.hash} type="block" />
-                    </td>
-                    <td>{Number(block.number)}</td>
-                    <td>{Number(block.gasLimit)}</td>
-                    <td>{Number(block.gasUsed)}</td>
-                    <td>
-                      {new Date(
-                        Number(block.timestamp) * 1000
-                      ).toLocaleString()}
-                    </td>
-                    <td>
-                      <div className="max-h-[50px] overflow-y-auto scrollbar-thin font-mono">
-                        {block.transactions.map((tx) => (
-                          <div key={tx.toString()}>
-                            <HashComp hash={tx as Hash} type="transaction" />
+            <div>
+              <div className="h-[550px]">
+                <table className="table w-full table-compact">
+                  <thead>
+                    <tr>
+                      <th>Block hash</th>
+                      <th>Block number</th>
+                      <th>Gas limit</th>
+                      <th>Gas used</th>
+                      <th>Timestamp</th>
+                      <th>Transactions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {blocks.length === 0 && (
+                      <tr>
+                        <td colSpan={5} className="text-center">
+                          No blocks found
+                        </td>
+                      </tr>
+                    )}
+                    {currentBlocks.map((block) => (
+                      <tr key={block.hash} className="h-[50px]">
+                        <td>
+                          <HashComp hash={block.hash} type="block" />
+                        </td>
+                        <td>{Number(block.number)}</td>
+                        <td>{Number(block.gasLimit)}</td>
+                        <td>{Number(block.gasUsed)}</td>
+                        <td>
+                          {new Date(
+                            Number(block.timestamp) * 1000
+                          ).toLocaleString()}
+                        </td>
+                        <td>
+                          <div className="max-h-[50px] overflow-y-auto scrollbar-thin font-mono">
+                            {block.transactions.map((tx) => (
+                              <div key={tx.toString()}>
+                                <HashComp
+                                  hash={tx as Hash}
+                                  type="transaction"
+                                />
+                              </div>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <Pagination
+                currentPage={currentPage}
+                totalItems={blocks.length}
+                paginate={paginate}
+              />
+            </div>
           )}
         </div>
-        <Pagination
-          currentPage={currentPage}
-          totalItems={blocks.length}
-          paginate={paginate}
-        />
       </div>
     </div>
   );
