@@ -18,14 +18,14 @@ export const AddressDetails = ({
 
   const indexOfLastAddress = currentPage * ADRESSES_PER_PAGE;
   const indexOfFirstAddress = indexOfLastAddress - ADRESSES_PER_PAGE;
-  const currentAddresses = transactions.slice(
+  const currentTransactions = transactions.slice(
     indexOfFirstAddress,
     indexOfLastAddress
   );
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-  const filteredTransactions = transactions.filter(
+  const filteredTransactions = currentTransactions.filter(
     (tx) =>
       tx.from === address?.toLowerCase() || tx.to === address?.toLowerCase()
   );
@@ -41,7 +41,7 @@ export const AddressDetails = ({
       </button>
       <div className="px-5 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-secondary ">
         <h2 className="text-2xl font-bold text-center">Address Details</h2>
-        <TransactionsTable transactions={currentAddresses} />
+        <TransactionsTable transactions={filteredTransactions} />
       </div>
       <Pagination
         currentPage={currentPage}
