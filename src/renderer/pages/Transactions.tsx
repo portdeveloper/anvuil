@@ -7,6 +7,7 @@ import {
 import { Address, Transaction, formatEther } from 'viem';
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
+import { TransactionsTable } from 'renderer/components/TransactionsTable';
 
 const TRANSACTIONS_PER_PAGE = 10;
 
@@ -46,53 +47,7 @@ export const Transactions = ({
           <TransactionDetails />
         ) : (
           <div>
-            <div className="h-[550px]">
-              <table className="table w-full table-compact">
-                <thead>
-                  <tr>
-                    <th>Transaction Hash</th>
-                    <th>Block Number</th>
-                    <th>From</th>
-                    <th>To</th>
-                    <th>Value</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {transactions.length === 0 ? (
-                    <tr>
-                      <td colSpan={4} className="text-center">
-                        No transactions found
-                      </td>
-                    </tr>
-                  ) : (
-                    currentTransactions.map((tx) => (
-                      <tr key={tx.hash} className="h-[50px]">
-                        <td>
-                          <HashComp hash={tx.hash} type="transaction" />
-                        </td>
-                        <td>{Number(tx.blockNumber)}</td>
-                        <td>
-                          <AddressComp address={tx.from} />
-                        </td>
-                        <td>
-                          {tx.to === null ? (
-                            <div className="relative">
-                              <AddressComp address={tx.contractAddress} />
-                              <span className="absolute top-4 left-8 text-xs">
-                                (Contract Creation)
-                              </span>
-                            </div>
-                          ) : (
-                            <AddressComp address={tx.to} />
-                          )}
-                        </td>
-                        <td>{formatEther(tx.value)}</td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+            <TransactionsTable transactions={currentTransactions} />
             <Pagination
               currentPage={currentPage}
               totalItems={transactions.length}

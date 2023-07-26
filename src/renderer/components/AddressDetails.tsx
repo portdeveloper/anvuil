@@ -5,13 +5,21 @@ import { HashComp } from './HashComp';
 import { AddressComp } from './AddressComp';
 import { Pagination } from './Pagination';
 import { useState } from 'react';
+import { TransactionsTable } from './TransactionsTable';
 
 const ADRESSES_PER_PAGE = 10;
+
+// @todo move this to a type file
+type TransactionExtended = Transaction & {
+  contractAddress: Address | null;
+  status?: string;
+  gasUsed?: bigint;
+};
 
 export const AddressDetails = ({
   transactions,
 }: {
-  transactions: Transaction[];
+  transactions: TransactionExtended[];
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -41,57 +49,10 @@ export const AddressDetails = ({
       <button className="btn btn-sm btn-primary" onClick={handleBack}>
         Back
       </button>
-      {address ? (
-        <div className="px-5 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-secondary ">
-          <h2 className="text-2xl font-bold text-center">
-            Address Details
-          </h2>
-          <div className="h-[550px]">
-            <table className="table w-full table-compact">
-              <thead>
-                <tr>
-                  <th>Transaction Hash</th>
-                  <th>Block Number</th>
-                  <th>From</th>
-                  <th>To</th>
-                  <th>Value</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredTransactions.length === 0 ? (
-                  <tr>
-                    <td colSpan={4} className="text-center">
-                      No transactions found
-                    </td>
-                  </tr>
-                ) : (
-                  currentAddresses.map((tx) => (
-                    <tr key={tx.hash} className="h-[50px]">
-                      <td>
-                        <HashComp hash={tx.hash} type="transaction" />
-                      </td>
-                      <td>{Number(tx.blockNumber)}</td>
-                      <td>
-                        <AddressComp address={tx.from} />
-                      </td>
-                      <td>
-                        {tx.to === null ? (
-                          <span className="text-xs">Contract Creation</span>
-                        ) : (
-                          <AddressComp address={tx.to} />
-                        )}
-                      </td>
-                      <td>{Number(tx.value)}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      ) : (
-        <div></div>
-      )}
+      <div className="px-5 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-secondary ">
+        <h2 className="text-2xl font-bold text-center">Address Details</h2>
+        <TransactionsTable transactions={currentAddresses} />
+      </div>
       <Pagination
         currentPage={currentPage}
         totalItems={transactions.length}
