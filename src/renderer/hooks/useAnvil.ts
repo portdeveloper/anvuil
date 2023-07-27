@@ -36,28 +36,30 @@ const useAnvil = (anvilRunning: boolean) => {
   }
 
   useEffect(() => {
-    const unwatchFunction = anvilClient.watchBlocks({
-      onBlock: async (block) => {
-        setBlockNumber(Number(block.number));
-        setBlocks((prevBlocks) => [...prevBlocks, block]);
-        console.log('⚠️ watchBlocks is called inside useAnvil.ts');
+    if (anvilRunning) {
+      const unwatchFunction = anvilClient.watchBlocks({
+        onBlock: async (block) => {
+          setBlockNumber(Number(block.number));
+          setBlocks((prevBlocks) => [...prevBlocks, block]);
+          console.log('⚠️ watchBlocks is called inside useAnvil.ts');
 
-        const blockTransactions = await Promise.all(
-          block.transactions.map((tx) => fetchTransactionData(tx as Hash))
-        );
-        console.log('⚠️ getTransaction is called inside useAnvil.ts');
+          const blockTransactions = await Promise.all(
+            block.transactions.map((tx) => fetchTransactionData(tx as Hash))
+          );
+          console.log('⚠️ getTransaction is called inside useAnvil.ts');
 
-        setTransactions((prev) => [...prev, ...blockTransactions]);
-      },
-      onError: (error) => toast.error(error.message),
-    });
+          setTransactions((prev) => [...prev, ...blockTransactions]);
+        },
+        onError: (error) => toast.error(error.message),
+      });
 
-    setUnwatch(() => unwatchFunction);
+      setUnwatch(() => unwatchFunction);
 
-    getAddresses();
-    console.log('⚠️⚠️⚠️ a new watchBlocks is created in useAnvil.ts ⚠️⚠️⚠️');
+      getAddresses();
+      console.log('⚠️⚠️⚠️ a new watchBlocks is created in useAnvil.ts ⚠️⚠️⚠️');
 
-    return resetStateAndUnwatch;
+      return resetStateAndUnwatch;
+    }
   }, [anvilRunning]);
 
   return {
