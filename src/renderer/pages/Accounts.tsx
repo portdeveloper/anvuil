@@ -98,6 +98,7 @@ export const Accounts = ({
               type="button"
               className="btn btn-xs w-full"
               onClick={handleStopImpersonating}
+              disabled={!impersonatedAccount}
             >
               Stop impersonating
             </button>

@@ -66,6 +66,7 @@ export const Mempool = () => {
               type="button"
               className="btn btn-xs w-full"
               onClick={handleDropTxByHash}
+              disabled={!txToBeDropped}
             >
               Drop transaction
             </button>
