@@ -6,7 +6,7 @@ interface OutputLine {
   count: number;
 }
 
-const outputReducer = (state: OutputLine[], action: OutputAction) => {
+export const outputReducer = (state: OutputLine[], action: OutputAction) => {
   switch (action.type) {
     case 'add':
       const newLines = action.lines.map((line) => {
@@ -32,5 +32,3 @@ const outputReducer = (state: OutputLine[], action: OutputAction) => {
       throw new Error();
   }
 };
-
-export default outputReducer;
