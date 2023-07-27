@@ -6,7 +6,13 @@ interface OutputLine {
   count: number;
 }
 
-export const LogsWindow = ({ output }: { output: OutputLine[] }) => {
+export const LogsWindow = ({
+  output,
+  dispatchOutput,
+}: {
+  output: OutputLine[];
+  dispatchOutput: Function;
+}) => {
   const logsContainerRef = useRef<HTMLPreElement | null>(null);
   const [manuallyScrolled, setManuallyScrolled] = useState(false);
 
@@ -53,6 +59,13 @@ export const LogsWindow = ({ output }: { output: OutputLine[] }) => {
 
   return (
     <div className="flex-grow flex flex-col items-center h-full px-5">
+      <button
+        type="button"
+        className="btn btn-primary btn-xs m-3"
+        onClick={() => dispatchOutput({ type: 'reset' })}
+      >
+        Reset logs
+      </button>
       <pre
         ref={logsContainerRef}
         className="flex-grow w-full max-h-[600px] overflow-auto text-sm"

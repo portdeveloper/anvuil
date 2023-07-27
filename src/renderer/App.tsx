@@ -24,10 +24,7 @@ import { AddressDetails } from './components/AddressDetails';
 
 /**
  * @todo make the sidebar collapsible
- * @todo add a button to clear the Logs page
- * @todo add a button to drop all transactions in mempool
  * @todo make the app responsive on all screen sizes(remove 550px set height on pages/tables)
- * @todo searchbar considers empty inputs a block hash
  */
 
 export default function App() {
@@ -182,7 +179,7 @@ export default function App() {
             <Route path="/events" element={<Events />} />
             <Route
               path="/logs-window"
-              element={<LogsWindow output={output} />}
+              element={<LogsWindow output={output} dispatchOutput={dispatchOutput} />}
             />
           </Routes>
         </div>
