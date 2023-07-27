@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 import { TransactionsTable } from './TransactionsTable';
 import { TransactionExtended } from 'renderer/utils';
 import { anvilClient } from 'renderer/client';
-import { Address, toHex, Hex, Log } from 'viem';
+import { Address, toHex, Hex, Log, stringify, formatEther } from 'viem';
 import { toast } from 'react-toastify';
+import { AddressComp } from './AddressComp';
 
 const ADRESSES_PER_PAGE = 10;
 
@@ -20,6 +21,7 @@ export const AddressDetails = ({
   const [slot, setSlot] = useState<bigint>(0n); // Keep track of the current slot number
   const [storageData, setStorageData] = useState<Hex | null>(null); // Store the data from the chosen slot
   const [logs, setLogs] = useState<Log[]>([]);
+  const [addressBalance, setAddressBalance] = useState<bigint>(0n);
 
   const { address } = useParams();
   const navigate = useNavigate();
@@ -60,8 +62,20 @@ export const AddressDetails = ({
     }
   };
 
+  const fetchBalance = async () => {
+    try {
+      const balance = await anvilClient.getBalance({
+        address: address as Address,
+      });
+      setAddressBalance(balance);
+    } catch (error: any) {
+      toast.error(error);
+    }
+  };
+
   useEffect(() => {
     fetchLogs();
+    fetchBalance();
   }, [activeTab]);
 
   useEffect(() => {
@@ -92,8 +106,12 @@ export const AddressDetails = ({
         Back
       </button>
       <div>
-        <div className="px-5 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-secondary ">
+        <div className="px-5 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-secondary">
           <h2 className="text-2xl font-bold text-center">Address Details</h2>
+          <div className="p-2">
+            <AddressComp address={address as Address} />
+            <p>Balance: {formatEther(addressBalance)} ETH</p>
+          </div>
           {bytecode && (
             <div className="tabs">
               <button
