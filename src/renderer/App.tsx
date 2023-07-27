@@ -25,6 +25,7 @@ import { AddressDetails } from './components/AddressDetails';
 /**
  * @todo make the sidebar collapsible
  * @todo make the app responsive on all screen sizes(remove 550px set height on pages/tables)
+ * @todo Accounts.tsx: add a button to copy/see the private key
  */
 
 export default function App() {
