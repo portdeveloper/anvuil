@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { anvilClient } from 'renderer/client';
 import { Hash } from 'viem';
+import { isValidUrl } from '../utils';
 
 type HomeProps = {
   selectDirectory: () => void;
@@ -108,6 +109,11 @@ export const Home = ({
             type="button"
             className="btn btn-xs w-full"
             onClick={handleResetFork}
+            disabled={
+              !resetForkBlockNumber ||
+              !resetForkRpcUrl ||
+              !isValidUrl(resetForkRpcUrl)
+            }
           >
             Reset fork
           </button>
@@ -125,6 +131,7 @@ export const Home = ({
             type="button"
             className="btn btn-xs w-full"
             onClick={handleSetRpcUrl}
+            disabled={!RpcUrl || !isValidUrl(RpcUrl)}
           >
             Set RPC URL
           </button>
@@ -151,6 +158,7 @@ export const Home = ({
             type="button"
             className="btn btn-xs w-full"
             onClick={handleRevertState}
+            disabled={!snapshotId}
           >
             Revert to snapshot
           </button>
