@@ -92,6 +92,7 @@ export const Navbar = () => {
         <button
           type="submit"
           className="btn btn-xs btn-primary self-center mr-1"
+          disabled={!searchInput}
         >
           Search
         </button>
