@@ -113,9 +113,9 @@ export const AddressDetails = ({
             <p>Balance: {formatEther(addressBalance)} ETH</p>
           </div>
           {bytecode && (
-            <div className="tabs">
+            <div className="tabs flex justify-center">
               <button
-                className={`tab tab-lifted ${
+                className={`tab tab-bordered ${
                   activeTab === 'transactions' ? 'tab-active' : ''
                 }`}
                 onClick={() => setActiveTab('transactions')}
@@ -123,7 +123,7 @@ export const AddressDetails = ({
                 Transactions
               </button>
               <button
-                className={`tab tab-lifted ${
+                className={`tab tab-bordered ${
                   activeTab === 'code' ? 'tab-active' : ''
                 }`}
                 onClick={() => setActiveTab('code')}
@@ -131,7 +131,7 @@ export const AddressDetails = ({
                 Code
               </button>
               <button
-                className={`tab tab-lifted ${
+                className={`tab tab-bordered ${
                   activeTab === 'storage' ? 'tab-active' : ''
                 }`}
                 onClick={() => setActiveTab('storage')}
@@ -139,7 +139,7 @@ export const AddressDetails = ({
                 Storage
               </button>
               <button
-                className={`tab tab-lifted ${
+                className={`tab tab-bordered ${
                   activeTab === 'logs' ? 'tab-active' : ''
                 }`}
                 onClick={() => setActiveTab('logs')}
