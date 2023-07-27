@@ -1,4 +1,4 @@
-import { Address, Hash } from 'viem';
+import { Address, Hash, isAddress, isHex } from 'viem';
 import { AddressBlock, AddressComp, AddressInput } from '../components/';
 import { useState } from 'react';
 import { anvilClient } from 'renderer/client';
@@ -90,6 +90,7 @@ export const Accounts = ({
               type="button"
               className="btn btn-xs w-full"
               onClick={handleStartImpersonating}
+              disabled={!isAddress(impersonatedAccount)}
             >
               Start impersonating
             </button>
@@ -137,6 +138,7 @@ export const Accounts = ({
               type="button"
               className="btn btn-xs w-full"
               onClick={handleSetStorage}
+              disabled={!isAddress(storageAddress)}
             >
               Set storage
             </button>
@@ -160,6 +162,7 @@ export const Accounts = ({
               type="button"
               className="btn btn-xs w-full"
               onClick={handleSetBytecode}
+              disabled={!isAddress(bytecodeAddress) || !isHex(bytecodeValue)}
             >
               Set bytecode
             </button>
