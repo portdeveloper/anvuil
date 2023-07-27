@@ -8,7 +8,7 @@ import {
   HashComp,
   Pagination,
 } from 'renderer/components';
-import { Block, Address, Hash } from 'viem';
+import { Block, Address, Hash, isAddress } from 'viem';
 
 const BLOCKS_PER_PAGE = 10;
 
@@ -108,6 +108,7 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
             type="button"
             className="btn btn-xs w-full"
             onClick={handleSetIntervalMining}
+            disabled={!intervalMining}
           >
             Set interval mining
           </button>
@@ -144,6 +145,7 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
             type="button"
             className="btn btn-xs w-full"
             onClick={handleSetJumpTime}
+            disabled={!jumpTime}
           >
             Jump
           </button>
@@ -158,17 +160,19 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
             className="input input-bordered input-sm w-full"
           />
           <button
-            className="btn btn-xs w-full"
-            onClick={handleRemoveBlockTimestampInterval}
-          >
-            Remove Interval
-          </button>
-          <button
             type="button"
             className="btn btn-xs w-full"
             onClick={handleSetBlockTimestampInterval}
+            disabled={!blockTimestampInterval}
           >
             Set Interval
+          </button>
+          <button
+            className="btn btn-xs w-full"
+            onClick={handleRemoveBlockTimestampInterval}
+            disabled={!blockTimestampInterval}
+          >
+            Remove Interval
           </button>
         </div>
         <div className="flex flex-col gap-1">
@@ -183,6 +187,7 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
             type="button"
             className="btn btn-xs w-full"
             onClick={handleSetCoinbase}
+            disabled={!isAddress(coinbase)}
           >
             Set coinbase
           </button>
