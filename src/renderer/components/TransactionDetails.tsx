@@ -1,31 +1,29 @@
 import { useEffect, useState } from 'react';
 import { anvilClient } from 'renderer/client';
-import { Hash, Transaction } from 'viem';
+import { Hash } from 'viem';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
-
-/**
- * @todo add contract address if there is a contract created
- */
+import { TransactionExtended, fetchTransactionData } from 'renderer/utils';
+import { AddressComp } from './AddressComp';
 
 export const TransactionDetails = () => {
-  const [transaction, setTransaction] = useState<Transaction | null>(null);
+  const [transaction, setTransaction] = useState<TransactionExtended | null>(
+    null
+  );
   const [confirmations, setConfirmations] = useState<Number | null>(null);
 
   const navigate = useNavigate();
-  const { txHash } = useParams(); // extracting txHash using useParams
+  const { txHash } = useParams();
 
   const handleBack = () => {
-    navigate(-1); // navigates back to the previous page
+    navigate(-1);
   };
 
   useEffect(() => {
     if (txHash) {
       const fetchTransaction = async () => {
         try {
-          const tx = await anvilClient.getTransaction({
-            hash: txHash as Hash,
-          });
+          const tx = await fetchTransactionData(txHash as Hash);
           const confirmations = await anvilClient.getTransactionConfirmations({
             hash: txHash as Hash,
           });
@@ -66,13 +64,26 @@ export const TransactionDetails = () => {
                 <td>
                   <strong>From:</strong>
                 </td>
-                <td>{transaction.from}</td>
+                <td>
+                  <AddressComp address={transaction.from} />
+                </td>
               </tr>
               <tr>
                 <td>
                   <strong>To:</strong>
                 </td>
-                <td>{transaction.to}</td>
+                {transaction.to === null ? (
+                  <td className="relative">
+                    <AddressComp address={transaction.contractAddress} />
+                    <span className="absolute top-7 left-12 text-xs">
+                      (Contract Creation)
+                    </span>
+                  </td>
+                ) : (
+                  <td>
+                    <AddressComp address={transaction.to} />
+                  </td>
+                )}
               </tr>
               <tr>
                 <td>
@@ -94,7 +105,7 @@ export const TransactionDetails = () => {
                   <textarea
                     readOnly
                     value={transaction.input}
-                    className="p-0 textarea-primary bg-inherit h-[250px]"
+                    className="p-0 textarea-primary bg-inherit h-[250px] scrollbar-thin scrollbar-thumb-secondary"
                   />
                 </td>
               </tr>
