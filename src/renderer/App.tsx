@@ -34,7 +34,7 @@ export default function App() {
   const [anvilRunning, setAnvilRunning] = useState(false);
 
   const { accounts, blockNumber, blocks, transactions, resetStateAndUnwatch } =
-    useAnvil();
+    useAnvil(anvilRunning);
 
   useEffect(() => {
     const handleData = (data: Uint8Array) => {

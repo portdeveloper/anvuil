@@ -4,7 +4,7 @@ import { anvilClient } from 'renderer/client';
 import { Block, Address, Hash } from 'viem';
 import { TransactionExtended, fetchTransactionData } from 'renderer/utils';
 
-const useAnvil = () => {
+const useAnvil = (anvilRunning: boolean) => {
   const [accounts, setAccounts] = useState<Address[]>([]);
   const [blockNumber, setBlockNumber] = useState(0);
   const [blocks, setBlocks] = useState<Block[]>([]);
@@ -58,7 +58,7 @@ const useAnvil = () => {
     console.log('⚠️⚠️⚠️ a new watchBlocks is created in useAnvil.ts ⚠️⚠️⚠️');
 
     return resetStateAndUnwatch;
-  }, []);
+  }, [anvilRunning]);
 
   return {
     accounts,
