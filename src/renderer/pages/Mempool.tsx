@@ -50,6 +50,31 @@ export const Mempool = () => {
     }
   };
 
+  const handleDropAllTxs = async () => {
+    try {
+      // Iterate through pending transactions and drop them
+      for (const address in pending) {
+        for (const nonce in pending[address]) {
+          const tx = pending[address][nonce];
+          await anvilClient.dropTransaction({ hash: tx.hash });
+        }
+      }
+
+      // Iterate through queued transactions and drop them
+      for (const address in queued) {
+        for (const nonce in queued[address]) {
+          const tx = queued[address][nonce];
+          await anvilClient.dropTransaction({ hash: tx.hash });
+        }
+      }
+
+      console.log('⚠️⚠️⚠️ All transactions dropped');
+      setTriggerFetch((prev) => prev + 1);
+    } catch (error) {
+      console.error('Failed to drop all transactions: ', error);
+    }
+  };
+
   return (
     <div className="flex h-full">
       <div className="px-3 py-2 flex flex-col gap-7 bg-secondary w-1/5 justify-between">
@@ -69,6 +94,16 @@ export const Mempool = () => {
               disabled={!txToBeDropped}
             >
               Drop transaction
+            </button>
+          </div>
+          <div className="flex flex-col gap-1">
+            <p>Drop all transactions</p>
+            <button
+              type="button"
+              className="btn btn-xs w-full"
+              onClick={handleDropAllTxs}
+            >
+              Drop all transactions
             </button>
           </div>
         </div>
