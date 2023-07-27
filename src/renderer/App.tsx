@@ -18,7 +18,7 @@ import {
   BlockDetails,
 } from 'renderer/components';
 import 'react-toastify/dist/ReactToastify.css';
-import outputReducer from '../utils/outputReducer';
+import { outputReducer } from './utils';
 import useAnvil from './hooks/useAnvil';
 import { AddressDetails } from './components/AddressDetails';
 
