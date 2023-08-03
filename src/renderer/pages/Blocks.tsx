@@ -9,8 +9,8 @@ import {
   Pagination,
 } from 'renderer/components';
 import { Block, Address, Hash, isAddress } from 'viem';
-
-const BLOCKS_PER_PAGE = 10;
+import { ITEMS_PER_PAGE } from 'renderer/constants';
+import { usePagination } from 'renderer/hooks/usePagination';
 
 export const Blocks = ({ blocks }: { blocks: Block[] }) => {
   const [intervalMining, setIntervalMining] = useState<number>(0);
@@ -19,15 +19,14 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
   const [blockTimestampInterval, setBlockTimestampInterval] =
     useState<number>(0);
   const [coinbase, setCoinbase] = useState<string>('');
-  const [currentPage, setCurrentPage] = useState(1);
 
   let { blockHash } = useParams();
 
-  const indexOfLastBlock = currentPage * BLOCKS_PER_PAGE;
-  const indexOfFirstBlock = indexOfLastBlock - BLOCKS_PER_PAGE;
-  const currentBlocks = blocks.slice(indexOfFirstBlock, indexOfLastBlock);
-
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+  const {
+    currentItems: currentBlocks,
+    currentPage,
+    paginate,
+  } = usePagination(blocks, ITEMS_PER_PAGE);
 
   const handleSetIntervalMining = async () => {
     try {
@@ -199,7 +198,7 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
             <BlockDetails />
           ) : (
             <div>
-              <div className="h-[550px]">
+              <div className="min-h-[550px]">
                 <table className="table w-full table-compact">
                   <thead>
                     <tr>
@@ -219,7 +218,7 @@ export const Blocks = ({ blocks }: { blocks: Block[] }) => {
                         </td>
                       </tr>
                     )}
-                    {currentBlocks.map((block) => (
+                    {currentBlocks.map((block: Block) => (
                       <tr key={block.hash} className="h-[50px]">
                         <td>
                           <HashComp hash={block.hash} type="block" />

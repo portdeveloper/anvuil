@@ -8,7 +8,7 @@ export const TransactionsTable = ({
   transactions: TransactionExtended[];
 }) => {
   return (
-    <div className="h-[550px]">
+    <div className="min-h-[550px]">
       <table className="table w-full table-compact">
         <thead>
           <tr>
