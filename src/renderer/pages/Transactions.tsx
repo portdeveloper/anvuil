@@ -1,29 +1,22 @@
 import { Pagination, TransactionDetails } from 'renderer/components';
 import { useParams } from 'react-router-dom';
-import { useState } from 'react';
 import { TransactionsTable } from 'renderer/components/TransactionsTable';
 import { TransactionExtended } from 'renderer/utils';
-
-const TRANSACTIONS_PER_PAGE = 10;
+import { ITEMS_PER_PAGE } from 'renderer/constants';
+import { usePagination } from 'renderer/hooks/usePagination';
 
 export const Transactions = ({
   transactions,
 }: {
   transactions: TransactionExtended[];
 }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-
   let { txHash } = useParams();
 
-  const indexOfLastTransaction = currentPage * TRANSACTIONS_PER_PAGE;
-  const indexOfFirstTransaction =
-    indexOfLastTransaction - TRANSACTIONS_PER_PAGE;
-  const currentTransactions = transactions.slice(
-    indexOfFirstTransaction,
-    indexOfLastTransaction
-  );
-
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+  const {
+    currentItems: currentTransactions,
+    currentPage,
+    paginate,
+  } = usePagination(transactions, ITEMS_PER_PAGE);
 
   return (
     <div className="flex h-full">
